@@ -7,10 +7,10 @@
  */
 
 // Export core classes
-export { SwaggerLoader } from './core/SwaggerLoader';
+export { SwaggerLoader } from '@/core/SwaggerLoader';
 
 // Export logging utilities
-export { Logger } from './logging/Logger';
+export { Logger } from '@/logging/Logger';
 
 // Export core types and interfaces (to be implemented)
 // export * from '@/types';
