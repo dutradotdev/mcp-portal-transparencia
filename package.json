@@ -82,8 +82,8 @@
       "^@/utils/(.*)$": "<rootDir>/src/utils/$1",
       "^@/types/(.*)$": "<rootDir>/src/types/$1",
       "^@/config/(.*)$": "<rootDir>/src/config/$1",
-      "^@/errors/(.*)$": "<rootDir>/src/errors/$1",
-      "^@/logging/(.*)$": "<rootDir>/src/logging/$1"
+      "^@/logging/(.*)$": "<rootDir>/src/logging/$1",
+      "^@/errors/(.*)$": "<rootDir>/src/errors/$1"
     }
   },
   "lint-staged": {

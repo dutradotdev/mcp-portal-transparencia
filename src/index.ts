@@ -8,6 +8,7 @@
 
 // Export core classes
 export { SwaggerLoader } from '@/core/SwaggerLoader';
+export { Authentication } from '@/core/Authentication';
 
 // Export logging utilities
 export { Logger } from '@/logging/Logger';
