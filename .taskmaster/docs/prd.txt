@@ -1,0 +1,96 @@
+Product Requirements Document (PRD): MCP para Portal da Transparência API
+
+1. Objetivo
+	•	Desenvolver um Multi-step Call Planner (MCP) usando o SDK TypeScript que orquestre e encadeie todas as chamadas disponíveis no Swagger do Portal da Transparência (https://api.portaldatransparencia.gov.br/v3/api-docs).
+	•	Proporcionar uma interface programática que automatize fluxos de consulta a múltiplos endpoints, tratamento de erros e respeito aos limites de taxa (esse respeito pode ser apenas em formato de aviso mesmo caso o endpoint dê um erro de rating limit).
+
+2. Visão
+
+criar um MCP do portal de transparencia
+
+3. Escopo do Projeto
+	•	Importação automática do spec Swagger V3 e geração de clients individuais por endpoint.
+	•	Autenticação: suporte a API Key (HTTP Header) e possivelmente OAuth, se implementado futuramente.
+	•	Log e Monitoramento: geração de logs estruturados em JSON e métricas de sucesso/falha.
+	•	Rate Limiting: aviso caso o usuário atinja o limite com base nas mensagens de erro retornadas pela API (90/min das 06:00 às 23:59, 300/min entre 00:00 e 05:59).
+	•	Testes: unitários e de integração.
+	•	Documentação: guia de uso do MCP e melhores práticas.
+
+4. Requisitos Funcionais
+	1.	Import Spec
+	•	Carregar Swagger JSON diretamente da URL.
+	•	Validar versões e detectar alterações.
+	2.	Client Generator
+	•	Gerar classes TypeScript para cada endpoint (tipos de request/response).
+	3.	Autenticação
+	•	Injeção de API Key global e por chamada.
+	4.	Tratamento de Erros
+	•	Categorizar erros (4xx vs 5xx).
+	-   Caso o usuário atinja o limite, avise-o.
+	5.	Rate Limiting
+	•	Alertas quando atingir 80% do limite.
+	6.	Logging
+	•	Logs de cada chamada (endpoint, payload, tempo de resposta, status).
+	7.	Documentação e Exemplos
+	•	README com setup, exemplos de chaining completo.
+	•	Diagrama de fluxo de chamadas.
+
+5. Requisitos Não-Funcionais
+	•	Performance: Performático na medida do possível, evite chamadas desnecessárias e processamentos desnecessários.
+	•	Escalabilidade: compatível com ambientes serverless e servidores dedicados.
+	•	Segurança: não expor API Key em logs, suportar variáveis de ambiente.
+	•	Manutenibilidade: código limpo, modular, seguindo padrões SOLID.
+
+6. Entregáveis
+	•	Pacote NPM mcp-portal-transparencia versão inicial.
+	•	Código-fonte no repositório Git (branch main protegido).
+	•	Documentação: site estático ou GitHub Pages.
+	•	Test Suite Cobertura mínima de 90%.
+	•	Documentação rica de todos os endpoints
+
+8. Dependências
+	•	Acesso válido ao Swagger JSON público.
+	•	Node.js >= 16.0.
+	•	npm ou yarn.
+	•	Conta de e-mail ou canal de alertas para notificações de rate limit.
+
+9. Riscos e Mitigações
+	•	Mudanças no spec: usar versionamento semântico e CI para detectar diffs.
+	•	Erros de autenticação: testes de credenciais e validação antecipada.
+
+⸻
+
+Documento gerado para orientar o desenvolvimento do MCP das chamadas da API do Portal da Transparência.
+
+10. Detalhes Técnicos da API
+
+A API do Portal da Transparência possui endpoints para:
+- Viagens a serviço
+- Servidores do Poder Executivo Federal
+- Benefícios (Bolsa Família, PETI, Seguro Defeso, Garantia-Safra)
+- Imóveis Funcionais
+- Renúncias Fiscais
+- Licitações do Poder Executivo Federal
+- Notas Fiscais
+- Despesas Públicas
+- Emendas parlamentares
+- Convênios do Poder Executivo Federal
+- Contratos do Poder Executivo Federal
+- Sanções (CNEP, CEPIM, CEIS)
+- Pessoas físicas e jurídicas
+- Órgãos (SIAPE e SIAFI)
+- Coronavírus (dados específicos)
+
+11. Especificações de Rate Limiting
+- 90 chamadas por minuto das 06:00 às 23:59
+- 300 chamadas por minuto entre 00:00 e 05:59
+- Autenticação via API Key no header
+
+12. Estrutura do Pacote NPM
+- Classe principal MCP
+- Clients individuais para cada categoria de endpoint
+- Sistema de autenticação centralizado
+- Logger estruturado
+- Rate limiter com alertas
+- Sistema de cache opcional
+- Validação de schema automática
