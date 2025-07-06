@@ -102,6 +102,7 @@ For each task, **update the file `docs/progress.md`** at the repository root wit
 - PR title: `<TASK_NUMBER> – short description`
 - generate a good PR and remember that we will use this PR as documentation
 - use the gh cli to open the pr
+- follow the docs/PULL_REQUEST_TEMPLATE.md
 
 ---
 
