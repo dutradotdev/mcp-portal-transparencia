@@ -1,5 +1,5 @@
-import { Authentication, AuthConfig } from '@/core/Authentication';
-import { Logger } from '@/logging/Logger';
+import { Authentication, AuthConfig } from '../../../src/core/Authentication';
+import { Logger } from '../../../src/logging/Logger';
 import axios from 'axios';
 
 // Mock axios
