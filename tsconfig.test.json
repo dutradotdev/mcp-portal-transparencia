@@ -5,6 +5,6 @@
     "skipLibCheck": true,
     "types": ["jest", "node"]
   },
-  "include": ["src/**/*", "tests/**/*"],
+  "include": ["src/**/*"],
   "exclude": ["node_modules", "dist", "coverage"]
 }

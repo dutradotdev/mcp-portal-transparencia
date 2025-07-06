@@ -1,9 +1,9 @@
-import { ClientGenerator } from '../../../src/core/ClientGenerator';
-import { Logger } from '../../../src/logging/Logger';
+import { ClientGenerator } from '@/core/ClientGenerator';
+import { Logger } from '@/logging/Logger';
 
 // Mock Logger only
 
-jest.mock('../../../src/logging/Logger');
+jest.mock('@/logging/Logger');
 
 const MockedLogger = Logger as jest.MockedClass<typeof Logger>;
 

@@ -1,4 +1,4 @@
-import mcpPortalTransparencia from '../../src/index';
+import mcpPortalTransparencia from '../../index';
 
 describe('MCP Portal da Transparência', () => {
   test('should export the package information', () => {
