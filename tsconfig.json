@@ -7,7 +7,6 @@
     "declarationMap": true,
     "sourceMap": true,
     "outDir": "./dist",
-    "rootDir": "./src",
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
@@ -36,15 +35,8 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true
   },
-  "include": ["src/**/*"],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "tests",
-    "**/*.test.ts",
-    "**/*.spec.ts",
-    "examples"
-  ],
+  "include": ["src/**/*", "tests/**/*"],
+  "exclude": ["node_modules", "dist", "examples"],
   "ts-node": {
     "esm": true,
     "experimentalSpecifierResolution": "node"
