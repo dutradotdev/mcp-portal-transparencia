@@ -1,5 +1,5 @@
-import { SwaggerLoader } from '../../../src/core/SwaggerLoader';
-import { Logger } from '../../../src/logging/Logger';
+import { SwaggerLoader } from '@/core/SwaggerLoader';
+import { Logger } from '@/logging/Logger';
 import axios from 'axios';
 import SwaggerParser from '@apidevtools/swagger-parser';
 
@@ -12,7 +12,7 @@ jest.mock('@apidevtools/swagger-parser');
 const mockedSwaggerParser = SwaggerParser as jest.Mocked<typeof SwaggerParser>;
 
 // Mock Logger
-jest.mock('../../../src/logging/Logger');
+jest.mock('@/logging/Logger');
 const MockedLogger = Logger as jest.MockedClass<typeof Logger>;
 
 describe('SwaggerLoader', () => {

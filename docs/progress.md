@@ -25,10 +25,14 @@
 - Implemented SwaggerLoader class with caching mechanism and validation
 - Added Logger utility class using Winston for structured logging
 - Used @apidevtools/swagger-parser for spec validation and openapi-types for TypeScript types
-- Created comprehensive unit tests (16 tests) with mocking for external dependencies
-- Added integration tests (7 tests) for real API interaction with Portal da Transparência
+- Implemented caching mechanism to avoid unnecessary reloads
+- Added version detection to identify API changes
+- Created both unit and integration tests for comprehensive coverage (26 tests total)
 - Implemented error handling for network failures and invalid specs
 - Added spec structure validation and version change detection
-- Achieved 94% test coverage (97.67% for SwaggerLoader core functionality)
+- **Enhanced:** Configured TypeScript path mapping with `@/` prefix for cleaner imports
+- **Enhanced:** Updated all imports to use `@/core/*`, `@/logging/*` etc. instead of relative paths
+- **Enhanced:** Configured Jest moduleNameMapper to support path mappings in tests
+- **Enhanced:** Updated tsconfig.json to properly handle both src and test files
 
 **Status:** Completed

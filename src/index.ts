@@ -7,19 +7,19 @@
  */
 
 // Export core classes
-export { SwaggerLoader } from './core/SwaggerLoader';
+export { SwaggerLoader } from '@/core/SwaggerLoader';
 
 // Export logging utilities
-export { Logger } from './logging/Logger';
+export { Logger } from '@/logging/Logger';
 
 // Export core types and interfaces (to be implemented)
-// export * from './types';
+// export * from '@/types';
 
 // Export utility functions
-// export * from './utils';
+// export * from '@/utils';
 
 // Export error classes
-// export * from './errors';
+// export * from '@/errors';
 
 // Default export (to be replaced with main client)
 export default {

@@ -1,5 +1,5 @@
-import { SwaggerLoader } from '../../src/core/SwaggerLoader';
-import { Logger } from '../../src/logging/Logger';
+import { SwaggerLoader } from '@/core/SwaggerLoader';
+import { Logger } from '@/logging/Logger';
 
 describe('SwaggerLoader Integration Tests', () => {
   let swaggerLoader: SwaggerLoader;
@@ -81,6 +81,31 @@ describe('SwaggerLoader Integration Tests', () => {
       // For now, we test that the method works with same URL (should return false)
       const hasChanges = await swaggerLoader.detectSpecChanges();
       expect(typeof hasChanges).toBe('boolean');
+    }, 30000);
+
+    it('should clear cache properly', async () => {
+      await swaggerLoader.loadSpec();
+      expect(swaggerLoader.getSpecInfo()).toBeDefined();
+
+      swaggerLoader.clearCache();
+      expect(swaggerLoader.getSpecInfo()).toBeNull();
+    }, 30000);
+
+    it('should detect spec changes when comparing different URLs', async () => {
+      // This test uses a different URL to simulate change detection
+      const hasChanges = await swaggerLoader.detectSpecChanges(
+        'https://petstore.swagger.io/v2/swagger.json'
+      );
+
+      // Should detect changes because we're comparing different APIs
+      expect(hasChanges).toBe(true);
+    }, 30000);
+
+    it('should not detect changes when comparing same specs', async () => {
+      const hasChanges = await swaggerLoader.detectSpecChanges();
+
+      // Should not detect changes because we're comparing the same spec
+      expect(hasChanges).toBe(false);
     }, 30000);
   });
 

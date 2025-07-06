@@ -1,7 +1,7 @@
 import axios from 'axios';
 import SwaggerParser from '@apidevtools/swagger-parser';
 import { OpenAPI } from 'openapi-types';
-import { Logger } from '../logging/Logger';
+import { Logger } from '@/logging/Logger';
 
 interface OpenAPIVersionCheck {
   openapi?: string;

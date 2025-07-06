@@ -112,6 +112,16 @@
       "text",
       "lcov",
       "html"
-    ]
+    ],
+    "moduleNameMapper": {
+      "^@/(.*)$": "<rootDir>/src/$1",
+      "^@/clients/(.*)$": "<rootDir>/src/clients/$1",
+      "^@/core/(.*)$": "<rootDir>/src/core/$1",
+      "^@/utils/(.*)$": "<rootDir>/src/utils/$1",
+      "^@/types/(.*)$": "<rootDir>/src/types/$1",
+      "^@/config/(.*)$": "<rootDir>/src/config/$1",
+      "^@/errors/(.*)$": "<rootDir>/src/errors/$1",
+      "^@/logging/(.*)$": "<rootDir>/src/logging/$1"
+    }
   }
 }
