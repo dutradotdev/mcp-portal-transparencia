@@ -38,7 +38,6 @@ standard QA sequence:
 npm run lint
 npm run test
 npm run typecheck
-npm run ci-test
 ```
 
 1. Run QA sequence before coding in order to check if everything is ok. If it fails for some reason fix it
