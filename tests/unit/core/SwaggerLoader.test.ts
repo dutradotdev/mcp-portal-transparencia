@@ -1,5 +1,5 @@
-import { SwaggerLoader } from '../../../src/core/SwaggerLoader';
-import { Logger } from '../../../src/logging/Logger';
+import { SwaggerLoader } from '@/core/SwaggerLoader';
+import { Logger } from '@/logging/Logger';
 import axios from 'axios';
 import SwaggerParser from '@apidevtools/swagger-parser';
 
