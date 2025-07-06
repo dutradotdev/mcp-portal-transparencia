@@ -6,7 +6,7 @@
   "bin": "src/index.ts",
   "type": "commonjs",
   "scripts": {
-    "dev": "ts-node src/index.ts",
+    "dev": "npx ts-node -r tsconfig-paths/register src/index.ts",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
@@ -44,6 +44,7 @@
     "prettier": "^3.4.2",
     "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5.7.2"
   },
   "dependencies": {
