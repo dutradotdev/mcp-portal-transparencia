@@ -1,7 +1,7 @@
 {
   "name": "mcp-portal-transparencia",
   "version": "1.0.0",
-  "description": "Multi-step Call Planner (MCP) para orquestração de chamadas à API do Portal da Transparência do Governo Federal brasileiro",
+  "description": "🇧🇷 Multi-step Call Planner (MCP) para orquestração automatizada de chamadas à API do Portal da Transparência do Governo Federal brasileiro. Gera clientes TypeScript a partir do Swagger/OpenAPI, com rate limiting inteligente, logs estruturados, tratamento robusto de erros e autenticação centralizada. Suporta todos os endpoints: viagens, servidores, licitações, contratos, despesas públicas, benefícios, sanções e convênios.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "module": "dist/index.esm.js",

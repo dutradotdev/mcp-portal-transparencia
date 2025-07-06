@@ -18,12 +18,9 @@
 // Export error classes
 // export * from './errors';
 
-// Temporary placeholder for development
-console.log("MCP Portal da Transparência - Setup Complete!");
-
 // Default export (to be replaced with main client)
 export default {
-  name: "mcp-portal-transparencia",
-  version: "1.0.0",
-  description: "Multi-step Call Planner for Portal da Transparência API",
+  name: 'mcp-portal-transparencia',
+  version: '1.0.0',
+  description: 'Multi-step Call Planner for Portal da Transparência API',
 };
