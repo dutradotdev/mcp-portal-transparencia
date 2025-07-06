@@ -6,8 +6,11 @@
  * @version 1.0.0
  */
 
-// Export main client class (to be implemented)
-// export { PortalTransparenciaClient } from './core/PortalTransparenciaClient';
+// Export main components
+export { ClientGenerator } from './core/ClientGenerator';
+export { SwaggerLoader } from './core/SwaggerLoader';
+export { Authentication } from './core/Authentication';
+export { Logger } from './logging/Logger';
 
 // Export core types and interfaces (to be implemented)
 // export * from './types';
