@@ -101,6 +101,7 @@ For each task, **update the file `docs/progress.md`** at the repository root wit
 - Open a pull request **against `develop`**.
 - PR title: `<TASK_NUMBER> – short description`
 - generate a good PR and remember that we will use this PR as documentation
+- use the gh cli to open the pr
 
 ---
 
