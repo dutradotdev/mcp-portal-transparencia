@@ -1,5 +1,4 @@
-'use strict';
-
+"use strict";
 /**
  * MCP Portal da Transparência
  * Multi-step Call Planner for the Brazilian Government Transparency Portal API
@@ -27,4 +26,3 @@ exports.default = {
     version: '1.0.0',
     description: 'Multi-step Call Planner for Portal da Transparência API',
 };
-//# sourceMappingURL=index.js.map
