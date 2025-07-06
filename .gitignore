@@ -28,4 +28,5 @@ node_modules/
 # tasks.json
 # tasks/ 
 
-coverage/   
+coverage/
+dist/
