@@ -3,1190 +3,285 @@
     "tasks": [
       {
         "id": 1,
-        "title": "Setup Project Repository and Initial Configuration",
-        "description": "Initialize the TypeScript project with proper structure, dependencies, and configuration files for the MCP Portal da Transparência package",
-        "details": "Create package.json with TypeScript SDK dependencies, setup tsconfig.json for Node.js >= 16.0, configure ESLint/Prettier, setup Jest for testing, create initial folder structure (src/, tests/, docs/), configure GitHub repository with protected main branch, setup CI/CD pipeline with GitHub Actions",
-        "testStrategy": "Verify project builds successfully, all linting passes, and basic test runner executes without errors",
-        "priority": "high",
+        "title": "Setup Project Repository and Structure",
+        "description": "Initialize the project repository with proper structure, configuration files, and development environment setup for the MCP Portal da Transparência API.",
+        "status": "done",
         "dependencies": [],
-        "status": "pending",
-        "subtasks": [
-          {
-            "id": 1,
-            "title": "Create and Configure Git Repository",
-            "description": "Set up the Git repository structure for the Portal da Transparência MCP implementation",
-            "dependencies": [],
-            "details": "Create a new repository on GitHub/GitLab, initialize with README.md, .gitignore for Node.js, and LICENSE file. Set up branch protection rules for main branch and configure repository access permissions for team members.",
-            "status": "in-progress",
-            "testStrategy": ""
-          },
-          {
-            "id": 2,
-            "title": "Configure Package Management",
-            "description": "Set up package.json and dependency management for the project",
-            "dependencies": [
-              1
-            ],
-            "details": "Initialize package.json with appropriate metadata, add core dependencies for the MCP implementation, configure scripts for development, testing, and building. Set up package-lock.json or yarn.lock for dependency versioning consistency.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 3,
-            "title": "Set Up TypeScript Configuration",
-            "description": "Configure TypeScript compiler options and type definitions",
-            "dependencies": [
-              2
-            ],
-            "details": "Create tsconfig.json with appropriate compiler options for the Portal da Transparência project. Configure path aliases, source maps, strict type checking, and output directory. Add necessary @types packages for dependencies.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 4,
-            "title": "Implement Linting and Code Formatting",
-            "description": "Set up ESLint and Prettier for code quality and consistency",
-            "dependencies": [
-              3
-            ],
-            "details": "Configure ESLint with appropriate rules for TypeScript, install and configure Prettier for code formatting, set up pre-commit hooks using husky and lint-staged, create .editorconfig file for editor consistency across the team.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 5,
-            "title": "Implement CI/CD Pipeline",
-            "description": "Set up continuous integration and deployment workflow",
-            "dependencies": [
-              4
-            ],
-            "details": "Create GitHub Actions or GitLab CI configuration files to automate testing, linting, and building processes. Configure deployment pipeline for different environments (development, staging, production). Set up automated version management and release creation.",
-            "status": "pending",
-            "testStrategy": ""
-          }
-        ]
+        "priority": "high",
+        "details": "✅ TASK COMPLETED - Comprehensive Project Setup and Configuration\n\n**All components successfully implemented:**\n\n1. **✅ GitHub Repository Setup**\n   - Git repository initialized on main branch\n   - Initial commit created with comprehensive project structure\n   - README.md with detailed project documentation and usage examples\n\n2. **✅ Package Management Configuration**\n   - Enhanced package.json with comprehensive metadata and scripts\n   - Production dependencies: axios, swagger-parser, openapi-typescript, winston, dotenv\n   - Development dependencies: TypeScript toolchain, ESLint/Prettier, Jest, Rollup, etc.\n   - Dual module format support (CommonJS + ESM)\n   - All dependencies successfully installed\n\n3. **✅ TypeScript Configuration**\n   - Comprehensive tsconfig.json with modern ES2020 target\n   - Path aliases configured for clean imports (@/clients, @/core, etc.)\n   - Strict typing enabled with additional safety checks\n   - Build configuration for dist/ output\n\n4. **✅ ESLint and Prettier Setup**\n   - Modern ESLint flat config with TypeScript integration\n   - Prettier configuration for consistent code formatting\n   - Pre-commit hooks configured with husky and lint-staged\n   - All code quality checks passing\n\n5. **✅ Folder Structure Created**\n   ```\n   src/\n     ├── clients/       # Generated API clients\n     ├── core/          # Core MCP functionality  \n     ├── utils/         # Utility functions\n     ├── types/         # TypeScript interfaces\n     ├── config/        # Configuration\n     ├── errors/        # Error handling\n     ├── logging/       # Logging functionality\n     └── index.ts       # Main entry point\n   tests/\n     ├── unit/          # Unit tests\n     └── integration/   # Integration tests\n   docs/\n     └── examples/      # Usage examples\n   ```\n\n6. **✅ Jest Testing Setup**\n   - Jest configured with ts-jest for TypeScript support\n   - Coverage reporting configured\n   - Sample test created and passing\n   - Multiple test scripts available (test, test:watch, test:coverage)\n\n7. **✅ Build System (Rollup)**\n   - Multi-format builds: CommonJS, ESM, and minified ESM\n   - TypeScript declaration files generated\n   - Source maps enabled for debugging\n   - Build process verified and working\n\n8. **✅ GitHub Actions CI/CD Pipeline**\n   - Comprehensive workflow with matrix testing (Node 16, 18, 20)\n   - Automated testing, linting, and building\n   - Automatic NPM publishing on version changes\n   - GitHub releases creation\n   - Code coverage reporting to Codecov\n\n**Generated Build Artifacts:**\n- dist/index.js (CommonJS build)\n- dist/index.esm.js (ESM build) \n- dist/index.esm.min.js (Minified ESM)\n- dist/index.d.ts (TypeScript declarations)\n- Source maps for all builds\n\nThe project foundation is now complete and ready for implementing the MCP functionality. All development tools, build processes, and CI/CD pipelines are fully operational.",
+        "testStrategy": "✅ ALL VERIFICATION TESTS PASSED:\n1. ✅ TypeScript compilation: `npm run typecheck` - no errors\n2. ✅ Jest tests: `npm test` - all tests passing\n3. ✅ Build process: `npm run build` - all formats generated successfully\n4. ✅ ESLint runs without errors\n5. ✅ Project structure: All directories and configuration files in place\n6. ✅ GitHub Actions CI/CD pipeline operational\n7. ✅ Code quality checks passing with pre-commit hooks",
+        "subtasks": []
       },
       {
         "id": 2,
         "title": "Implement Swagger Spec Loader",
-        "description": "Create a module to fetch and parse the Swagger V3 specification from the Portal da Transparência API",
-        "details": "Implement HTTP client to fetch JSON from https://api.portaldatransparencia.gov.br/v3/api-docs, add JSON schema validation, implement version detection and change tracking, create caching mechanism for spec file, handle network errors and retries with exponential backoff",
-        "testStrategy": "Unit tests for spec loading, validation, and error handling. Mock HTTP responses to test various scenarios including network failures",
+        "description": "Create a module to load, parse, and validate the Swagger specification from the Portal da Transparência API.",
+        "details": "1. Install required dependencies:\n   - `npm install axios swagger-parser @apidevtools/swagger-parser openapi-types --save`\n2. Create a SwaggerLoader class in `src/core/swagger-loader.ts`:\n```typescript\nimport axios from 'axios';\nimport SwaggerParser from '@apidevtools/swagger-parser';\nimport { OpenAPI } from 'openapi-types';\nimport { Logger } from '../logging/logger';\n\nexport class SwaggerLoader {\n  private specUrl: string;\n  private cachedSpec: OpenAPI.Document | null = null;\n  private logger: Logger;\n\n  constructor(specUrl: string = 'https://api.portaldatransparencia.gov.br/v3/api-docs', logger: Logger) {\n    this.specUrl = specUrl;\n    this.logger = logger;\n  }\n\n  async loadSpec(): Promise<OpenAPI.Document> {\n    try {\n      this.logger.info('Loading Swagger specification', { url: this.specUrl });\n      const response = await axios.get(this.specUrl);\n      const rawSpec = response.data;\n      \n      // Validate the spec\n      const validatedSpec = await SwaggerParser.validate(rawSpec) as OpenAPI.Document;\n      this.cachedSpec = validatedSpec;\n      this.logger.info('Swagger specification loaded successfully');\n      return validatedSpec;\n    } catch (error) {\n      this.logger.error('Failed to load Swagger specification', { error });\n      throw new Error(`Failed to load Swagger specification: ${error.message}`);\n    }\n  }\n\n  async getSpec(): Promise<OpenAPI.Document> {\n    if (!this.cachedSpec) {\n      return this.loadSpec();\n    }\n    return this.cachedSpec;\n  }\n\n  async detectSpecChanges(newSpecUrl?: string): Promise<boolean> {\n    const currentSpec = await this.getSpec();\n    const newSpec = await new SwaggerLoader(newSpecUrl || this.specUrl, this.logger).loadSpec();\n    \n    // Compare versions or other relevant properties\n    return currentSpec.info.version !== newSpec.info.version;\n  }\n}\n```\n3. Create a simple spec validator to check for required fields and structure\n4. Implement caching mechanism to avoid unnecessary reloads\n5. Add version detection to identify API changes",
+        "testStrategy": "1. Unit tests:\n   - Test loading spec from a mock URL\n   - Test caching mechanism\n   - Test error handling for invalid URLs\n   - Test version comparison logic\n2. Integration tests:\n   - Test loading the actual Portal da Transparência Swagger spec\n   - Verify all expected endpoints are present\n   - Test version detection with actual API",
         "priority": "high",
         "dependencies": [
           1
         ],
         "status": "pending",
-        "subtasks": [
-          {
-            "id": 1,
-            "title": "Implement HTTP client setup for Swagger spec loader",
-            "description": "Create a robust HTTP client configuration for fetching Swagger specifications from remote endpoints",
-            "dependencies": [],
-            "details": "Implement a configurable HTTP client with appropriate timeouts, headers, and connection settings. Include support for different authentication methods (API keys, OAuth, etc.) and proxy configurations. The client should be able to handle different content types and compression formats.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 2,
-            "title": "Develop schema validation for Swagger specifications",
-            "description": "Implement validation logic to ensure fetched Swagger specs conform to OpenAPI standards",
-            "dependencies": [
-              1
-            ],
-            "details": "Create validators for both OpenAPI 2.0 (Swagger) and OpenAPI 3.x specifications. Implement structural validation against the official schemas. Add semantic validation for common issues. Generate detailed validation reports with specific error locations and suggestions for fixes.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 3,
-            "title": "Build version detection and compatibility layer",
-            "description": "Create a system to detect OpenAPI/Swagger version and normalize data across different versions",
-            "dependencies": [
-              1,
-              2
-            ],
-            "details": "Implement automatic detection of OpenAPI/Swagger version from the loaded specification. Create adapters to normalize data structures between OpenAPI 2.0 and 3.x versions. Provide warnings for deprecated features and suggestions for migration to newer standards.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 4,
-            "title": "Implement caching mechanism for Swagger specs",
-            "description": "Develop a multi-level caching system to optimize performance and reduce network requests",
-            "dependencies": [
-              1,
-              3
-            ],
-            "details": "Implement in-memory caching with configurable TTL. Add disk-based persistent caching with versioning. Support cache invalidation strategies based on ETag/Last-Modified headers. Include cache statistics and monitoring capabilities.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 5,
-            "title": "Create comprehensive error handling system",
-            "description": "Develop a robust error handling framework for the Swagger spec loader",
-            "dependencies": [
-              1,
-              2,
-              3
-            ],
-            "details": "Implement custom error classes for different failure scenarios (network errors, validation errors, parsing errors). Add detailed error messages with troubleshooting suggestions. Create a logging system with configurable verbosity levels. Implement fallback mechanisms for partial failures.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 6,
-            "title": "Implement retry logic with exponential backoff",
-            "description": "Build an advanced retry system for handling transient failures when loading Swagger specs",
-            "dependencies": [
-              1,
-              5
-            ],
-            "details": "Implement configurable retry policies with exponential backoff and jitter. Add circuit breaker pattern to prevent overwhelming failing services. Create retry event hooks for monitoring and logging. Support different retry strategies based on error types and HTTP status codes.",
-            "status": "pending",
-            "testStrategy": ""
-          }
-        ]
+        "subtasks": []
       },
       {
         "id": 3,
-        "title": "Develop TypeScript Client Generator",
-        "description": "Build a code generator that creates TypeScript interfaces and client classes from the Swagger specification",
-        "details": "Parse OpenAPI 3.0 spec to extract endpoints, parameters, and response schemas. Generate TypeScript interfaces for request/response types using tools like openapi-typescript or custom generator. Create individual client classes for each endpoint category (viagens, servidores, beneficios, etc.). Implement proper type safety and JSDoc comments",
-        "testStrategy": "Test generator with sample OpenAPI specs, verify generated types compile correctly, validate generated clients match expected interface patterns",
+        "title": "Implement Logging System",
+        "description": "Create a structured logging system that outputs JSON logs and captures API call details, errors, and performance metrics.",
+        "details": "1. Install logging dependencies:\n   - `npm install pino pino-pretty --save`\n2. Create a Logger class in `src/logging/logger.ts`:\n```typescript\nimport pino from 'pino';\n\nexport interface LoggerOptions {\n  level?: string;\n  prettyPrint?: boolean;\n}\n\nexport class Logger {\n  private logger: pino.Logger;\n\n  constructor(options: LoggerOptions = {}) {\n    this.logger = pino({\n      level: options.level || 'info',\n      ...(options.prettyPrint ? { transport: { target: 'pino-pretty' } } : {}),\n    });\n  }\n\n  info(message: string, data?: Record<string, any>): void {\n    this.logger.info(data || {}, message);\n  }\n\n  error(message: string, data?: Record<string, any>): void {\n    // Ensure API keys are not logged\n    if (data?.headers?.['chave-api-portal']) {\n      data.headers['chave-api-portal'] = '[REDACTED]';\n    }\n    this.logger.error(data || {}, message);\n  }\n\n  warn(message: string, data?: Record<string, any>): void {\n    this.logger.warn(data || {}, message);\n  }\n\n  debug(message: string, data?: Record<string, any>): void {\n    this.logger.debug(data || {}, message);\n  }\n\n  // Specialized method for API calls\n  logApiCall({\n    endpoint,\n    method,\n    requestPayload,\n    responseStatus,\n    responseTime,\n    error,\n  }: {\n    endpoint: string;\n    method: string;\n    requestPayload?: any;\n    responseStatus?: number;\n    responseTime?: number;\n    error?: Error;\n  }): void {\n    const logData = {\n      endpoint,\n      method,\n      requestPayload: this.sanitizePayload(requestPayload),\n      responseStatus,\n      responseTime,\n      error: error ? { message: error.message, stack: error.stack } : undefined,\n    };\n\n    if (error) {\n      this.error('API call failed', logData);\n    } else {\n      this.info('API call completed', logData);\n    }\n  }\n\n  private sanitizePayload(payload: any): any {\n    if (!payload) return payload;\n    \n    // Deep clone to avoid modifying the original\n    const sanitized = JSON.parse(JSON.stringify(payload));\n    \n    // Redact sensitive fields\n    if (sanitized.apiKey) sanitized.apiKey = '[REDACTED]';\n    if (sanitized['chave-api-portal']) sanitized['chave-api-portal'] = '[REDACTED]';\n    \n    return sanitized;\n  }\n}\n```\n3. Create a LoggerFactory to ensure consistent logger instances across the application\n4. Implement log rotation for production environments\n5. Add context tracking to correlate logs from the same request flow",
+        "testStrategy": "1. Unit tests:\n   - Test log level filtering\n   - Test sensitive data redaction\n   - Test JSON formatting\n   - Test API call logging format\n2. Integration tests:\n   - Verify logs are correctly written to files\n   - Test log rotation\n   - Verify performance impact is minimal",
         "priority": "high",
         "dependencies": [
-          2
+          1
         ],
         "status": "pending",
-        "subtasks": [
-          {
-            "id": 1,
-            "title": "OpenAPI Specification Parser Implementation",
-            "description": "Develop a robust parser to read and interpret OpenAPI specifications, extracting endpoints, parameters, request bodies, and response schemas.",
-            "dependencies": [],
-            "details": "Implement a parser that can handle OpenAPI 3.0+ specifications in both JSON and YAML formats. The parser should validate the spec structure, extract all API endpoints with their HTTP methods, path parameters, query parameters, headers, request bodies, and response schemas. Handle references ($ref) properly with dereferencing capabilities.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 2,
-            "title": "TypeScript Interface Generation",
-            "description": "Create a module that transforms OpenAPI schemas into TypeScript interfaces with proper typing and documentation.",
-            "dependencies": [
-              1
-            ],
-            "details": "Develop a schema-to-interface converter that handles all OpenAPI data types and maps them to appropriate TypeScript types. Support complex schemas including nested objects, arrays, enums, and nullable types. Generate proper JSDoc comments from schema descriptions. Handle inheritance and composition patterns in schemas.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 3,
-            "title": "API Client Class Structure Implementation",
-            "description": "Design and implement the core structure of the TypeScript client class with methods for each API endpoint.",
-            "dependencies": [
-              1,
-              2
-            ],
-            "details": "Create a template-based client class generator that produces methods for each API endpoint. Implement proper parameter handling, request formation, and response parsing. Structure the client to support different authentication methods (API key, OAuth, etc.) and configurable base URLs.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 4,
-            "title": "Type Safety and Error Handling Implementation",
-            "description": "Enhance the generated client with comprehensive type safety features and robust error handling mechanisms.",
-            "dependencies": [
-              2,
-              3
-            ],
-            "details": "Implement runtime type checking for request parameters and response data. Add proper error handling with typed error responses based on API specifications. Create custom error classes for different error scenarios (network errors, validation errors, API errors). Ensure all error messages are informative and actionable.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 5,
-            "title": "Documentation Generator Development",
-            "description": "Create a documentation generator that produces comprehensive TypeScript documentation for the generated client.",
-            "dependencies": [
-              2,
-              3
-            ],
-            "details": "Develop a documentation generator that creates markdown or HTML documentation from the generated TypeScript code. Include method signatures, parameter descriptions, return types, and example usage. Generate documentation for models/interfaces with property descriptions. Ensure documentation is linked to the original OpenAPI spec sections where applicable.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 6,
-            "title": "Output Validation and Testing Framework",
-            "description": "Implement a validation system to ensure the generated client correctly implements the OpenAPI specification and functions as expected.",
-            "dependencies": [
-              3,
-              4
-            ],
-            "details": "Create a testing framework that validates the generated client against the original OpenAPI spec. Implement automated tests that verify endpoint availability, parameter handling, and response parsing. Add integration test templates that can be used with the generated client. Include a validation report generator that highlights any discrepancies between the spec and implementation.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 7,
-            "title": "Main System Integration",
-            "description": "Integrate the TypeScript client generator with the main system, ensuring seamless operation and compatibility.",
-            "dependencies": [
-              4,
-              5,
-              6
-            ],
-            "details": "Create integration points between the client generator and the main system. Implement configuration options to customize the generation process. Add CLI support for generating clients from command line. Ensure the generator can be used as both a library and standalone tool. Document the integration process and provide examples for different use cases.",
-            "status": "pending",
-            "testStrategy": ""
-          }
-        ]
+        "subtasks": []
       },
       {
         "id": 4,
         "title": "Implement Authentication System",
-        "description": "Create centralized authentication handling with API Key support and environment variable management",
-        "details": "Create AuthManager class with API Key injection via HTTP headers, support global and per-request authentication, implement secure environment variable loading (.env support), add validation for API key format, prepare structure for future OAuth implementation, ensure API keys are never logged",
-        "testStrategy": "Unit tests for auth manager, test API key injection in headers, verify environment variable loading, test that sensitive data is not exposed in logs",
+        "description": "Create an authentication system that handles API key management and injection into requests, with support for global and per-call configurations.",
+        "details": "1. Create an Authentication class in `src/core/authentication.ts`:\n```typescript\nimport { Logger } from '../logging/logger';\n\nexport interface AuthConfig {\n  apiKey?: string;\n  headerName?: string;\n}\n\nexport class Authentication {\n  private apiKey: string | null = null;\n  private headerName: string;\n  private logger: Logger;\n\n  constructor(config: AuthConfig = {}, logger: Logger) {\n    this.apiKey = config.apiKey || null;\n    this.headerName = config.headerName || 'chave-api-portal';\n    this.logger = logger;\n  }\n\n  setApiKey(apiKey: string): void {\n    this.apiKey = apiKey;\n    this.logger.info('API key updated');\n  }\n\n  getAuthHeaders(overrideApiKey?: string): Record<string, string> {\n    const key = overrideApiKey || this.apiKey;\n    \n    if (!key) {\n      this.logger.warn('No API key provided for authentication');\n      return {};\n    }\n    \n    return { [this.headerName]: key };\n  }\n\n  hasApiKey(): boolean {\n    return !!this.apiKey;\n  }\n\n  validateApiKey(): boolean {\n    // Basic validation - could be expanded\n    return this.hasApiKey() && this.apiKey!.length > 0;\n  }\n}\n```\n2. Add support for loading API key from environment variables:\n```typescript\n// In constructor\nthis.apiKey = config.apiKey || process.env.PORTAL_TRANSPARENCIA_API_KEY || null;\n```\n3. Implement a method to test API key validity with a simple endpoint call\n4. Add support for future OAuth implementation (placeholder)\n5. Create utility functions to securely store and retrieve API keys",
+        "testStrategy": "1. Unit tests:\n   - Test header generation\n   - Test API key validation\n   - Test environment variable loading\n   - Test override functionality\n2. Integration tests:\n   - Test authentication against the actual API\n   - Verify error handling for invalid keys\n   - Test security of key storage",
         "priority": "high",
         "dependencies": [
-          1
+          1,
+          3
         ],
         "status": "pending",
-        "subtasks": [
-          {
-            "id": 1,
-            "title": "Create AuthManager class structure",
-            "description": "Design and implement the base AuthManager class with core functionality and interfaces",
-            "dependencies": [],
-            "details": "Create a new AuthManager class with proper constructor, initialization methods, and error handling. Define the class interface with methods for authentication, validation, and key management. Implement proper logging and error handling mechanisms.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 2,
-            "title": "Implement API key handling",
-            "description": "Develop methods for API key generation, validation, and management",
-            "dependencies": [
-              1
-            ],
-            "details": "Add functionality to generate secure API keys, validate incoming keys against stored values, implement key rotation mechanisms, and handle key expiration. Include methods for key revocation and regeneration with appropriate security measures.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 3,
-            "title": "Set up environment variable management",
-            "description": "Create secure methods to handle environment variables for authentication",
-            "dependencies": [
-              1
-            ],
-            "details": "Implement functionality to securely load and validate environment variables related to authentication. Include fallback mechanisms, validation of required variables, and secure storage of sensitive information. Add documentation for required environment setup.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 4,
-            "title": "Implement security validation features",
-            "description": "Add security validation mechanisms including rate limiting and request validation",
-            "dependencies": [
-              1,
-              2
-            ],
-            "details": "Develop methods for request validation, implement rate limiting to prevent brute force attacks, add IP-based restrictions if needed, and create audit logging for authentication attempts. Include mechanisms to detect and prevent common attack patterns.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 5,
-            "title": "Integrate with HTTP request handling",
-            "description": "Connect AuthManager with HTTP request pipeline for seamless authentication",
-            "dependencies": [
-              1,
-              2,
-              4
-            ],
-            "details": "Create middleware or interceptors to validate authentication for incoming HTTP requests. Implement proper header parsing, error response formatting, and integration with the existing request handling pipeline. Add documentation and usage examples for the integration.",
-            "status": "pending",
-            "testStrategy": ""
-          }
-        ]
+        "subtasks": []
       },
       {
         "id": 5,
-        "title": "Build Core MCP Orchestrator Class",
-        "description": "Develop the main Multi-step Call Planner class that coordinates all API interactions and client management",
-        "details": "Create main MCP class that initializes all endpoint clients, implement method chaining capabilities, add request orchestration logic, integrate authentication system, provide unified interface for all Portal da Transparência endpoints, implement proper error propagation and handling",
-        "testStrategy": "Integration tests for MCP initialization, test client coordination, verify method chaining works correctly, test error handling across different scenarios",
+        "title": "Implement Error Handling System",
+        "description": "Create a comprehensive error handling system that categorizes API errors, provides meaningful messages, and handles rate limiting errors specifically.",
+        "details": "1. Create custom error classes in `src/errors/api-errors.ts`:\n```typescript\nexport class ApiError extends Error {\n  statusCode: number;\n  endpoint: string;\n  requestPayload?: any;\n  responseBody?: any;\n\n  constructor(message: string, statusCode: number, endpoint: string, requestPayload?: any, responseBody?: any) {\n    super(message);\n    this.name = 'ApiError';\n    this.statusCode = statusCode;\n    this.endpoint = endpoint;\n    this.requestPayload = requestPayload;\n    this.responseBody = responseBody;\n  }\n\n  isClientError(): boolean {\n    return this.statusCode >= 400 && this.statusCode < 500;\n  }\n\n  isServerError(): boolean {\n    return this.statusCode >= 500;\n  }\n}\n\nexport class RateLimitError extends ApiError {\n  retryAfter?: number;\n  currentLimit: number;\n  \n  constructor(message: string, endpoint: string, currentLimit: number, retryAfter?: number) {\n    super(message, 429, endpoint);\n    this.name = 'RateLimitError';\n    this.currentLimit = currentLimit;\n    this.retryAfter = retryAfter;\n  }\n}\n\nexport class AuthenticationError extends ApiError {\n  constructor(message: string, endpoint: string) {\n    super(message, 401, endpoint);\n    this.name = 'AuthenticationError';\n  }\n}\n\nexport class NotFoundError extends ApiError {\n  constructor(message: string, endpoint: string) {\n    super(message, 404, endpoint);\n    this.name = 'NotFoundError';\n  }\n}\n```\n2. Create an ErrorHandler class in `src/errors/error-handler.ts`:\n```typescript\nimport { Logger } from '../logging/logger';\nimport { ApiError, RateLimitError, AuthenticationError, NotFoundError } from './api-errors';\n\nexport class ErrorHandler {\n  private logger: Logger;\n\n  constructor(logger: Logger) {\n    this.logger = logger;\n  }\n\n  handleApiError(error: any, endpoint: string, requestPayload?: any): Error {\n    if (error.response) {\n      const { status, data } = error.response;\n      \n      // Handle rate limiting errors\n      if (status === 429) {\n        const retryAfter = parseInt(error.response.headers['retry-after'] || '60', 10);\n        const message = 'Rate limit exceeded for Portal da Transparência API';\n        const rateLimitError = new RateLimitError(message, endpoint, 90, retryAfter);\n        \n        this.logger.warn(message, {\n          endpoint,\n          status,\n          retryAfter,\n          responseData: data\n        });\n        \n        return rateLimitError;\n      }\n      \n      // Handle authentication errors\n      if (status === 401) {\n        const message = 'Authentication failed for Portal da Transparência API';\n        this.logger.error(message, { endpoint, status });\n        return new AuthenticationError(message, endpoint);\n      }\n      \n      // Handle not found errors\n      if (status === 404) {\n        const message = 'Resource not found in Portal da Transparência API';\n        this.logger.error(message, { endpoint, status });\n        return new NotFoundError(message, endpoint);\n      }\n      \n      // Generic API error\n      const message = `API error: ${data?.message || 'Unknown error'}`;\n      this.logger.error(message, {\n        endpoint,\n        status,\n        requestPayload,\n        responseData: data\n      });\n      \n      return new ApiError(message, status, endpoint, requestPayload, data);\n    }\n    \n    // Network or other errors\n    const message = `Request failed: ${error.message}`;\n    this.logger.error(message, { endpoint, error: error.message });\n    return new Error(message);\n  }\n\n  isRateLimitError(error: any): error is RateLimitError {\n    return error instanceof RateLimitError;\n  }\n}\n```\n3. Implement rate limit detection from error messages\n4. Add retry logic for transient errors\n5. Create user-friendly error messages for common error scenarios",
+        "testStrategy": "1. Unit tests:\n   - Test error classification\n   - Test rate limit detection\n   - Test error message formatting\n   - Test retry logic\n2. Integration tests:\n   - Test with actual API errors\n   - Verify rate limit detection works with real API responses\n   - Test error handling in full request flow",
         "priority": "high",
         "dependencies": [
-          3,
-          4
+          1,
+          3
         ],
         "status": "pending",
-        "subtasks": [
-          {
-            "id": 1,
-            "title": "Design MCP Orchestrator Class Structure",
-            "description": "Define the overall class structure, properties, and interfaces for the MCP Orchestrator",
-            "dependencies": [],
-            "details": "Create a comprehensive class diagram including all necessary properties, methods, and relationships. Define clear interfaces for interaction with other components. Include documentation for each public method and property. Consider implementing the Singleton pattern if appropriate for the orchestrator.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 2,
-            "title": "Implement Client Initialization Logic",
-            "description": "Develop the initialization process for API clients and required dependencies",
-            "dependencies": [
-              1
-            ],
-            "details": "Create factory methods for initializing different client types. Implement configuration loading from environment variables or config files. Add validation for required configuration parameters. Include connection pooling and retry logic for resilience.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 3,
-            "title": "Develop Method Chaining Implementation",
-            "description": "Create a fluent interface for the orchestrator allowing method chaining for request building",
-            "dependencies": [
-              1
-            ],
-            "details": "Implement builder pattern for request construction. Ensure each method returns the instance (this) to enable chaining. Add parameter validation within each chainable method. Include type definitions/interfaces for better IDE support and documentation.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 4,
-            "title": "Build Request Orchestration Logic",
-            "description": "Implement the core orchestration logic to coordinate requests across different services",
-            "dependencies": [
-              2,
-              3
-            ],
-            "details": "Create request queue management system. Implement parallel request handling where appropriate. Add request prioritization capabilities. Develop request transformation logic between different service formats. Include comprehensive logging of request flow.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 5,
-            "title": "Integrate Authentication System",
-            "description": "Connect the orchestrator with the authentication mechanisms required for the Portal da Transparência",
-            "dependencies": [
-              2,
-              4
-            ],
-            "details": "Implement token acquisition and refresh logic. Add secure token storage mechanism. Create interceptors for automatically adding authentication headers to requests. Develop session management capabilities. Include authentication failure handling and recovery.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 6,
-            "title": "Implement Error Handling System",
-            "description": "Develop comprehensive error handling, reporting, and recovery mechanisms",
-            "dependencies": [
-              4,
-              5
-            ],
-            "details": "Create custom error classes for different failure scenarios. Implement graceful degradation strategies. Add detailed error logging with appropriate context. Develop retry policies for transient failures. Create user-friendly error messages for API consumers.",
-            "status": "pending",
-            "testStrategy": ""
-          }
-        ]
+        "subtasks": []
       },
       {
         "id": 6,
-        "title": "Implement Rate Limiting Detection and Alerts",
-        "description": "Create rate limiting monitoring system that tracks API usage and provides warnings based on Portal da Transparência limits",
-        "details": "Implement rate counter with time-based windows (90/min 06:00-23:59, 300/min 00:00-05:59), create alert system for 80% threshold warnings, detect rate limit errors from API responses (429 status codes), implement exponential backoff for rate-limited requests, provide user-friendly rate limit status reporting",
-        "testStrategy": "Unit tests for rate counting logic, test time window calculations, mock rate limit responses to verify detection, test alert triggering at 80% threshold",
+        "title": "Implement Rate Limiting Monitor",
+        "description": "Create a rate limiting monitor that tracks API usage, provides alerts when approaching limits, and helps manage request timing to avoid exceeding limits.",
+        "details": "1. Create a RateLimiter class in `src/core/rate-limiter.ts`:\n```typescript\nimport { Logger } from '../logging/logger';\n\ninterface RateLimitConfig {\n  dayTimeLimit?: number;  // 6:00-23:59 limit\n  nightTimeLimit?: number; // 00:00-5:59 limit\n  alertThreshold?: number; // Percentage threshold for alerts\n}\n\nexport class RateLimiter {\n  private dayTimeLimit: number;\n  private nightTimeLimit: number;\n  private alertThreshold: number;\n  private requestCounts: Map<string, number> = new Map();\n  private logger: Logger;\n\n  constructor(config: RateLimitConfig = {}, logger: Logger) {\n    this.dayTimeLimit = config.dayTimeLimit || 90;\n    this.nightTimeLimit = config.nightTimeLimit || 300;\n    this.alertThreshold = config.alertThreshold || 0.8; // 80%\n    this.logger = logger;\n    \n    // Reset counters every minute\n    setInterval(() => this.resetCounters(), 60000);\n  }\n\n  private getCurrentLimit(): number {\n    const hour = new Date().getHours();\n    return (hour >= 6 && hour < 24) ? this.dayTimeLimit : this.nightTimeLimit;\n  }\n\n  private getMinuteKey(): string {\n    const now = new Date();\n    return `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}-${now.getHours()}-${now.getMinutes()}`;\n  }\n\n  private resetCounters(): void {\n    this.requestCounts.clear();\n    this.logger.debug('Rate limit counters reset');\n  }\n\n  trackRequest(): void {\n    const key = this.getMinuteKey();\n    const currentCount = this.requestCounts.get(key) || 0;\n    this.requestCounts.set(key, currentCount + 1);\n    \n    const currentLimit = this.getCurrentLimit();\n    const usagePercentage = (currentCount + 1) / currentLimit;\n    \n    if (usagePercentage >= this.alertThreshold) {\n      this.logger.warn('Approaching rate limit', {\n        currentCount: currentCount + 1,\n        limit: currentLimit,\n        usagePercentage: usagePercentage.toFixed(2),\n        timeWindow: this.getMinuteKey()\n      });\n    }\n  }\n\n  getCurrentUsage(): { count: number; limit: number; percentage: number } {\n    const key = this.getMinuteKey();\n    const currentCount = this.requestCounts.get(key) || 0;\n    const currentLimit = this.getCurrentLimit();\n    \n    return {\n      count: currentCount,\n      limit: currentLimit,\n      percentage: currentCount / currentLimit\n    };\n  }\n\n  shouldThrottle(): boolean {\n    const { count, limit } = this.getCurrentUsage();\n    return count >= limit;\n  }\n}\n```\n2. Add event emitter for rate limit alerts\n3. Implement adaptive throttling based on time of day\n4. Add support for custom alert callbacks\n5. Create utility to estimate remaining requests in current window",
+        "testStrategy": "1. Unit tests:\n   - Test limit calculation based on time of day\n   - Test counter incrementation\n   - Test alert threshold detection\n   - Test counter reset functionality\n2. Integration tests:\n   - Test with simulated high-frequency requests\n   - Verify alerts are triggered at appropriate thresholds\n   - Test throttling behavior",
         "priority": "medium",
         "dependencies": [
+          1,
+          3,
           5
         ],
         "status": "pending",
-        "subtasks": [
-          {
-            "id": 1,
-            "title": "Implement Counter with Time Windows",
-            "description": "Create a counter system that tracks API requests with different time windows for day (90/min) and night (300/min) operations.",
-            "dependencies": [],
-            "details": "Develop a counter mechanism that accurately tracks request rates with time-based windows. Include functionality to distinguish between daytime (8:00-20:00) and nighttime (20:00-8:00) periods with their respective rate limits. Implement efficient data structures to store and update request counts with minimal performance impact.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 2,
-            "title": "Develop Threshold Alert System",
-            "description": "Create an alert system that notifies when request rates approach configured thresholds.",
-            "dependencies": [
-              1
-            ],
-            "details": "Design and implement an alert system that monitors request rates and triggers notifications when approaching defined thresholds (e.g., 80% of limit). Include configurable alert levels and notification methods (logs, email, dashboard). Ensure alerts include relevant context such as endpoint, client ID, and current usage statistics.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 3,
-            "title": "Implement Rate Limit Error Detection",
-            "description": "Build a system to detect and properly handle rate limit violations with appropriate error responses.",
-            "dependencies": [
-              1
-            ],
-            "details": "Develop logic to detect when rate limits are exceeded and generate standardized error responses (HTTP 429 Too Many Requests). Include informative headers such as X-RateLimit-Limit, X-RateLimit-Remaining, and Retry-After. Ensure the system logs detailed information about rate limit violations for analysis.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 4,
-            "title": "Create Backoff Strategy Implementation",
-            "description": "Implement exponential backoff and retry mechanisms for handling rate limit errors.",
-            "dependencies": [
-              3
-            ],
-            "details": "Design and implement client-side backoff strategies including exponential backoff with jitter. Create helper utilities that applications can use to automatically handle rate limiting with appropriate waiting periods. Include configurable retry limits and timeout parameters to prevent excessive retries.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 5,
-            "title": "Develop Status Reporting Interface",
-            "description": "Create an interface for monitoring and reporting on rate limit status across the system.",
-            "dependencies": [
-              1,
-              2,
-              3
-            ],
-            "details": "Build a comprehensive reporting interface that provides real-time and historical data on rate limit usage. Include visualizations of request patterns, rate limit violations, and system performance. Implement filtering capabilities by time period, endpoint, and client. Ensure the interface can be integrated with existing monitoring systems.",
-            "status": "pending",
-            "testStrategy": ""
-          }
-        ]
+        "subtasks": []
       },
       {
         "id": 7,
-        "title": "Develop Structured Logging System",
-        "description": "Create comprehensive logging system with JSON structured output for monitoring and debugging",
-        "details": "Implement Logger class with JSON output format, log all API calls with endpoint, payload (sanitized), response time, status codes, create different log levels (debug, info, warn, error), implement log rotation and size management, ensure sensitive data (API keys) are never logged, add correlation IDs for request tracking",
-        "testStrategy": "Unit tests for logger functionality, verify JSON format output, test log level filtering, ensure sensitive data masking works correctly",
-        "priority": "medium",
+        "title": "Implement API Client Generator",
+        "description": "Create a module that automatically generates TypeScript client classes for each endpoint in the Portal da Transparência API based on the Swagger specification.",
+        "details": "1. Install required dependencies:\n   - `npm install openapi-typescript-codegen handlebars --save-dev`\n2. Create a ClientGenerator class in `src/core/client-generator.ts`:\n```typescript\nimport { OpenAPI } from 'openapi-types';\nimport * as fs from 'fs';\nimport * as path from 'path';\nimport Handlebars from 'handlebars';\nimport { Logger } from '../logging/logger';\n\nexport class ClientGenerator {\n  private spec: OpenAPI.Document;\n  private outputDir: string;\n  private logger: Logger;\n\n  constructor(spec: OpenAPI.Document, outputDir: string = './src/clients', logger: Logger) {\n    this.spec = spec;\n    this.outputDir = outputDir;\n    this.logger = logger;\n  }\n\n  async generateClients(): Promise<string[]> {\n    const generatedFiles: string[] = [];\n    \n    try {\n      // Ensure output directory exists\n      if (!fs.existsSync(this.outputDir)) {\n        fs.mkdirSync(this.outputDir, { recursive: true });\n      }\n      \n      // Load template\n      const templatePath = path.resolve(__dirname, '../templates/client.hbs');\n      const templateSource = fs.readFileSync(templatePath, 'utf8');\n      const template = Handlebars.compile(templateSource);\n      \n      // Group endpoints by tag\n      const endpointsByTag = this.groupEndpointsByTag();\n      \n      // Generate client for each tag\n      for (const [tag, endpoints] of Object.entries(endpointsByTag)) {\n        const clientName = this.formatClientName(tag);\n        const fileName = `${this.kebabCase(tag)}.ts`;\n        const filePath = path.join(this.outputDir, fileName);\n        \n        const clientCode = template({\n          clientName,\n          endpoints,\n          imports: this.generateImports(endpoints),\n          interfaces: this.generateInterfaces(endpoints)\n        });\n        \n        fs.writeFileSync(filePath, clientCode);\n        generatedFiles.push(filePath);\n        \n        this.logger.info(`Generated client for ${tag}`, { filePath });\n      }\n      \n      // Generate index file\n      this.generateIndexFile(Object.keys(endpointsByTag));\n      \n      return generatedFiles;\n    } catch (error) {\n      this.logger.error('Failed to generate clients', { error });\n      throw new Error(`Client generation failed: ${error.message}`);\n    }\n  }\n\n  private groupEndpointsByTag(): Record<string, any[]> {\n    const endpointsByTag: Record<string, any[]> = {};\n    \n    // Process paths and operations\n    for (const [path, pathItem] of Object.entries(this.spec.paths)) {\n      for (const [method, operation] of Object.entries(pathItem)) {\n        if (!operation) continue;\n        \n        const tag = operation.tags?.[0] || 'Default';\n        \n        if (!endpointsByTag[tag]) {\n          endpointsByTag[tag] = [];\n        }\n        \n        endpointsByTag[tag].push({\n          path,\n          method: method.toUpperCase(),\n          operationId: operation.operationId || `${method}${this.formatClientName(path)}`,\n          summary: operation.summary,\n          description: operation.description,\n          parameters: operation.parameters,\n          requestBody: operation.requestBody,\n          responses: operation.responses\n        });\n      }\n    }\n    \n    return endpointsByTag;\n  }\n\n  private formatClientName(str: string): string {\n    return str\n      .split(/[-_\\s/{}]/)\n      .map(part => part.charAt(0).toUpperCase() + part.slice(1))\n      .join('')\n      .replace(/[^a-zA-Z0-9]/g, '')\n      + 'Client';\n  }\n\n  private kebabCase(str: string): string {\n    return str\n      .replace(/([a-z])([A-Z])/g, '$1-$2')\n      .replace(/[\\s_]+/g, '-')\n      .toLowerCase();\n  }\n\n  private generateImports(endpoints: any[]): string {\n    // Generate necessary imports\n    return '';\n  }\n\n  private generateInterfaces(endpoints: any[]): string {\n    // Generate TypeScript interfaces for request/response\n    return '';\n  }\n\n  private generateIndexFile(tags: string[]): void {\n    const indexPath = path.join(this.outputDir, 'index.ts');\n    const exports = tags.map(tag => {\n      const fileName = this.kebabCase(tag);\n      const clientName = this.formatClientName(tag);\n      return `export { ${clientName} } from './${fileName}';`;\n    }).join('\\n');\n    \n    fs.writeFileSync(indexPath, exports);\n    this.logger.info('Generated index file', { path: indexPath });\n  }\n}\n```\n3. Create Handlebars templates for client generation\n4. Implement type generation for request/response objects\n5. Add support for path parameters, query parameters, and request bodies\n6. Generate proper TypeScript documentation",
+        "testStrategy": "1. Unit tests:\n   - Test client name formatting\n   - Test endpoint grouping\n   - Test template rendering\n   - Test type generation\n2. Integration tests:\n   - Test with actual Swagger spec\n   - Verify generated clients can make API calls\n   - Test type safety of generated code",
+        "priority": "high",
         "dependencies": [
-          4
+          1,
+          2
         ],
         "status": "pending",
-        "subtasks": [
-          {
-            "id": 1,
-            "title": "Create Logger Class Structure",
-            "description": "Implement the base Logger class with core functionality and initialization methods",
-            "dependencies": [],
-            "details": "Design and implement the Logger class with constructor, configuration options, and basic logging methods. Include initialization parameters for service name, environment, and default log level. Implement singleton pattern if appropriate for the application context.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 2,
-            "title": "Implement JSON Formatting",
-            "description": "Create structured JSON output format for all log entries",
-            "dependencies": [
-              1
-            ],
-            "details": "Develop a formatter that outputs logs in JSON format with standardized fields including timestamp, log level, message, service name, and environment. Ensure proper handling of nested objects and arrays. Add support for additional context fields that can be passed when logging.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 3,
-            "title": "Add Log Level Management",
-            "description": "Implement different log levels and filtering capabilities",
-            "dependencies": [
-              1
-            ],
-            "details": "Create methods for different log levels (debug, info, warn, error, fatal). Implement runtime log level configuration to filter logs based on minimum severity level. Add ability to change log level dynamically during application execution.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 4,
-            "title": "Implement Sensitive Data Sanitization",
-            "description": "Create mechanism to automatically sanitize sensitive information in logs",
-            "dependencies": [
-              2
-            ],
-            "details": "Develop pattern recognition for sensitive data like passwords, tokens, and personal information. Implement sanitization methods that replace sensitive data with placeholders before logging. Create configuration options to specify custom patterns for sensitive data detection.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 5,
-            "title": "Add Correlation ID Tracking",
-            "description": "Implement system to track and include correlation IDs in all logs",
-            "dependencies": [
-              2
-            ],
-            "details": "Create methods to generate, store, and retrieve correlation IDs. Implement middleware or interceptors to automatically include correlation IDs in all logs. Add support for propagating correlation IDs across service boundaries and asynchronous operations.",
-            "status": "pending",
-            "testStrategy": ""
-          }
-        ]
+        "subtasks": []
       },
       {
         "id": 8,
-        "title": "Implement Error Handling and Categorization",
-        "description": "Build comprehensive error handling system that categorizes and manages different types of API errors",
-        "details": "Create custom error classes for different error types (AuthenticationError, RateLimitError, ValidationError, NetworkError), implement error categorization for 4xx vs 5xx responses, add retry logic for transient errors, create user-friendly error messages, implement error recovery strategies where possible",
-        "testStrategy": "Unit tests for each error type, test error categorization logic, verify retry mechanisms work correctly, test error message formatting",
-        "priority": "medium",
+        "title": "Implement HTTP Client with Interceptors",
+        "description": "Create a base HTTP client with interceptors for authentication, error handling, logging, and rate limiting.",
+        "details": "1. Install required dependencies:\n   - `npm install axios axios-retry --save`\n2. Create a HttpClient class in `src/core/http-client.ts`:\n```typescript\nimport axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';\nimport axiosRetry from 'axios-retry';\nimport { Authentication } from './authentication';\nimport { ErrorHandler } from '../errors/error-handler';\nimport { Logger } from '../logging/logger';\nimport { RateLimiter } from './rate-limiter';\n\nexport interface HttpClientConfig {\n  baseURL?: string;\n  timeout?: number;\n  retries?: number;\n}\n\nexport class HttpClient {\n  private client: AxiosInstance;\n  private auth: Authentication;\n  private errorHandler: ErrorHandler;\n  private logger: Logger;\n  private rateLimiter: RateLimiter;\n\n  constructor(\n    auth: Authentication,\n    errorHandler: ErrorHandler,\n    logger: Logger,\n    rateLimiter: RateLimiter,\n    config: HttpClientConfig = {}\n  ) {\n    this.auth = auth;\n    this.errorHandler = errorHandler;\n    this.logger = logger;\n    this.rateLimiter = rateLimiter;\n    \n    this.client = axios.create({\n      baseURL: config.baseURL || 'https://api.portaldatransparencia.gov.br',\n      timeout: config.timeout || 30000,\n    });\n    \n    // Configure retries\n    axiosRetry(this.client, {\n      retries: config.retries || 3,\n      retryDelay: axiosRetry.exponentialDelay,\n      retryCondition: (error) => {\n        // Only retry on network errors and 5xx responses\n        return axiosRetry.isNetworkOrIdempotentRequestError(error) ||\n          (error.response?.status >= 500 && error.response?.status < 600);\n      }\n    });\n    \n    this.setupInterceptors();\n  }\n\n  private setupInterceptors(): void {\n    // Request interceptor\n    this.client.interceptors.request.use(\n      (config) => {\n        const startTime = Date.now();\n        config.metadata = { startTime };\n        \n        // Add authentication headers\n        const authHeaders = this.auth.getAuthHeaders();\n        config.headers = { ...config.headers, ...authHeaders };\n        \n        // Track request for rate limiting\n        this.rateLimiter.trackRequest();\n        \n        return config;\n      },\n      (error) => {\n        this.logger.error('Request error', { error: error.message });\n        return Promise.reject(error);\n      }\n    );\n    \n    // Response interceptor\n    this.client.interceptors.response.use(\n      (response) => {\n        const config = response.config as AxiosRequestConfig & { metadata?: any };\n        const duration = Date.now() - (config.metadata?.startTime || 0);\n        \n        this.logger.logApiCall({\n          endpoint: `${config.method?.toUpperCase()} ${config.url}`,\n          method: config.method?.toUpperCase() || 'UNKNOWN',\n          requestPayload: config.data,\n          responseStatus: response.status,\n          responseTime: duration\n        });\n        \n        return response;\n      },\n      (error) => {\n        const config = error.config as AxiosRequestConfig & { metadata?: any };\n        const duration = Date.now() - (config.metadata?.startTime || 0);\n        \n        this.logger.logApiCall({\n          endpoint: `${config.method?.toUpperCase()} ${config.url}`,\n          method: config.method?.toUpperCase() || 'UNKNOWN',\n          requestPayload: config.data,\n          responseStatus: error.response?.status,\n          responseTime: duration,\n          error\n        });\n        \n        // Transform error\n        const transformedError = this.errorHandler.handleApiError(\n          error,\n          `${config.method?.toUpperCase()} ${config.url}`,\n          config.data\n        );\n        \n        return Promise.reject(transformedError);\n      }\n    );\n  }\n\n  async request<T>(config: AxiosRequestConfig): Promise<T> {\n    try {\n      const response = await this.client.request<T>(config);\n      return response.data;\n    } catch (error) {\n      throw error; // Already transformed by interceptor\n    }\n  }\n\n  async get<T>(url: string, config?: AxiosRequestConfig): Promise<T> {\n    return this.request<T>({ ...config, method: 'GET', url });\n  }\n\n  async post<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {\n    return this.request<T>({ ...config, method: 'POST', url, data });\n  }\n\n  async put<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {\n    return this.request<T>({ ...config, method: 'PUT', url, data });\n  }\n\n  async delete<T>(url: string, config?: AxiosRequestConfig): Promise<T> {\n    return this.request<T>({ ...config, method: 'DELETE', url });\n  }\n}\n```\n3. Implement request/response timing for performance monitoring\n4. Add circuit breaker pattern for failing endpoints\n5. Implement request queuing for rate limiting\n6. Add support for request cancellation",
+        "testStrategy": "1. Unit tests:\n   - Test interceptor functionality\n   - Test authentication header injection\n   - Test error transformation\n   - Test retry logic\n2. Integration tests:\n   - Test with mock API endpoints\n   - Verify rate limiting behavior\n   - Test error handling with various response codes\n   - Measure performance impact of interceptors",
+        "priority": "high",
         "dependencies": [
-          6,
-          7
+          1,
+          3,
+          4,
+          5,
+          6
         ],
         "status": "pending",
-        "subtasks": [
-          {
-            "id": 1,
-            "title": "Design Custom Error Class Hierarchy",
-            "description": "Create a comprehensive error class hierarchy for the Transparency Portal that extends from base Error class",
-            "dependencies": [],
-            "details": "Design and implement base error classes and specialized subclasses that categorize different types of errors (e.g., NetworkError, ValidationError, AuthenticationError). Include properties for error codes, timestamps, and severity levels. Ensure proper inheritance relationships and consistent error structure.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 2,
-            "title": "Implement Error Categorization Logic",
-            "description": "Develop logic to categorize and classify errors based on their source, type, and severity",
-            "dependencies": [
-              1
-            ],
-            "details": "Create mechanisms to identify error sources (API, database, user input), determine error types, and assign appropriate severity levels. Implement factory methods or services that generate the right error instances based on different scenarios. Include logging integration for error tracking.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 3,
-            "title": "Develop Retry Mechanism Implementation",
-            "description": "Create configurable retry mechanisms for handling transient failures in the Transparency Portal",
-            "dependencies": [
-              1,
-              2
-            ],
-            "details": "Implement exponential backoff algorithms, configurable retry counts, and timeout handling. Create decorators or higher-order functions that can wrap API calls or database operations to automatically retry on specific error types. Include circuit breaker patterns to prevent cascading failures.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 4,
-            "title": "Create User-Friendly Message Formatting System",
-            "description": "Develop a system to transform technical error details into user-friendly messages",
-            "dependencies": [
-              1,
-              2
-            ],
-            "details": "Implement message templates for different error types, localization support for multiple languages, and context-aware message generation. Create a centralized message repository with placeholders for dynamic content. Ensure messages are helpful without exposing sensitive system details.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 5,
-            "title": "Implement Recovery Strategy System",
-            "description": "Design and implement recovery strategies for different error scenarios in the Transparency Portal",
-            "dependencies": [
-              1,
-              2,
-              3
-            ],
-            "details": "Create fallback mechanisms for critical operations, data recovery procedures for corrupted states, and graceful degradation patterns. Implement strategy pattern to select appropriate recovery methods based on error context. Include monitoring hooks to track recovery success rates and performance impacts.",
-            "status": "pending",
-            "testStrategy": ""
-          }
-        ]
+        "subtasks": []
       },
       {
         "id": 9,
-        "title": "Create Individual Endpoint Client Classes",
-        "description": "Implement specific client classes for each major Portal da Transparência endpoint category",
-        "details": "Create client classes for: ViagensClient, ServidoresClient, BeneficiosClient, ImoveisFuncionaisClient, RenunciasFiscaisClient, LicitacoesClient, NotasFiscaisClient, DespesasPublicasClient, EmendasClient, ConveniosClient, ContratosClient, SancoesClient, PessoasClient, OrgaosClient, CoronavirusClient. Each client should have typed methods matching the API endpoints",
-        "testStrategy": "Unit tests for each client class, test method signatures match API spec, verify request/response type safety, test error handling in each client",
+        "title": "Implement Multi-step Call Planner Core",
+        "description": "Create the core MCP functionality that allows chaining multiple API calls in a sequence with dependency management.",
+        "details": "1. Create interfaces for the MCP in `src/types/mcp.ts`:\n```typescript\nexport interface MCPStep {\n  id: string;\n  name: string;\n  execute: (context: MCPContext) => Promise<any>;\n  dependsOn?: string[];\n  onSuccess?: (result: any, context: MCPContext) => void;\n  onError?: (error: Error, context: MCPContext) => void;\n  retryConfig?: {\n    maxRetries: number;\n    retryDelay: number;\n  };\n}\n\nexport interface MCPContext {\n  results: Record<string, any>;\n  errors: Record<string, Error>;\n  metadata: Record<string, any>;\n}\n\nexport interface MCPConfig {\n  continueOnError?: boolean;\n  timeout?: number;\n  concurrency?: number;\n}\n```\n2. Create the MCP class in `src/core/mcp.ts`:\n```typescript\nimport { MCPStep, MCPContext, MCPConfig } from '../types/mcp';\nimport { Logger } from '../logging/logger';\n\nexport class MCP {\n  private steps: MCPStep[] = [];\n  private context: MCPContext;\n  private config: MCPConfig;\n  private logger: Logger;\n\n  constructor(config: MCPConfig = {}, logger: Logger) {\n    this.config = {\n      continueOnError: config.continueOnError ?? false,\n      timeout: config.timeout ?? 300000, // 5 minutes\n      concurrency: config.concurrency ?? 1, // Sequential by default\n    };\n    \n    this.context = {\n      results: {},\n      errors: {},\n      metadata: {},\n    };\n    \n    this.logger = logger;\n  }\n\n  addStep(step: MCPStep): MCP {\n    this.steps.push(step);\n    return this;\n  }\n\n  addSteps(steps: MCPStep[]): MCP {\n    this.steps.push(...steps);\n    return this;\n  }\n\n  setContext(context: Partial<MCPContext>): MCP {\n    this.context = { ...this.context, ...context };\n    return this;\n  }\n\n  private validateSteps(): void {\n    // Check for duplicate IDs\n    const ids = this.steps.map(step => step.id);\n    const uniqueIds = new Set(ids);\n    \n    if (ids.length !== uniqueIds.size) {\n      throw new Error('Duplicate step IDs found');\n    }\n    \n    // Check for circular dependencies\n    for (const step of this.steps) {\n      if (!step.dependsOn) continue;\n      \n      const visited = new Set<string>();\n      const checkCircular = (stepId: string, path: string[] = []): boolean => {\n        if (path.includes(stepId)) {\n          this.logger.error('Circular dependency detected', { path: [...path, stepId] });\n          return true;\n        }\n        \n        if (visited.has(stepId)) return false;\n        visited.add(stepId);\n        \n        const step = this.steps.find(s => s.id === stepId);\n        if (!step || !step.dependsOn) return false;\n        \n        for (const depId of step.dependsOn) {\n          if (checkCircular(depId, [...path, stepId])) {\n            return true;\n          }\n        }\n        \n        return false;\n      };\n      \n      for (const depId of step.dependsOn) {\n        if (checkCircular(depId)) {\n          throw new Error(`Circular dependency detected: ${depId}`);\n        }\n      }\n    }\n  }\n\n  private canExecuteStep(step: MCPStep): boolean {\n    if (!step.dependsOn || step.dependsOn.length === 0) {\n      return true;\n    }\n    \n    // Check if all dependencies have completed successfully\n    return step.dependsOn.every(depId => {\n      const hasResult = depId in this.context.results;\n      const hasError = depId in this.context.errors;\n      \n      return hasResult && (!hasError || this.config.continueOnError);\n    });\n  }\n\n  async execute(): Promise<MCPContext> {\n    this.validateSteps();\n    \n    // Sort steps based on dependencies\n    const executionOrder = this.topologicalSort();\n    \n    this.logger.info('Starting MCP execution', {\n      stepCount: this.steps.length,\n      executionOrder: executionOrder.map(step => step.id)\n    });\n    \n    const startTime = Date.now();\n    \n    try {\n      if (this.config.concurrency === 1) {\n        // Sequential execution\n        for (const step of executionOrder) {\n          await this.executeStep(step);\n        }\n      } else {\n        // Parallel execution with dependency respect\n        let remainingSteps = [...executionOrder];\n        \n        while (remainingSteps.length > 0) {\n          const executableSteps = remainingSteps.filter(step => this.canExecuteStep(step));\n          \n          if (executableSteps.length === 0) {\n            // Deadlock or all remaining steps have failed dependencies\n            break;\n          }\n          \n          // Execute steps in parallel up to concurrency limit\n          const batch = executableSteps.slice(0, this.config.concurrency);\n          await Promise.all(batch.map(step => this.executeStep(step)));\n          \n          // Remove executed steps\n          remainingSteps = remainingSteps.filter(step => \n            !batch.some(s => s.id === step.id)\n          );\n        }\n      }\n    } catch (error) {\n      this.logger.error('MCP execution failed', { error });\n      throw error;\n    } finally {\n      const duration = Date.now() - startTime;\n      this.context.metadata.executionTime = duration;\n      \n      this.logger.info('MCP execution completed', {\n        duration,\n        successCount: Object.keys(this.context.results).length,\n        errorCount: Object.keys(this.context.errors).length\n      });\n    }\n    \n    return this.context;\n  }\n\n  private async executeStep(step: MCPStep): Promise<void> {\n    if (!this.canExecuteStep(step)) {\n      this.logger.warn(`Skipping step ${step.id} due to failed dependencies`);\n      return;\n    }\n    \n    this.logger.info(`Executing step: ${step.id} - ${step.name}`);\n    const startTime = Date.now();\n    \n    try {\n      const result = await step.execute(this.context);\n      this.context.results[step.id] = result;\n      \n      if (step.onSuccess) {\n        step.onSuccess(result, this.context);\n      }\n      \n      const duration = Date.now() - startTime;\n      this.logger.info(`Step ${step.id} completed successfully`, { duration });\n    } catch (error) {\n      this.context.errors[step.id] = error;\n      \n      if (step.onError) {\n        step.onError(error, this.context);\n      }\n      \n      const duration = Date.now() - startTime;\n      this.logger.error(`Step ${step.id} failed`, { error, duration });\n      \n      if (!this.config.continueOnError) {\n        throw error;\n      }\n    }\n  }\n\n  private topologicalSort(): MCPStep[] {\n    const result: MCPStep[] = [];\n    const visited = new Set<string>();\n    const temp = new Set<string>();\n    \n    const visit = (stepId: string): void => {\n      if (temp.has(stepId)) {\n        throw new Error(`Circular dependency detected: ${stepId}`);\n      }\n      \n      if (visited.has(stepId)) return;\n      \n      const step = this.steps.find(s => s.id === stepId);\n      if (!step) return;\n      \n      temp.add(stepId);\n      \n      if (step.dependsOn) {\n        for (const depId of step.dependsOn) {\n          visit(depId);\n        }\n      }\n      \n      temp.delete(stepId);\n      visited.add(stepId);\n      result.push(step);\n    };\n    \n    for (const step of this.steps) {\n      if (!visited.has(step.id)) {\n        visit(step.id);\n      }\n    }\n    \n    return result;\n  }\n\n  reset(): MCP {\n    this.context = {\n      results: {},\n      errors: {},\n      metadata: {},\n    };\n    return this;\n  }\n}\n```\n3. Implement timeout handling for long-running steps\n4. Add support for conditional step execution\n5. Implement step result transformation\n6. Add support for step retries with backoff",
+        "testStrategy": "1. Unit tests:\n   - Test dependency validation\n   - Test topological sorting\n   - Test step execution order\n   - Test error handling\n   - Test parallel execution\n2. Integration tests:\n   - Test with mock steps\n   - Verify context passing between steps\n   - Test timeout handling\n   - Test with actual API clients",
+        "priority": "high",
+        "dependencies": [
+          1,
+          3,
+          5,
+          8
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 10,
+        "title": "Implement API Client Integration with MCP",
+        "description": "Integrate the generated API clients with the MCP core to enable seamless chaining of API calls.",
+        "details": "1. Create a ClientFactory class in `src/core/client-factory.ts`:\n```typescript\nimport { HttpClient } from './http-client';\nimport { Logger } from '../logging/logger';\nimport { Authentication } from './authentication';\nimport { ErrorHandler } from '../errors/error-handler';\nimport { RateLimiter } from './rate-limiter';\nimport * as clients from '../clients';\n\nexport class ClientFactory {\n  private httpClient: HttpClient;\n  private logger: Logger;\n\n  constructor(httpClient: HttpClient, logger: Logger) {\n    this.httpClient = httpClient;\n    this.logger = logger;\n  }\n\n  createClient<T extends keyof typeof clients>(clientName: T): InstanceType<typeof clients[T]> {\n    const ClientClass = clients[clientName];\n    \n    if (!ClientClass) {\n      throw new Error(`Client not found: ${clientName}`);\n    }\n    \n    return new ClientClass(this.httpClient) as InstanceType<typeof clients[T]>;\n  }\n\n  createAllClients(): Record<keyof typeof clients, any> {\n    const allClients: Record<string, any> = {};\n    \n    for (const clientName of Object.keys(clients)) {\n      allClients[clientName] = this.createClient(clientName as keyof typeof clients);\n    }\n    \n    return allClients as Record<keyof typeof clients, any>;\n  }\n}\n```\n2. Create a MCPBuilder class for fluent API creation in `src/core/mcp-builder.ts`:\n```typescript\nimport { MCP } from './mcp';\nimport { MCPStep, MCPConfig } from '../types/mcp';\nimport { ClientFactory } from './client-factory';\nimport { Logger } from '../logging/logger';\n\nexport class MCPBuilder {\n  private mcp: MCP;\n  private clientFactory: ClientFactory;\n  private logger: Logger;\n\n  constructor(config: MCPConfig = {}, clientFactory: ClientFactory, logger: Logger) {\n    this.logger = logger;\n    this.mcp = new MCP(config, logger);\n    this.clientFactory = clientFactory;\n  }\n\n  addStep(step: MCPStep): MCPBuilder {\n    this.mcp.addStep(step);\n    return this;\n  }\n\n  addApiCall<T>(\n    id: string,\n    clientName: string,\n    methodName: string,\n    params: any = {},\n    options: {\n      dependsOn?: string[];\n      transform?: (result: any, context: any) => T;\n      retries?: number;\n    } = {}\n  ): MCPBuilder {\n    const step: MCPStep = {\n      id,\n      name: `${clientName}.${methodName}`,\n      dependsOn: options.dependsOn || [],\n      execute: async (context) => {\n        const client = this.clientFactory.createClient(clientName);\n        \n        if (!client[methodName]) {\n          throw new Error(`Method ${methodName} not found on client ${clientName}`);\n        }\n        \n        // Resolve parameter values from context if needed\n        const resolvedParams = this.resolveParamsFromContext(params, context);\n        \n        const result = await client[methodName](resolvedParams);\n        return options.transform ? options.transform(result, context) : result;\n      },\n      retryConfig: options.retries ? {\n        maxRetries: options.retries,\n        retryDelay: 1000,\n      } : undefined,\n    };\n    \n    this.mcp.addStep(step);\n    return this;\n  }\n\n  private resolveParamsFromContext(params: any, context: any): any {\n    if (!params) return {};\n    \n    const resolved = { ...params };\n    \n    // Look for special syntax like \"$result.stepId.property\"\n    for (const [key, value] of Object.entries(resolved)) {\n      if (typeof value === 'string' && value.startsWith('$result.')) {\n        const path = value.substring(8).split('.');\n        const stepId = path[0];\n        \n        if (context.results[stepId]) {\n          let currentValue = context.results[stepId];\n          \n          for (let i = 1; i < path.length; i++) {\n            currentValue = currentValue[path[i]];\n            if (currentValue === undefined) break;\n          }\n          \n          resolved[key] = currentValue;\n        }\n      } else if (typeof value === 'object') {\n        resolved[key] = this.resolveParamsFromContext(value, context);\n      }\n    }\n    \n    return resolved;\n  }\n\n  build(): MCP {\n    return this.mcp;\n  }\n\n  async execute(): Promise<any> {\n    return this.mcp.execute();\n  }\n}\n```\n3. Create utility functions for common API call patterns\n4. Implement parameter resolution from previous step results\n5. Add support for conditional API calls\n6. Implement result transformation and filtering",
+        "testStrategy": "1. Unit tests:\n   - Test parameter resolution\n   - Test client creation\n   - Test step building\n   - Test transformation functions\n2. Integration tests:\n   - Test with mock API responses\n   - Verify data flows correctly between steps\n   - Test error handling in chained calls\n   - Test with actual API endpoints",
+        "priority": "high",
+        "dependencies": [
+          7,
+          8,
+          9
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 11,
+        "title": "Implement Caching System",
+        "description": "Create a caching system to improve performance and reduce unnecessary API calls.",
+        "details": "1. Install required dependencies:\n   - `npm install node-cache --save`\n2. Create a CacheManager class in `src/core/cache-manager.ts`:\n```typescript\nimport NodeCache from 'node-cache';\nimport { Logger } from '../logging/logger';\n\nexport interface CacheConfig {\n  stdTTL?: number; // Default TTL in seconds\n  checkperiod?: number; // How often to check for expired keys\n  maxKeys?: number; // Maximum number of keys in cache\n  useClones?: boolean; // Whether to clone objects on get/set\n}\n\nexport class CacheManager {\n  private cache: NodeCache;\n  private logger: Logger;\n  private enabled: boolean = true;\n\n  constructor(config: CacheConfig = {}, logger: Logger) {\n    this.cache = new NodeCache({\n      stdTTL: config.stdTTL || 300, // 5 minutes default\n      checkperiod: config.checkperiod || 60, // Check every minute\n      maxKeys: config.maxKeys || 1000,\n      useClones: config.useClones !== undefined ? config.useClones : true,\n    });\n    \n    this.logger = logger;\n    \n    // Setup event listeners\n    this.cache.on('expired', (key, value) => {\n      this.logger.debug('Cache key expired', { key });\n    });\n    \n    this.cache.on('flush', () => {\n      this.logger.debug('Cache flushed');\n    });\n  }\n\n  set<T>(key: string, value: T, ttl?: number): boolean {\n    if (!this.enabled) return false;\n    \n    try {\n      const result = this.cache.set(key, value, ttl);\n      this.logger.debug('Cache set', { key, ttl });\n      return result;\n    } catch (error) {\n      this.logger.error('Cache set error', { key, error });\n      return false;\n    }\n  }\n\n  get<T>(key: string): T | undefined {\n    if (!this.enabled) return undefined;\n    \n    try {\n      const value = this.cache.get<T>(key);\n      this.logger.debug('Cache get', { key, hit: value !== undefined });\n      return value;\n    } catch (error) {\n      this.logger.error('Cache get error', { key, error });\n      return undefined;\n    }\n  }\n\n  delete(key: string): number {\n    try {\n      const result = this.cache.del(key);\n      this.logger.debug('Cache delete', { key });\n      return result;\n    } catch (error) {\n      this.logger.error('Cache delete error', { key, error });\n      return 0;\n    }\n  }\n\n  flush(): void {\n    try {\n      this.cache.flushAll();\n      this.logger.debug('Cache flushed');\n    } catch (error) {\n      this.logger.error('Cache flush error', { error });\n    }\n  }\n\n  enable(): void {\n    this.enabled = true;\n    this.logger.info('Cache enabled');\n  }\n\n  disable(): void {\n    this.enabled = false;\n    this.logger.info('Cache disabled');\n  }\n\n  isEnabled(): boolean {\n    return this.enabled;\n  }\n\n  getStats(): NodeCache.Stats {\n    return this.cache.getStats();\n  }\n}\n```\n3. Integrate cache with HttpClient:\n```typescript\n// In HttpClient class\nprivate cacheManager: CacheManager;\n\nconstructor(\n  auth: Authentication,\n  errorHandler: ErrorHandler,\n  logger: Logger,\n  rateLimiter: RateLimiter,\n  cacheManager: CacheManager,\n  config: HttpClientConfig = {}\n) {\n  // ... existing code\n  this.cacheManager = cacheManager;\n}\n\nasync get<T>(url: string, config?: AxiosRequestConfig & { skipCache?: boolean }): Promise<T> {\n  if (!config?.skipCache) {\n    const cacheKey = `GET:${url}:${JSON.stringify(config?.params || {})}`;\n    const cachedData = this.cacheManager.get<T>(cacheKey);\n    \n    if (cachedData) {\n      this.logger.debug('Using cached response', { url });\n      return cachedData;\n    }\n    \n    const response = await this.request<T>({ ...config, method: 'GET', url });\n    this.cacheManager.set(cacheKey, response);\n    return response;\n  }\n  \n  return this.request<T>({ ...config, method: 'GET', url });\n}\n```\n4. Add cache invalidation strategies\n5. Implement cache key generation based on request parameters\n6. Add cache statistics and monitoring",
+        "testStrategy": "1. Unit tests:\n   - Test cache set/get operations\n   - Test TTL functionality\n   - Test cache key generation\n   - Test cache invalidation\n2. Integration tests:\n   - Test caching with HTTP client\n   - Verify performance improvement\n   - Test cache hit/miss rates\n   - Test memory usage",
         "priority": "medium",
         "dependencies": [
+          1,
           3,
           8
         ],
         "status": "pending",
-        "subtasks": [
-          {
-            "id": 1,
-            "title": "Define base client interface and common utilities",
-            "description": "Create the foundation for all client implementations including base interfaces, HTTP request handling, error management, and common utilities.",
-            "dependencies": [],
-            "details": "Implement BaseClient interface with common methods, create HTTP request wrapper, implement error handling strategies, define response types, and create utility functions for parameter formatting that will be used across all clients.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 2,
-            "title": "Implement ViagensClient",
-            "description": "Create the client implementation for accessing travel-related endpoints in the Portal da Transparência API.",
-            "dependencies": [
-              1
-            ],
-            "details": "Define interface with methods for retrieving travel data, implement pagination handling, create data models for travel information, implement all endpoint methods with proper error handling, and write unit tests for the client.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 3,
-            "title": "Implement ServidoresClient",
-            "description": "Create the client implementation for accessing public servant data endpoints in the Portal da Transparência API.",
-            "dependencies": [
-              1
-            ],
-            "details": "Define interface with methods for retrieving servant data, implement methods for querying by different parameters (name, ID, position), create data models for servant information, implement proper error handling, and write unit tests.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 4,
-            "title": "Implement LicitacoesClient",
-            "description": "Create the client implementation for accessing procurement and bidding data from the Portal da Transparência API.",
-            "dependencies": [
-              1
-            ],
-            "details": "Define interface with methods for retrieving procurement data, implement filtering capabilities, create data models for procurement information, implement all endpoint methods with proper error handling, and write unit tests.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 5,
-            "title": "Implement ContratosClient",
-            "description": "Create the client implementation for accessing contract data from the Portal da Transparência API.",
-            "dependencies": [
-              1
-            ],
-            "details": "Define interface with methods for retrieving contract data, implement search by contract number and other parameters, create data models for contract information, implement proper error handling, and write unit tests.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 6,
-            "title": "Implement DespesasClient",
-            "description": "Create the client implementation for accessing expense data from the Portal da Transparência API.",
-            "dependencies": [
-              1
-            ],
-            "details": "Define interface with methods for retrieving expense data, implement filtering by date ranges and categories, create data models for expense information, implement proper error handling, and write unit tests.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 7,
-            "title": "Implement integration tests for all clients",
-            "description": "Create comprehensive integration tests that verify the clients work correctly against the actual API.",
-            "dependencies": [
-              2,
-              3,
-              4,
-              5,
-              6
-            ],
-            "details": "Set up test environment with API mocks, implement integration tests for each client, create test fixtures and scenarios, verify error handling in real-world conditions, and ensure all endpoints return expected data structures.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 8,
-            "title": "Create client factory and documentation",
-            "description": "Implement a factory pattern for client instantiation and create comprehensive documentation for all client implementations.",
-            "dependencies": [
-              2,
-              3,
-              4,
-              5,
-              6
-            ],
-            "details": "Create a ClientFactory class for easy instantiation of all clients, implement configuration options, write detailed documentation with examples for each client, create usage guides, and document error handling strategies.",
-            "status": "pending",
-            "testStrategy": ""
-          }
-        ]
-      },
-      {
-        "id": 10,
-        "title": "Implement HTTP Client with Retry Logic",
-        "description": "Create robust HTTP client with retry mechanisms, timeout handling, and connection management",
-        "details": "Implement HTTP client using axios or fetch with TypeScript, add configurable timeout settings, implement exponential backoff retry logic, add connection pooling for performance, handle network errors gracefully, implement request/response interceptors for logging and authentication",
-        "testStrategy": "Unit tests for HTTP client, test retry logic with mock failures, verify timeout handling, test connection management under load",
-        "priority": "medium",
-        "dependencies": [
-          7,
-          8
-        ],
-        "status": "pending",
-        "subtasks": [
-          {
-            "id": 1,
-            "title": "Implement Base HTTP Client Setup",
-            "description": "Create the foundation for the HTTP client with basic request/response handling capabilities",
-            "dependencies": [],
-            "details": "Implement a base HTTP client class that handles basic HTTP methods (GET, POST, PUT, DELETE). Include proper error handling for common HTTP status codes and network errors. Set up the client to work with the Portal da Transparência API endpoints. Define the client interface that will be used by other components.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 2,
-            "title": "Configure Timeout Handling",
-            "description": "Implement configurable timeout settings for requests to prevent hanging connections",
-            "dependencies": [
-              1
-            ],
-            "details": "Add connection timeout and read timeout configurations. Implement proper error handling for timeout scenarios. Create a configuration interface to allow customization of timeout values. Test timeout behavior with slow endpoints to ensure proper functioning.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 3,
-            "title": "Implement Retry Logic with Exponential Backoff",
-            "description": "Add retry capability with exponential backoff algorithm for failed requests",
-            "dependencies": [
-              1,
-              2
-            ],
-            "details": "Implement retry mechanism for transient errors (5xx responses, network issues). Create an exponential backoff algorithm that increases wait time between retries. Add configurable parameters for max retries, initial delay, and maximum delay. Include jitter to prevent thundering herd problems. Implement proper logging of retry attempts.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 4,
-            "title": "Set Up Connection Pooling",
-            "description": "Implement connection pooling to efficiently manage HTTP connections",
-            "dependencies": [
-              1
-            ],
-            "details": "Configure connection pooling to reuse connections for better performance. Implement settings for maximum connections per route and total connections. Add connection TTL (Time To Live) configuration. Implement proper connection cleanup to prevent resource leaks. Test performance improvements with and without connection pooling.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 5,
-            "title": "Develop Request/Response Interceptors",
-            "description": "Create interceptor framework for modifying requests and responses",
-            "dependencies": [
-              1,
-              4
-            ],
-            "details": "Implement interceptor interfaces for both requests and responses. Create authentication interceptor for adding API keys or tokens. Develop logging interceptors for debugging purposes. Add content type and accept header interceptors. Implement error response interceptors for standardized error handling across the application.",
-            "status": "pending",
-            "testStrategy": ""
-          }
-        ]
-      },
-      {
-        "id": 11,
-        "title": "Add Optional Caching System",
-        "description": "Implement intelligent caching mechanism to reduce API calls and improve performance",
-        "details": "Create cache layer with configurable TTL, implement cache key generation based on endpoint and parameters, add cache invalidation strategies, support both in-memory and Redis caching options, implement cache hit/miss metrics, ensure cache respects rate limiting considerations",
-        "testStrategy": "Unit tests for cache operations, test TTL expiration, verify cache key generation, test cache invalidation scenarios, performance tests for cache hit/miss ratios",
-        "priority": "low",
-        "dependencies": [
-          10
-        ],
-        "status": "pending",
-        "subtasks": [
-          {
-            "id": 1,
-            "title": "Design Cache Interface",
-            "description": "Create a generic cache interface that abstracts the underlying cache implementation",
-            "dependencies": [],
-            "details": "Define a cache interface with methods for get, set, delete, and clear operations. Include support for TTL settings and ensure the interface is flexible enough to work with different backend implementations. Document the interface with clear method signatures and expected behaviors.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 2,
-            "title": "Implement In-Memory Cache",
-            "description": "Create an in-memory cache implementation that adheres to the cache interface",
-            "dependencies": [
-              1
-            ],
-            "details": "Develop an in-memory cache using appropriate data structures (e.g., Map). Implement TTL management with an efficient expiration mechanism. Include thread-safety considerations for concurrent access. Implement memory usage limits to prevent excessive memory consumption.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 3,
-            "title": "Develop Redis Cache Adapter",
-            "description": "Create a Redis-based cache implementation that follows the cache interface",
-            "dependencies": [
-              1
-            ],
-            "details": "Implement a Redis cache adapter using a Redis client library. Configure connection pooling for efficient Redis connections. Handle serialization/deserialization of complex objects. Implement proper error handling for Redis connection issues and timeouts.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 4,
-            "title": "Implement Cache Key Generation Strategy",
-            "description": "Create a consistent and efficient cache key generation mechanism",
-            "dependencies": [
-              1
-            ],
-            "details": "Design a key generation strategy that creates unique and consistent keys based on request parameters. Implement namespacing to avoid key collisions between different parts of the application. Consider key length limitations in Redis. Create utility functions for key generation that can be used across the application.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 5,
-            "title": "Develop TTL Management System",
-            "description": "Create a flexible TTL management system for different types of cached data",
-            "dependencies": [
-              1,
-              2,
-              3
-            ],
-            "details": "Implement configurable TTL settings for different data types and endpoints. Create a mechanism for dynamic TTL calculation based on data characteristics. Develop a cache invalidation strategy for manual purging when data changes. Implement staggered expiration to prevent cache stampedes.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 6,
-            "title": "Implement Cache Metrics Collection",
-            "description": "Add metrics collection to monitor cache performance and usage",
-            "dependencies": [
-              2,
-              3,
-              5
-            ],
-            "details": "Implement hit/miss ratio tracking for cache performance analysis. Add metrics for cache size, memory usage, and eviction rates. Create integration with monitoring systems for alerting on cache issues. Develop a dashboard for visualizing cache performance metrics over time.",
-            "status": "pending",
-            "testStrategy": ""
-          }
-        ]
+        "subtasks": []
       },
       {
         "id": 12,
-        "title": "Develop Comprehensive Test Suite",
-        "description": "Create extensive test coverage including unit tests, integration tests, and end-to-end testing scenarios",
-        "details": "Implement unit tests for all classes and methods (target 90%+ coverage), create integration tests with mock API responses, add end-to-end tests with real API calls (using test API keys), implement performance tests for rate limiting and caching, create test utilities and fixtures, setup test data management",
-        "testStrategy": "Achieve minimum 90% code coverage, all tests pass in CI/CD pipeline, performance benchmarks meet requirements, integration tests cover all major workflows",
+        "title": "Implement Main MCP Class and Public API",
+        "description": "Create the main MCP class that serves as the public API for the library, integrating all components.",
+        "details": "1. Create the main MCP class in `src/index.ts`:\n```typescript\nimport { Authentication, AuthConfig } from './core/authentication';\nimport { SwaggerLoader } from './core/swagger-loader';\nimport { Logger, LoggerOptions } from './logging/logger';\nimport { ErrorHandler } from './errors/error-handler';\nimport { RateLimiter } from './core/rate-limiter';\nimport { HttpClient, HttpClientConfig } from './core/http-client';\nimport { ClientFactory } from './core/client-factory';\nimport { MCPBuilder } from './core/mcp-builder';\nimport { CacheManager, CacheConfig } from './core/cache-manager';\nimport { MCPConfig } from './types/mcp';\n\nexport interface MCPOptions {\n  auth?: AuthConfig;\n  logger?: LoggerOptions;\n  http?: HttpClientConfig;\n  cache?: CacheConfig;\n  rateLimiter?: {\n    dayTimeLimit?: number;\n    nightTimeLimit?: number;\n    alertThreshold?: number;\n  };\n  swaggerUrl?: string;\n}\n\nexport class PortalTransparenciaMCP {\n  private logger: Logger;\n  private auth: Authentication;\n  private errorHandler: ErrorHandler;\n  private rateLimiter: RateLimiter;\n  private cacheManager: CacheManager;\n  private httpClient: HttpClient;\n  private clientFactory: ClientFactory;\n  private swaggerLoader: SwaggerLoader;\n\n  constructor(options: MCPOptions = {}) {\n    // Initialize components\n    this.logger = new Logger(options.logger);\n    this.auth = new Authentication(options.auth, this.logger);\n    this.errorHandler = new ErrorHandler(this.logger);\n    this.rateLimiter = new RateLimiter(options.rateLimiter, this.logger);\n    this.cacheManager = new CacheManager(options.cache, this.logger);\n    this.httpClient = new HttpClient(\n      this.auth,\n      this.errorHandler,\n      this.logger,\n      this.rateLimiter,\n      this.cacheManager,\n      options.http\n    );\n    this.clientFactory = new ClientFactory(this.httpClient, this.logger);\n    this.swaggerLoader = new SwaggerLoader(options.swaggerUrl, this.logger);\n    \n    this.logger.info('Portal da Transparência MCP initialized');\n  }\n\n  setApiKey(apiKey: string): void {\n    this.auth.setApiKey(apiKey);\n  }\n\n  createFlow(config: MCPConfig = {}): MCPBuilder {\n    return new MCPBuilder(config, this.clientFactory, this.logger);\n  }\n\n  getClient<T extends string>(clientName: T): any {\n    return this.clientFactory.createClient(clientName);\n  }\n\n  getAllClients(): Record<string, any> {\n    return this.clientFactory.createAllClients();\n  }\n\n  async loadSwaggerSpec(): Promise<void> {\n    await this.swaggerLoader.loadSpec();\n  }\n\n  enableCache(): void {\n    this.cacheManager.enable();\n  }\n\n  disableCache(): void {\n    this.cacheManager.disable();\n  }\n\n  clearCache(): void {\n    this.cacheManager.flush();\n  }\n\n  getRateLimitStatus(): { count: number; limit: number; percentage: number } {\n    return this.rateLimiter.getCurrentUsage();\n  }\n}\n\n// Export types\nexport * from './types/mcp';\nexport * from './errors/api-errors';\n\n// Default export\nexport default PortalTransparenciaMCP;\n```\n2. Create a simple factory function for easier instantiation:\n```typescript\nexport function createMCP(options: MCPOptions = {}): PortalTransparenciaMCP {\n  return new PortalTransparenciaMCP(options);\n}\n```\n3. Add examples in the README for common use cases\n4. Implement convenience methods for common operations\n5. Add proper TypeScript exports for all public types\n6. Ensure backward compatibility for future versions",
+        "testStrategy": "1. Unit tests:\n   - Test initialization with different options\n   - Test API key setting\n   - Test flow creation\n   - Test client retrieval\n2. Integration tests:\n   - Test full workflow with multiple components\n   - Verify all components are properly initialized\n   - Test with actual API endpoints\n   - Test error handling at the top level",
         "priority": "high",
         "dependencies": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
           9,
           10,
           11
         ],
         "status": "pending",
-        "subtasks": [
-          {
-            "id": 1,
-            "title": "Unit Test Framework Setup",
-            "description": "Configure and set up the unit testing framework for the Portal da Transparência MCP implementation",
-            "dependencies": [],
-            "details": "Select and configure appropriate testing frameworks (Jest/Mocha), set up test directory structure, configure test runners, establish code coverage tools, and create initial test configuration files. Include setup for TypeScript support if applicable.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 2,
-            "title": "Test Utilities and Fixtures Development",
-            "description": "Create reusable test utilities, fixtures, and helper functions to support all test types",
-            "dependencies": [
-              1
-            ],
-            "details": "Develop test data generators, test helpers for common operations, custom test assertions, and fixtures for different test scenarios. Create utilities for test data cleanup and management. Implement test context providers if needed.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 3,
-            "title": "Mock API Response Implementation",
-            "description": "Create comprehensive mock API responses for all external services used by the Portal da Transparência",
-            "dependencies": [
-              2
-            ],
-            "details": "Implement mock responses for all API endpoints, create mock server setup (using tools like MSW or Nock), develop different response scenarios (success, error, timeout), and organize mocks by service domain. Include proper typing for all mock data.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 4,
-            "title": "Unit Test Implementation",
-            "description": "Develop unit tests for all core components and functions of the MCP implementation",
-            "dependencies": [
-              1,
-              2,
-              3
-            ],
-            "details": "Write comprehensive unit tests for all business logic, utility functions, data transformations, and isolated components. Aim for 90%+ code coverage. Include edge cases, error handling, and boundary testing. Organize tests to mirror the application structure.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 5,
-            "title": "Integration Test Implementation",
-            "description": "Create integration tests to verify interactions between components and services",
-            "dependencies": [
-              3,
-              4
-            ],
-            "details": "Develop tests for component interactions, service integrations, data flow between modules, and state management. Test API service integrations with mocks. Verify correct behavior of connected components and proper error propagation between systems.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 6,
-            "title": "End-to-End Test Scenarios",
-            "description": "Implement end-to-end test scenarios covering critical user journeys in the Portal da Transparência",
-            "dependencies": [
-              5
-            ],
-            "details": "Set up E2E testing framework (Cypress/Playwright), create test scenarios for main user flows, implement test authentication, develop tests for critical paths and user interactions. Include visual regression testing if applicable. Create test environments that closely match production.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 7,
-            "title": "Performance Testing and Coverage Reporting",
-            "description": "Implement performance tests and configure comprehensive test coverage reporting",
-            "dependencies": [
-              4,
-              5,
-              6
-            ],
-            "details": "Set up performance testing for critical operations, implement load tests for high-traffic scenarios, configure detailed coverage reporting with thresholds, create CI/CD integration for test execution, and develop test result dashboards. Include documentation on how to interpret test results and coverage reports.",
-            "status": "pending",
-            "testStrategy": ""
-          }
-        ]
+        "subtasks": []
       },
       {
         "id": 13,
-        "title": "Create Documentation and Usage Examples",
-        "description": "Develop comprehensive documentation including API reference, usage guides, and practical examples",
-        "details": "Create detailed README with setup instructions, write API documentation for all public methods, create usage examples for common scenarios, document best practices for rate limiting and error handling, create migration guides, setup GitHub Pages or static site for documentation hosting, include diagrams for call flow visualization",
-        "testStrategy": "Review documentation for completeness and accuracy, test all code examples work correctly, verify setup instructions on clean environment, validate documentation builds successfully",
+        "title": "Implement Unit Tests",
+        "description": "Create comprehensive unit tests for all components of the MCP library.",
+        "details": "1. Install testing dependencies:\n   - `npm install jest ts-jest @types/jest jest-mock-extended nock --save-dev`\n2. Configure Jest in `jest.config.js`:\n```javascript\nmodule.exports = {\n  preset: 'ts-jest',\n  testEnvironment: 'node',\n  collectCoverage: true,\n  collectCoverageFrom: [\n    'src/**/*.ts',\n    '!src/**/*.d.ts',\n    '!src/clients/**/*.ts', // Skip generated clients\n  ],\n  coverageThreshold: {\n    global: {\n      branches: 80,\n      functions: 80,\n      lines: 80,\n      statements: 80,\n    },\n  },\n  testMatch: ['**/tests/unit/**/*.test.ts'],\n};\n```\n3. Create test files for each core component:\n   - `tests/unit/core/authentication.test.ts`\n   - `tests/unit/core/swagger-loader.test.ts`\n   - `tests/unit/logging/logger.test.ts`\n   - `tests/unit/errors/error-handler.test.ts`\n   - `tests/unit/core/rate-limiter.test.ts`\n   - `tests/unit/core/http-client.test.ts`\n   - `tests/unit/core/mcp.test.ts`\n   - `tests/unit/core/cache-manager.test.ts`\n4. Create test utilities and mocks in `tests/utils`\n5. Implement test for the main MCP class\n6. Create test coverage reports",
+        "testStrategy": "1. Use Jest snapshots for complex objects\n2. Use mock-extended for complex dependencies\n3. Use nock for HTTP request mocking\n4. Test edge cases and error conditions\n5. Verify test coverage meets 90% threshold\n6. Run tests in CI pipeline",
+        "priority": "high",
+        "dependencies": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 14,
+        "title": "Implement Integration Tests",
+        "description": "Create integration tests that verify the MCP works correctly with the actual Portal da Transparência API.",
+        "details": "1. Create integration test configuration in `tests/integration/config.ts`:\n```typescript\nimport dotenv from 'dotenv';\n\ndotenv.config();\n\nexport const config = {\n  apiKey: process.env.PORTAL_TRANSPARENCIA_API_KEY || '',\n  skipLiveTests: process.env.SKIP_LIVE_TESTS === 'true',\n};\n```\n2. Create test files for each API category:\n   - `tests/integration/viagens.test.ts`\n   - `tests/integration/servidores.test.ts`\n   - `tests/integration/beneficios.test.ts`\n   - etc.\n3. Create test for the MCP flow with multiple chained calls\n4. Implement test for rate limiting behavior\n5. Create test for error handling with actual API errors\n6. Test caching with real API calls",
+        "testStrategy": "1. Skip tests if no API key is provided\n2. Use conditional testing based on environment variables\n3. Test actual API responses\n4. Verify data consistency across calls\n5. Test rate limiting with controlled request rates\n6. Measure and verify performance improvements with caching",
+        "priority": "medium",
+        "dependencies": [
+          12,
+          13
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 15,
+        "title": "Generate API Documentation",
+        "description": "Generate comprehensive API documentation for the MCP library and all available endpoints.",
+        "details": "1. Install documentation dependencies:\n   - `npm install typedoc --save-dev`\n2. Configure TypeDoc in `typedoc.json`:\n```json\n{\n  \"entryPoints\": [\"src/index.ts\"],\n  \"out\": \"docs\",\n  \"name\": \"Portal da Transparência MCP\",\n  \"readme\": \"README.md\",\n  \"includeVersion\": true,\n  \"excludePrivate\": true,\n  \"excludeExternals\": true,\n  \"theme\": \"default\"\n}\n```\n3. Add JSDoc comments to all public classes and methods\n4. Create a documentation generation script in package.json:\n```json\n\"scripts\": {\n  \"docs\": \"typedoc\"\n}\n```\n5. Create a documentation website structure:\n   - Overview\n   - Getting Started\n   - API Reference\n   - Examples\n   - Endpoint Reference\n6. Generate endpoint documentation from Swagger spec\n7. Create diagrams for complex flows",
+        "testStrategy": "1. Verify documentation builds without errors\n2. Check that all public APIs are documented\n3. Validate links between documentation pages\n4. Ensure examples are up-to-date and working\n5. Test documentation site in different browsers",
         "priority": "medium",
         "dependencies": [
           12
         ],
         "status": "pending",
-        "subtasks": [
-          {
-            "id": 1,
-            "title": "Create README.md file",
-            "description": "Develop a comprehensive README.md file that provides an overview of the MCP implementation for the Transparency Portal",
-            "dependencies": [],
-            "details": "Include sections for introduction, installation instructions, basic usage, configuration options, and links to other documentation resources. Ensure the README clearly explains the purpose of the MCP implementation and its benefits for the Transparency Portal.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 2,
-            "title": "Develop API reference documentation",
-            "description": "Create detailed API reference documentation for all public methods and classes in the MCP implementation",
-            "dependencies": [
-              1
-            ],
-            "details": "Document each method with parameters, return values, exceptions, and usage examples. Include information about data types, validation rules, and any constraints. Organize the documentation by modules or functional areas for easier navigation.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 3,
-            "title": "Create usage examples",
-            "description": "Develop comprehensive usage examples demonstrating common scenarios for the MCP implementation in the Transparency Portal",
-            "dependencies": [
-              2
-            ],
-            "details": "Create code snippets and step-by-step tutorials for common use cases such as data retrieval, filtering, visualization, and integration with other systems. Include both simple examples for beginners and advanced scenarios for experienced users.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 4,
-            "title": "Write best practices guide",
-            "description": "Develop a best practices guide for implementing and using the MCP in the Transparency Portal context",
-            "dependencies": [
-              3
-            ],
-            "details": "Include recommendations for performance optimization, security considerations, error handling, and maintainability. Provide guidance on common pitfalls to avoid and tips for troubleshooting. Address specific considerations for the Transparency Portal use case.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 5,
-            "title": "Create technical diagrams",
-            "description": "Design and create diagrams illustrating the architecture, data flow, and component interactions of the MCP implementation",
-            "dependencies": [
-              2
-            ],
-            "details": "Develop UML diagrams, flowcharts, and other visual representations to explain the system architecture, data flow, and integration points. Include sequence diagrams for key processes and component diagrams showing the relationship between different parts of the system.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 6,
-            "title": "Set up documentation website",
-            "description": "Configure and deploy a documentation website to host all the created documentation materials",
-            "dependencies": [
-              1,
-              2,
-              3,
-              4,
-              5
-            ],
-            "details": "Select and implement a documentation framework (such as Docusaurus, MkDocs, or Sphinx). Organize the content with proper navigation, search functionality, and version control. Ensure the site is responsive and accessible. Set up automated deployment processes for documentation updates.",
-            "status": "pending",
-            "testStrategy": ""
-          }
-        ]
+        "subtasks": []
       },
       {
-        "id": 14,
-        "title": "Package NPM Module and Distribution Setup",
-        "description": "Prepare the package for NPM distribution with proper versioning, build process, and publishing configuration",
-        "details": "Configure package.json for NPM publishing, setup build process with TypeScript compilation, create distribution files (CommonJS and ES modules), implement semantic versioning, setup automated publishing via CI/CD, create package documentation, configure package keywords and metadata for discoverability",
-        "testStrategy": "Test package installation from NPM registry, verify all exports work correctly, test in both CommonJS and ES module environments, validate package metadata",
+        "id": 16,
+        "title": "Create Usage Examples",
+        "description": "Create comprehensive examples demonstrating how to use the MCP for various common scenarios.",
+        "details": "1. Create examples directory structure:\n```\nexamples/\n  ├── basic/\n  │   ├── simple-call.ts\n  │   ├── authentication.ts\n  │   └── error-handling.ts\n  ├── flows/\n  │   ├── sequential-calls.ts\n  │   ├── parallel-calls.ts\n  │   └── conditional-flows.ts\n  ├── endpoints/\n  │   ├── viagens.ts\n  │   ├── servidores.ts\n  │   ├── beneficios.ts\n  │   └── ...\n  └── advanced/\n      ├── rate-limiting.ts\n      ├── caching.ts\n      └── custom-clients.ts\n```\n2. Implement basic examples:\n```typescript\n// examples/basic/simple-call.ts\nimport PortalTransparenciaMCP from '../../src';\n\nasync function main() {\n  // Create MCP instance\n  const mcp = new PortalTransparenciaMCP({\n    auth: {\n      apiKey: process.env.PORTAL_TRANSPARENCIA_API_KEY,\n    },\n  });\n\n  // Get a specific client\n  const servidoresClient = mcp.getClient('ServidoresClient');\n\n  // Make a simple API call\n  try {\n    const result = await servidoresClient.getServidoresPorOrgao({\n      orgaoSuperior: '26000',\n      pagina: 1,\n    });\n\n    console.log(`Found ${result.totalElements} servers`);\n    console.log(result.content.slice(0, 5));\n  } catch (error) {\n    console.error('API call failed:', error.message);\n  }\n}\n\nmain();\n```\n3. Implement flow examples:\n```typescript\n// examples/flows/sequential-calls.ts\nimport PortalTransparenciaMCP from '../../src';\n\nasync function main() {\n  const mcp = new PortalTransparenciaMCP({\n    auth: {\n      apiKey: process.env.PORTAL_TRANSPARENCIA_API_KEY,\n    },\n  });\n\n  // Create a flow with sequential calls\n  const flow = mcp.createFlow()\n    .addApiCall(\n      'getOrgaos',\n      'OrgaosClient',\n      'getOrgaosSuperiores'\n    )\n    .addApiCall(\n      'getServidores',\n      'ServidoresClient',\n      'getServidoresPorOrgao',\n      {\n        orgaoSuperior: '$result.getOrgaos[0].codigo',\n        pagina: 1,\n      },\n      { dependsOn: ['getOrgaos'] }\n    )\n    .addApiCall(\n      'getDetalhes',\n      'ServidoresClient',\n      'getServidorDetalhes',\n      {\n        id: '$result.getServidores.content[0].id',\n      },\n      { dependsOn: ['getServidores'] }\n    );\n\n  // Execute the flow\n  try {\n    const result = await flow.execute();\n    console.log('Flow executed successfully');\n    console.log('Servidor details:', result.results.getDetalhes);\n  } catch (error) {\n    console.error('Flow execution failed:', error.message);\n  }\n}\n\nmain();\n```\n4. Create examples for each major endpoint category\n5. Add advanced examples for caching, rate limiting, and error handling\n6. Create a README for each example explaining its purpose",
+        "testStrategy": "1. Verify all examples run without errors\n2. Test examples with actual API key\n3. Ensure examples cover all major features\n4. Check that examples are up-to-date with the latest API\n5. Validate output matches expected format",
         "priority": "medium",
         "dependencies": [
-          13
+          12
         ],
         "status": "pending",
-        "subtasks": [
-          {
-            "id": 1,
-            "title": "Configure package.json",
-            "description": "Set up the package.json file with all necessary fields for proper NPM packaging",
-            "dependencies": [],
-            "details": "Create or update package.json with appropriate name, version, description, author, license, repository, keywords, and entry points. Define proper 'main', 'module', and 'exports' fields to support both module formats. Include necessary scripts for building, testing, and publishing.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 2,
-            "title": "Set up build process",
-            "description": "Configure the build toolchain to compile and prepare the package for distribution",
-            "dependencies": [
-              1
-            ],
-            "details": "Select and configure appropriate build tools (e.g., webpack, rollup, or esbuild). Set up TypeScript configuration if applicable. Create build scripts that generate distribution files with proper source maps. Ensure the build process handles both development and production environments.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 3,
-            "title": "Implement dual module format support",
-            "description": "Ensure the package supports both CommonJS and ESM formats",
-            "dependencies": [
-              1,
-              2
-            ],
-            "details": "Configure the build process to output both CommonJS (.cjs) and ESM (.mjs) versions of the package. Update package.json with proper 'exports' field configuration to direct imports to the correct format. Test both formats to ensure they work correctly in different environments.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 4,
-            "title": "Implement semantic versioning",
-            "description": "Set up tools and processes for proper semantic versioning",
-            "dependencies": [
-              1
-            ],
-            "details": "Configure tools like standard-version or semantic-release to automate version management. Create a CHANGELOG.md file to track changes. Define commit message conventions (e.g., Conventional Commits) to determine version bumps. Document the versioning strategy for contributors.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 5,
-            "title": "Set up CI/CD publishing automation",
-            "description": "Configure automated testing and publishing to NPM registry",
-            "dependencies": [
-              2,
-              3,
-              4
-            ],
-            "details": "Set up GitHub Actions or other CI/CD pipeline to run tests, build the package, and publish to NPM when appropriate (e.g., on tag creation). Configure NPM authentication in the CI environment. Add safeguards to prevent publishing broken packages. Implement post-publish verification to ensure the package works correctly after publishing.",
-            "status": "pending",
-            "testStrategy": ""
-          }
-        ]
+        "subtasks": []
       },
       {
-        "id": 15,
-        "title": "Implement Monitoring and Health Checks",
-        "description": "Add monitoring capabilities and health check endpoints for production deployment",
-        "details": "Create health check methods to verify API connectivity, implement metrics collection for success/failure rates, add performance monitoring for response times, create alerting system for service degradation, implement status dashboard functionality, add diagnostic tools for troubleshooting API issues",
-        "testStrategy": "Test health check functionality, verify metrics collection accuracy, test alerting system with simulated failures, validate monitoring dashboard displays correct information",
-        "priority": "low",
+        "id": 17,
+        "title": "Create NPM Package Configuration",
+        "description": "Configure the project for publishing as an NPM package with proper versioning, metadata, and distribution files.",
+        "details": "1. Update package.json with publishing configuration:\n```json\n{\n  \"name\": \"mcp-portal-transparencia\",\n  \"version\": \"0.1.0\",\n  \"description\": \"Multi-step Call Planner for Portal da Transparência API\",\n  \"main\": \"dist/index.js\",\n  \"types\": \"dist/index.d.ts\",\n  \"files\": [\n    \"dist\",\n    \"LICENSE\",\n    \"README.md\"\n  ],\n  \"scripts\": {\n    \"build\": \"tsc\",\n    \"test\": \"jest\",\n    \"test:unit\": \"jest --testMatch='**/tests/unit/**/*.test.ts'\",\n    \"test:integration\": \"jest --testMatch='**/tests/integration/**/*.test.ts'\",\n    \"lint\": \"eslint 'src/**/*.ts'\",\n    \"docs\": \"typedoc\",\n    \"prepublishOnly\": \"npm run build && npm run test && npm run lint\"\n  },\n  \"keywords\": [\n    \"portal-da-transparencia\",\n    \"api\",\n    \"mcp\",\n    \"typescript\",\n    \"brasil\",\n    \"governo\"\n  ],\n  \"author\": \"Your Name\",\n  \"license\": \"MIT\",\n  \"repository\": {\n    \"type\": \"git\",\n    \"url\": \"git+https://github.com/yourusername/mcp-portal-transparencia.git\"\n  },\n  \"bugs\": {\n    \"url\": \"https://github.com/yourusername/mcp-portal-transparencia/issues\"\n  },\n  \"homepage\": \"https://github.com/yourusername/mcp-portal-transparencia#readme\",\n  \"engines\": {\n    \"node\": \">=16.0.0\"\n  }\n}\n```\n2. Create .npmignore file:\n```\nsrc/\ntests/\nexamples/\n.github/\n.vscode/\n.eslintrc.js\n.prettierrc\ntsconfig.json\njest.config.js\ntypedoc.json\n.gitignore\n.env\n.env.example\ncoverage/\ndocs/\n```\n3. Create release workflow in GitHub Actions:\n```yaml\nname: Release\n\non:\n  release:\n    types: [created]\n\njobs:\n  build:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v2\n      - uses: actions/setup-node@v2\n        with:\n          node-version: '16.x'\n          registry-url: 'https://registry.npmjs.org/'\n      - run: npm ci\n      - run: npm run build\n      - run: npm run test\n      - run: npm publish\n        env:\n          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}\n```\n4. Create CHANGELOG.md for version tracking\n5. Add LICENSE file (MIT)\n6. Configure semantic versioning for releases",
+        "testStrategy": "1. Verify package builds correctly\n2. Test installation from local package\n3. Verify TypeScript types are correctly included\n4. Check that unnecessary files are excluded\n5. Test package.json scripts",
+        "priority": "medium",
         "dependencies": [
-          14
+          12,
+          13,
+          14,
+          15,
+          16
         ],
         "status": "pending",
-        "subtasks": [
-          {
-            "id": 1,
-            "title": "Implement Health Check Endpoint",
-            "description": "Create a dedicated health check endpoint that reports the status of the MCP system and its dependencies",
-            "dependencies": [],
-            "details": "Design and implement a REST endpoint that provides basic health status information including system uptime, connection status to dependencies, and overall system health. Include configuration options for detailed vs. basic health information. Ensure the endpoint is lightweight and doesn't impact system performance.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 2,
-            "title": "Develop Metrics Collection System",
-            "description": "Create a comprehensive metrics collection system to track key performance indicators of the MCP",
-            "dependencies": [
-              1
-            ],
-            "details": "Implement a metrics collection system that captures data on request counts, response times, error rates, cache hit/miss ratios, and resource utilization. Design the system to have minimal performance impact. Include configuration options for sampling rates and metrics retention periods. Ensure compatibility with common monitoring tools like Prometheus.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 3,
-            "title": "Implement Performance Monitoring",
-            "description": "Build a performance monitoring subsystem that tracks and analyzes system performance metrics over time",
-            "dependencies": [
-              2
-            ],
-            "details": "Develop a performance monitoring component that analyzes collected metrics to identify trends, bottlenecks, and anomalies. Implement visualization capabilities for performance data. Create baseline performance profiles and deviation detection. Include tools for performance testing and load simulation to validate system behavior under stress.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 4,
-            "title": "Create Alerting Mechanism",
-            "description": "Develop an alerting system that notifies administrators of critical issues or performance degradation",
-            "dependencies": [
-              2,
-              3
-            ],
-            "details": "Implement a configurable alerting system with multiple notification channels (email, SMS, webhook integrations). Create alert severity levels and escalation paths. Design intelligent alert grouping to prevent alert storms. Include alert acknowledgment and resolution tracking. Ensure alerts include actionable information for troubleshooting.",
-            "status": "pending",
-            "testStrategy": ""
-          },
-          {
-            "id": 5,
-            "title": "Develop Diagnostic Tools",
-            "description": "Create diagnostic tools for troubleshooting and debugging MCP issues in production",
-            "dependencies": [
-              1,
-              2,
-              3
-            ],
-            "details": "Implement diagnostic tools including log analysis utilities, request tracing capabilities, and system state inspection tools. Create a diagnostic mode that can be temporarily enabled for deeper insights without redeployment. Develop tools for reproducing and analyzing reported issues. Include self-healing capabilities for common failure scenarios.",
-            "status": "pending",
-            "testStrategy": ""
-          }
-        ]
+        "subtasks": []
+      },
+      {
+        "id": 18,
+        "title": "Create CI/CD Pipeline",
+        "description": "Set up continuous integration and deployment pipeline for automated testing, building, and publishing.",
+        "details": "1. Create GitHub Actions workflow for CI in `.github/workflows/ci.yml`:\n```yaml\nname: CI\n\non:\n  push:\n    branches: [ main ]\n  pull_request:\n    branches: [ main ]\n\njobs:\n  test:\n    runs-on: ubuntu-latest\n    strategy:\n      matrix:\n        node-version: [16.x, 18.x]\n\n    steps:\n    - uses: actions/checkout@v2\n    - name: Use Node.js ${{ matrix.node-version }}\n      uses: actions/setup-node@v2\n      with:\n        node-version: ${{ matrix.node-version }}\n    - run: npm ci\n    - run: npm run build\n    - run: npm run lint\n    - run: npm run test:unit\n    - name: Upload coverage\n      uses: codecov/codecov-action@v2\n      with:\n        token: ${{ secrets.CODECOV_TOKEN }}\n\n  integration:\n    runs-on: ubuntu-latest\n    if: github.event_name == 'push' && github.ref == 'refs/heads/main'\n    needs: test\n    steps:\n    - uses: actions/checkout@v2\n    - name: Use Node.js 16.x\n      uses: actions/setup-node@v2\n      with:\n        node-version: 16.x\n    - run: npm ci\n    - run: npm run build\n    - run: npm run test:integration\n      env:\n        PORTAL_TRANSPARENCIA_API_KEY: ${{ secrets.PORTAL_TRANSPARENCIA_API_KEY }}\n        SKIP_LIVE_TESTS: ${{ secrets.PORTAL_TRANSPARENCIA_API_KEY == '' }}\n\n  docs:\n    runs-on: ubuntu-latest\n    if: github.event_name == 'push' && github.ref == 'refs/heads/main'\n    needs: test\n    steps:\n    - uses: actions/checkout@v2\n    - name: Use Node.js 16.x\n      uses: actions/setup-node@v2\n      with:\n        node-version: 16.x\n    - run: npm ci\n    - run: npm run docs\n    - name: Deploy to GitHub Pages\n      uses: peaceiris/actions-gh-pages@v3\n      with:\n        github_token: ${{ secrets.GITHUB_TOKEN }}\n        publish_dir: ./docs\n```\n2. Create release workflow in `.github/workflows/release.yml`\n3. Configure branch protection rules:\n   - Require pull request reviews before merging\n   - Require status checks to pass before merging\n   - Require linear history\n4. Set up Codecov integration for test coverage reporting\n5. Configure Dependabot for dependency updates\n6. Add status badges to README.md",
+        "testStrategy": "1. Verify CI workflow runs on pull requests\n2. Test that branch protection prevents direct pushes to main\n3. Verify documentation is automatically deployed\n4. Test release workflow with a test release\n5. Verify code coverage reporting works",
+        "priority": "medium",
+        "dependencies": [
+          1,
+          13,
+          14,
+          15,
+          17
+        ],
+        "status": "pending",
+        "subtasks": []
       }
     ],
     "metadata": {
       "created": "2025-07-06T19:43:37.348Z",
-      "updated": "2025-07-06T19:56:36.192Z",
+      "updated": "2025-07-06T20:07:16.344Z",
       "description": "Tasks for master context"
     }
   }
