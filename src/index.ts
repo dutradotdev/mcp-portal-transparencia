@@ -6,12 +6,11 @@
  * @version 1.0.0
  */
 
-// Export core classes
-export { SwaggerLoader } from '@/core/SwaggerLoader';
-export { Authentication } from '@/core/Authentication';
-
-// Export logging utilities
-export { Logger } from '@/logging/Logger';
+// Export main components
+export { ClientGenerator } from './core/ClientGenerator';
+export { SwaggerLoader } from './core/SwaggerLoader';
+export { Authentication } from './core/Authentication';
+export { Logger } from './logging/Logger';
 
 // Export core types and interfaces (to be implemented)
 // export * from '@/types';

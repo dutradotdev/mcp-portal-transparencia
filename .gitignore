@@ -29,4 +29,6 @@ node_modules/
 # tasks/ 
 
 coverage/
+test-clients/
 dist/
+
