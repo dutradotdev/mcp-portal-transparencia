@@ -371,7 +371,7 @@
             "title": "Setup básico do MCP Server com SDK",
             "description": "Criar a estrutura básica do MCP server usando o SDK oficial, configurar transporte stdio e definir capabilities do servidor",
             "details": "- Instalar @modelcontextprotocol/sdk\n- Criar classe MCPPortalServer básica\n- Configurar Server e StdioServerTransport\n- Definir capabilities (tools)\n- Implementar métodos de inicialização e start\n- Configurar logging básico",
-            "status": "pending",
+            "status": "done",
             "dependencies": [],
             "parentTaskId": 19
           },
@@ -458,7 +458,7 @@
     ],
     "metadata": {
       "created": "2025-07-06T19:43:37.348Z",
-      "updated": "2025-07-06T22:29:29.833Z",
+      "updated": "2025-07-07T19:45:02.994Z",
       "description": "Tasks for master context"
     }
   }
