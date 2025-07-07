@@ -2,11 +2,16 @@
   "name": "mcp-portal-transparencia",
   "version": "1.0.0",
   "description": "Multi-step Call Planner (MCP) for Brazilian Government Transparency Portal API. Provides intelligent query planning, data aggregation, and comprehensive API interaction capabilities for the Portal da Transparência, enabling efficient access to public expenditure data, government contracts, and transparency information.",
-  "main": "src/index.ts",
-  "bin": "src/index.ts",
+  "main": "dist/mcp-server.js",
+  "bin": {
+    "mcp-portal-transparencia": "./bin/mcp-portal-transparencia.js"
+  },
   "type": "commonjs",
   "scripts": {
     "dev": "npx ts-node -r tsconfig-paths/register src/index.ts",
+    "build": "tsc",
+    "start": "node dist/mcp-server.js",
+    "mcp-server": "node ./bin/mcp-portal-transparencia.js",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
@@ -39,6 +44,8 @@
   },
   "homepage": "https://github.com/lucasdutra/mcp-portal-transparencia#readme",
   "files": [
+    "dist/",
+    "bin/",
     "src/",
     "README.md",
     "LICENSE"
@@ -48,6 +55,7 @@
   },
   "dependencies": {
     "@apidevtools/swagger-parser": "^10.1.0",
+    "@modelcontextprotocol/sdk": "^1.15.0",
     "axios": "^1.10.0",
     "dotenv": "^16.4.7",
     "handlebars": "^4.7.8",

@@ -12,19 +12,28 @@ export class SwaggerLoader {
   private specUrl: string;
   private cachedSpec: OpenAPI.Document | null = null;
   private logger: Logger;
+  private authHeaders?: Record<string, string>;
 
   constructor(
     specUrl: string = 'https://api.portaldatransparencia.gov.br/v3/api-docs',
-    logger: Logger
+    logger: Logger,
+    authHeaders?: Record<string, string>
   ) {
     this.specUrl = specUrl;
     this.logger = logger;
+    this.authHeaders = authHeaders;
   }
 
   async loadSpec(): Promise<OpenAPI.Document> {
     try {
-      this.logger.info('Loading Swagger specification', { url: this.specUrl });
-      const response = await axios.get(this.specUrl);
+      this.logger.info('Loading Swagger specification', {
+        url: this.specUrl,
+        hasAuth: !!this.authHeaders,
+      });
+
+      const response = await axios.get(this.specUrl, {
+        headers: this.authHeaders || {},
+      });
       const rawSpec = response.data;
 
       // Validate the spec
