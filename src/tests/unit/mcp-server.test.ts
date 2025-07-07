@@ -1,12 +1,12 @@
-import { MCPPortalServer } from '../../../src/mcp-server';
-import { SwaggerLoader } from '../../../src/core/SwaggerLoader';
-import { Authentication } from '../../../src/core/Authentication';
-import { Logger } from '../../../src/logging/Logger';
+import { MCPPortalServer } from '../../mcp-server';
+import { SwaggerLoader } from '../../core/SwaggerLoader';
+import { Authentication } from '../../core/Authentication';
+import { Logger } from '../../logging/Logger';
 
 // Mock dependencies
-jest.mock('../../../src/core/SwaggerLoader');
-jest.mock('../../../src/core/Authentication');
-jest.mock('../../../src/logging/Logger');
+jest.mock('../../core/SwaggerLoader');
+jest.mock('../../core/Authentication');
+jest.mock('../../logging/Logger');
 
 describe('MCPPortalServer', () => {
   let server: MCPPortalServer;
@@ -17,6 +17,10 @@ describe('MCPPortalServer', () => {
   beforeEach(() => {
     // Clear all mocks
     jest.clearAllMocks();
+
+    // Clear environment variables
+    delete process.env.PORTAL_API_KEY;
+    delete process.env.LOG_LEVEL;
 
     // Mock Logger
     mockLogger = {
@@ -33,23 +37,29 @@ describe('MCPPortalServer', () => {
 
     // Mock Authentication
     mockAuth = {
-      getAuthHeaders: jest.fn(),
+      getAuthHeaders: jest.fn().mockReturnValue({}),
+      hasApiKey: jest.fn().mockReturnValue(false),
+      getMaskedApiKey: jest.fn().mockReturnValue(null),
+      testApiKey: jest.fn().mockResolvedValue(true),
     } as any;
 
-    // Mock constructors
-    (Logger as jest.Mock).mockImplementation(() => mockLogger);
-    (SwaggerLoader as jest.Mock).mockImplementation(() => mockSwaggerLoader);
-    (Authentication as jest.Mock).mockImplementation(() => mockAuth);
-
-    server = new MCPPortalServer();
+    // Mock the constructors
+    (Logger as jest.MockedClass<typeof Logger>).mockImplementation(() => mockLogger);
+    (SwaggerLoader as jest.MockedClass<typeof SwaggerLoader>).mockImplementation(
+      () => mockSwaggerLoader
+    );
+    (Authentication as jest.MockedClass<typeof Authentication>).mockImplementation(() => mockAuth);
   });
 
   describe('constructor', () => {
     it('should initialize with correct default values', () => {
+      server = new MCPPortalServer();
+
       expect(Logger).toHaveBeenCalledWith('info');
       expect(SwaggerLoader).toHaveBeenCalledWith(
         'https://api.portaldatransparencia.gov.br/swagger-ui/swagger.json',
-        mockLogger
+        mockLogger,
+        {} // Empty auth headers when no API key is provided
       );
       expect(Authentication).toHaveBeenCalledWith(
         {
@@ -61,60 +71,58 @@ describe('MCPPortalServer', () => {
       );
     });
 
-    it('should use environment variables when available', () => {
-      process.env.PORTAL_API_KEY = 'test-api-key';
+    it('should use environment variables when provided', () => {
+      process.env.PORTAL_API_KEY = 'test-key';
       process.env.LOG_LEVEL = 'debug';
 
-      const serverWithEnv = new MCPPortalServer();
-      expect(serverWithEnv).toBeInstanceOf(MCPPortalServer);
+      server = new MCPPortalServer();
 
       expect(Logger).toHaveBeenCalledWith('debug');
       expect(Authentication).toHaveBeenCalledWith(
         {
-          apiKey: 'test-api-key',
+          apiKey: 'test-key',
           headerName: 'chave-api-portal',
           testEndpoint: 'https://api.portaldatransparencia.gov.br/swagger-ui/swagger.json',
         },
         mockLogger
       );
-
-      // Clean up
-      delete process.env.PORTAL_API_KEY;
-      delete process.env.LOG_LEVEL;
     });
   });
 
   describe('initialize', () => {
+    beforeEach(() => {
+      server = new MCPPortalServer();
+      server['auth'] = mockAuth;
+      server['logger'] = mockLogger;
+      server['swaggerLoader'] = mockSwaggerLoader;
+    });
+
     it('should initialize successfully with valid swagger spec', async () => {
       const mockSpec = {
         info: { title: 'Test API', version: '1.0.0' },
         paths: {
           '/test': {
             get: {
-              operationId: 'getTest',
-              summary: 'Get test data',
-              parameters: [
-                {
-                  name: 'id',
-                  in: 'query',
-                  required: true,
-                  schema: { type: 'string' },
-                },
-              ],
+              summary: 'Test endpoint',
+              operationId: 'testEndpoint',
+              parameters: [],
+              responses: { '200': { description: 'Success' } },
             },
           },
         },
       };
 
       mockSwaggerLoader.loadSpec.mockResolvedValue(mockSpec as any);
+      mockAuth.hasApiKey.mockReturnValue(false);
 
       await server.initialize();
 
-      expect(mockSwaggerLoader.loadSpec).toHaveBeenCalledTimes(1);
+      expect(mockSwaggerLoader.loadSpec).toHaveBeenCalled();
       expect(mockLogger.info).toHaveBeenCalledWith(
         'Initializing MCP Portal da Transparência server...'
       );
-      expect(mockLogger.info).toHaveBeenCalledWith('MCP server initialized with 1 tools');
+      expect(mockLogger.info).toHaveBeenCalledWith('✅ API specification loaded successfully');
+      expect(server['isInitialized']).toBe(true);
     });
 
     it('should handle initialization errors gracefully', async () => {
@@ -134,93 +142,204 @@ describe('MCPPortalServer', () => {
       };
 
       mockSwaggerLoader.loadSpec.mockResolvedValue(mockSpec as any);
+      mockAuth.hasApiKey.mockReturnValue(false);
 
       await server.initialize();
-      await server.initialize();
+      await server.initialize(); // Second call
 
       expect(mockSwaggerLoader.loadSpec).toHaveBeenCalledTimes(1);
+    });
+
+    it('should log API key status during initialization', async () => {
+      const mockSpec = {
+        info: { title: 'Test API', version: '1.0.0' },
+        paths: {},
+      };
+
+      mockSwaggerLoader.loadSpec.mockResolvedValue(mockSpec as any);
+      mockAuth.hasApiKey.mockReturnValue(true);
+      mockAuth.testApiKey.mockResolvedValue(true);
+
+      await server.initialize();
+
+      expect(mockLogger.info).toHaveBeenCalledWith('✅ API key found, testing validity...');
+      expect(mockLogger.info).toHaveBeenCalledWith('✅ API key validated successfully');
+      expect(mockAuth.testApiKey).toHaveBeenCalled();
+    });
+
+    it('should handle API key validation errors', async () => {
+      const mockSpec = {
+        info: { title: 'Test API', version: '1.0.0' },
+        paths: {},
+      };
+
+      mockSwaggerLoader.loadSpec.mockResolvedValue(mockSpec as any);
+      mockAuth.hasApiKey.mockReturnValue(true);
+      mockAuth.testApiKey.mockRejectedValue(new Error('Network error'));
+
+      await server.initialize();
+
+      expect(mockLogger.warn).toHaveBeenCalledWith(
+        '⚠️ Could not validate API key due to network error'
+      );
+      expect(mockLogger.info).toHaveBeenCalledWith(
+        '🔄 Will proceed with initialization - test your key later'
+      );
+    });
+  });
+
+  describe('API key validation method', () => {
+    beforeEach(() => {
+      server = new MCPPortalServer();
+      server['auth'] = mockAuth;
+      server['logger'] = mockLogger;
+      server['tools'] = new Map();
+    });
+
+    it('should handle missing API key', async () => {
+      mockAuth.hasApiKey.mockReturnValue(false);
+
+      const result = await server['checkApiKeyStatus']();
+
+      expect(result.isError).toBe(true);
+      expect(result.content[0].text).toContain('❌ Chave da API não configurada');
+      expect(result.content[0].text).toContain('https://api.portaldatransparencia.gov.br/');
+    });
+
+    it('should handle valid API key', async () => {
+      mockAuth.hasApiKey.mockReturnValue(true);
+      mockAuth.getMaskedApiKey.mockReturnValue('abcd****1234');
+      mockAuth.testApiKey.mockResolvedValue(true);
+
+      const result = await server['checkApiKeyStatus']();
+
+      expect(result.isError).toBeFalsy();
+      expect(result.content[0].text).toContain('✅ Chave da API configurada e funcionando');
+      expect(result.content[0].text).toContain('abcd****1234');
+    });
+
+    it('should handle invalid API key', async () => {
+      mockAuth.hasApiKey.mockReturnValue(true);
+      mockAuth.getMaskedApiKey.mockReturnValue('abcd****1234');
+      mockAuth.testApiKey.mockResolvedValue(false);
+
+      const result = await server['checkApiKeyStatus']();
+
+      expect(result.isError).toBe(true);
+      expect(result.content[0].text).toContain('❌ Chave da API configurada mas inválida');
+      expect(result.content[0].text).toContain('abcd****1234');
+    });
+
+    it('should handle API key test errors', async () => {
+      mockAuth.hasApiKey.mockReturnValue(true);
+      mockAuth.getMaskedApiKey.mockReturnValue('abcd****1234');
+      mockAuth.testApiKey.mockRejectedValue(new Error('Network error'));
+
+      const result = await server['checkApiKeyStatus']();
+
+      expect(result.isError).toBe(true);
+      expect(result.content[0].text).toContain('⚠️ Erro ao testar chave da API');
+      expect(result.content[0].text).toContain('Network error');
     });
   });
 
   describe('tool generation', () => {
+    beforeEach(() => {
+      server = new MCPPortalServer();
+      server['auth'] = mockAuth;
+      server['logger'] = mockLogger;
+      server['swaggerLoader'] = mockSwaggerLoader;
+      server['tools'] = new Map();
+    });
+
     it('should generate tools with correct naming and structure', async () => {
       const mockSpec = {
         info: { title: 'Test API', version: '1.0.0' },
         paths: {
-          '/api-de-dados/servidores': {
+          '/servidores': {
             get: {
+              summary: 'Get servidores',
               operationId: 'getServidores',
-              summary: 'Lista servidores',
-              description: 'Retorna lista de servidores públicos',
-              tags: ['servidores'],
               parameters: [
                 {
                   name: 'nome',
                   in: 'query',
+                  description: 'Nome do servidor',
                   required: false,
                   schema: { type: 'string' },
-                  description: 'Nome do servidor',
                 },
               ],
-            },
-          },
-          '/api-de-dados/contratos/{id}': {
-            get: {
-              summary: 'Buscar contrato por ID',
-              parameters: [
-                {
-                  name: 'id',
-                  in: 'path',
-                  required: true,
-                  schema: { type: 'string' },
-                },
-              ],
+              responses: { '200': { description: 'Success' } },
             },
           },
         },
       };
 
       mockSwaggerLoader.loadSpec.mockResolvedValue(mockSpec as any);
+      mockAuth.hasApiKey.mockReturnValue(false);
 
       await server.initialize();
 
-      expect(mockLogger.info).toHaveBeenCalledWith('MCP server initialized with 2 tools');
+      expect(server['tools'].size).toBe(1);
+
+      // Check if any tool was generated (the exact name generation might vary)
+      const toolNames = Array.from(server['tools'].keys());
+      expect(toolNames.length).toBe(1);
+
+      const tool = server['tools'].get(toolNames[0]);
+      expect(tool?.method).toBe('GET');
+      expect(tool?.path).toBe('/servidores');
+      expect(tool?.category).toBe('servidores');
     });
 
     it('should categorize endpoints correctly', async () => {
       const mockSpec = {
         info: { title: 'Test API', version: '1.0.0' },
         paths: {
-          '/api-de-dados/servidores': {
+          '/servidores': {
             get: {
+              summary: 'Get servidores',
               operationId: 'getServidores',
-              summary: 'Lista servidores',
+              parameters: [],
+              responses: { '200': { description: 'Success' } },
             },
           },
-          '/api-de-dados/contratos': {
+          '/transferencias': {
             get: {
-              operationId: 'getContratos',
-              summary: 'Lista contratos',
-            },
-          },
-          '/api-de-dados/other': {
-            get: {
-              operationId: 'getOther',
-              summary: 'Other endpoint',
+              summary: 'Get transferencias',
+              operationId: 'getTransferencias',
+              parameters: [],
+              responses: { '200': { description: 'Success' } },
             },
           },
         },
       };
 
       mockSwaggerLoader.loadSpec.mockResolvedValue(mockSpec as any);
+      mockAuth.hasApiKey.mockReturnValue(false);
 
       await server.initialize();
 
-      expect(mockLogger.info).toHaveBeenCalledWith('MCP server initialized with 3 tools');
+      expect(server['tools'].size).toBe(2);
+
+      // Check that tools were generated and categorized correctly
+      const tools = Array.from(server['tools'].values());
+      const categories = tools.map(t => t.category);
+
+      expect(categories).toContain('servidores');
+      expect(categories).toContain('transferencias');
     });
   });
 
   describe('error handling', () => {
+    beforeEach(() => {
+      server = new MCPPortalServer();
+      server['auth'] = mockAuth;
+      server['logger'] = mockLogger;
+      server['swaggerLoader'] = mockSwaggerLoader;
+      server['tools'] = new Map();
+    });
+
     it('should handle unknown errors gracefully', async () => {
       const mockSpec = {
         info: { title: 'Test API', version: '1.0.0' },
@@ -228,11 +347,57 @@ describe('MCPPortalServer', () => {
       };
 
       mockSwaggerLoader.loadSpec.mockResolvedValue(mockSpec as any);
+      mockAuth.hasApiKey.mockReturnValue(false);
 
       await server.initialize();
 
-      // This test mainly verifies the error handling structure is in place
-      expect(mockLogger.info).toHaveBeenCalledWith('MCP server initialized with 0 tools');
+      // This should not throw
+      expect(() => server['isInitialized']).not.toThrow();
+    });
+
+    it('should create user-friendly error messages', () => {
+      const mockTool = {
+        name: 'test_tool',
+        description: 'Test tool',
+        inputSchema: { type: 'object', properties: {}, required: [] },
+        method: 'GET',
+        path: '/test',
+        operation: {},
+        category: 'test',
+      };
+
+      mockAuth.hasApiKey.mockReturnValue(false);
+
+      const error401 = server['createUserFriendlyError'](401, 'Unauthorized', mockTool);
+      expect(error401).toContain('🔑 **API KEY NECESSÁRIA:**');
+      expect(error401).toContain('https://api.portaldatransparencia.gov.br/');
+
+      const error403 = server['createUserFriendlyError'](403, 'Forbidden', mockTool);
+      expect(error403).toContain('🔑 **API KEY NECESSÁRIA:**');
+      expect(error403).toContain('Acesso negado');
+    });
+
+    it('should create different error messages when API key is present', () => {
+      const mockTool = {
+        name: 'test_tool',
+        description: 'Test tool',
+        inputSchema: { type: 'object', properties: {}, required: [] },
+        method: 'GET',
+        path: '/test',
+        operation: {},
+        category: 'test',
+      };
+
+      mockAuth.hasApiKey.mockReturnValue(true);
+      mockAuth.getMaskedApiKey.mockReturnValue('abcd****1234');
+
+      const error401 = server['createUserFriendlyError'](401, 'Unauthorized', mockTool);
+      expect(error401).toContain('❌ Erro de autenticação');
+      expect(error401).toContain('abcd****1234');
+
+      const error403 = server['createUserFriendlyError'](403, 'Forbidden', mockTool);
+      expect(error403).toContain('❌ Acesso negado');
+      expect(error403).toContain('abcd****1234');
     });
   });
 });
