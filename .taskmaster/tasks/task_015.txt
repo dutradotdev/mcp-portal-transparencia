@@ -1,0 +1,108 @@
+# Task ID: 15
+# Title: Generate API Documentation
+# Status: pending
+# Dependencies: 19
+# Priority: medium
+# Description: Generate comprehensive documentation for the MCP library focused on UI integration and user setup guides.
+# Details:
+1. Install documentation dependencies:
+   - `npm install typedoc --save-dev`
+2. Configure TypeDoc in `typedoc.json`:
+```json
+{
+  "entryPoints": ["src/index.ts"],
+  "out": "docs",
+  "name": "Portal da Transparência MCP",
+  "readme": "README.md",
+  "includeVersion": true,
+  "excludePrivate": true,
+  "excludeExternals": true,
+  "theme": "default"
+}
+```
+3. Create comprehensive user-focused documentation structure:
+   - Installation Guide (npx setup)
+   - Configuration Guides:
+     * Claude Desktop setup
+     * Cursor IDE setup
+     * Other UIs/editors setup
+   - Complete MCP Tools Reference
+   - Prompt Examples for Claude
+   - Step-by-step Setup Guides
+   - Troubleshooting Section
+4. Add JSDoc comments to all public classes and methods
+5. Create a documentation generation script in package.json:
+```json
+"scripts": {
+  "docs": "typedoc"
+}
+```
+6. Generate endpoint documentation from Swagger spec
+7. Create diagrams for setup flows and tool interactions
+8. Focus on documenting how to use the MCP server implementation from task 19
+
+# Test Strategy:
+1. Verify documentation builds without errors
+2. Check that all public APIs are documented
+3. Validate links between documentation pages
+4. Test all setup instructions on different platforms
+5. Verify prompt examples work correctly with Claude
+6. Ensure troubleshooting guides address common issues
+7. Test documentation site in different browsers
+8. Validate that MCP server usage documentation is accurate and complete
+
+# Subtasks:
+## 1. Create Installation Guide [pending]
+### Dependencies: None
+### Description: Document how to install the MCP server using npx
+### Details:
+
+
+## 2. Create Claude Desktop Configuration Guide [pending]
+### Dependencies: None
+### Description: Step-by-step guide for configuring MCP in Claude Desktop with screenshots
+### Details:
+
+
+## 3. Create Cursor IDE Configuration Guide [pending]
+### Dependencies: None
+### Description: Detailed setup instructions for Cursor IDE integration
+### Details:
+
+
+## 4. Create Other UIs/Editors Configuration Guide [pending]
+### Dependencies: None
+### Description: Generic configuration guide for other MCP-compatible UIs and editors
+### Details:
+
+
+## 5. Document All Available MCP Tools [pending]
+### Dependencies: None
+### Description: Create comprehensive reference of all MCP tools with parameters and examples
+### Details:
+
+
+## 6. Create Claude Prompt Examples [pending]
+### Dependencies: None
+### Description: Provide example prompts showing how Claude can use each MCP tool effectively
+### Details:
+
+
+## 7. Create Troubleshooting Guide [pending]
+### Dependencies: None
+### Description: Document common issues and solutions for MCP setup and usage
+### Details:
+
+
+## 8. Create Setup Flow Diagrams [pending]
+### Dependencies: None
+### Description: Visual diagrams showing the setup process for different UIs
+### Details:
+
+
+## 9. Document MCP Server Usage [pending]
+### Dependencies: None
+### Description: Create detailed documentation on how to use the MCP server implementation, including API endpoints, configuration options, and integration patterns
+### Details:
+
+

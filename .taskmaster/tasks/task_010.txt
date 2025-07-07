@@ -1,0 +1,161 @@
+# Task ID: 10
+# Title: Implement API Client Integration with MCP
+# Status: cancelled
+# Dependencies: 7, 8, 9
+# Priority: high
+# Description: Integrate the generated API clients with the MCP core to enable seamless chaining of API calls.
+# Details:
+1. Create a ClientFactory class in `src/core/client-factory.ts`:
+```typescript
+import { HttpClient } from './http-client';
+import { Logger } from '../logging/logger';
+import { Authentication } from './authentication';
+import { ErrorHandler } from '../errors/error-handler';
+import { RateLimiter } from './rate-limiter';
+import * as clients from '../clients';
+
+export class ClientFactory {
+  private httpClient: HttpClient;
+  private logger: Logger;
+
+  constructor(httpClient: HttpClient, logger: Logger) {
+    this.httpClient = httpClient;
+    this.logger = logger;
+  }
+
+  createClient<T extends keyof typeof clients>(clientName: T): InstanceType<typeof clients[T]> {
+    const ClientClass = clients[clientName];
+    
+    if (!ClientClass) {
+      throw new Error(`Client not found: ${clientName}`);
+    }
+    
+    return new ClientClass(this.httpClient) as InstanceType<typeof clients[T]>;
+  }
+
+  createAllClients(): Record<keyof typeof clients, any> {
+    const allClients: Record<string, any> = {};
+    
+    for (const clientName of Object.keys(clients)) {
+      allClients[clientName] = this.createClient(clientName as keyof typeof clients);
+    }
+    
+    return allClients as Record<keyof typeof clients, any>;
+  }
+}
+```
+2. Create a MCPBuilder class for fluent API creation in `src/core/mcp-builder.ts`:
+```typescript
+import { MCP } from './mcp';
+import { MCPStep, MCPConfig } from '../types/mcp';
+import { ClientFactory } from './client-factory';
+import { Logger } from '../logging/logger';
+
+export class MCPBuilder {
+  private mcp: MCP;
+  private clientFactory: ClientFactory;
+  private logger: Logger;
+
+  constructor(config: MCPConfig = {}, clientFactory: ClientFactory, logger: Logger) {
+    this.logger = logger;
+    this.mcp = new MCP(config, logger);
+    this.clientFactory = clientFactory;
+  }
+
+  addStep(step: MCPStep): MCPBuilder {
+    this.mcp.addStep(step);
+    return this;
+  }
+
+  addApiCall<T>(
+    id: string,
+    clientName: string,
+    methodName: string,
+    params: any = {},
+    options: {
+      dependsOn?: string[];
+      transform?: (result: any, context: any) => T;
+      retries?: number;
+    } = {}
+  ): MCPBuilder {
+    const step: MCPStep = {
+      id,
+      name: `${clientName}.${methodName}`,
+      dependsOn: options.dependsOn || [],
+      execute: async (context) => {
+        const client = this.clientFactory.createClient(clientName);
+        
+        if (!client[methodName]) {
+          throw new Error(`Method ${methodName} not found on client ${clientName}`);
+        }
+        
+        // Resolve parameter values from context if needed
+        const resolvedParams = this.resolveParamsFromContext(params, context);
+        
+        const result = await client[methodName](resolvedParams);
+        return options.transform ? options.transform(result, context) : result;
+      },
+      retryConfig: options.retries ? {
+        maxRetries: options.retries,
+        retryDelay: 1000,
+      } : undefined,
+    };
+    
+    this.mcp.addStep(step);
+    return this;
+  }
+
+  private resolveParamsFromContext(params: any, context: any): any {
+    if (!params) return {};
+    
+    const resolved = { ...params };
+    
+    // Look for special syntax like "$result.stepId.property"
+    for (const [key, value] of Object.entries(resolved)) {
+      if (typeof value === 'string' && value.startsWith('$result.')) {
+        const path = value.substring(8).split('.');
+        const stepId = path[0];
+        
+        if (context.results[stepId]) {
+          let currentValue = context.results[stepId];
+          
+          for (let i = 1; i < path.length; i++) {
+            currentValue = currentValue[path[i]];
+            if (currentValue === undefined) break;
+          }
+          
+          resolved[key] = currentValue;
+        }
+      } else if (typeof value === 'object') {
+        resolved[key] = this.resolveParamsFromContext(value, context);
+      }
+    }
+    
+    return resolved;
+  }
+
+  build(): MCP {
+    return this.mcp;
+  }
+
+  async execute(): Promise<any> {
+    return this.mcp.execute();
+  }
+}
+```
+3. Create utility functions for common API call patterns
+4. Implement parameter resolution from previous step results
+5. Add support for conditional API calls
+6. Implement result transformation and filtering
+
+# Test Strategy:
+1. Unit tests:
+   - Test parameter resolution
+   - Test client creation
+   - Test step building
+   - Test transformation functions
+2. Integration tests:
+   - Test with mock API responses
+   - Verify data flows correctly between steps
+   - Test error handling in chained calls
+   - Test with actual API endpoints

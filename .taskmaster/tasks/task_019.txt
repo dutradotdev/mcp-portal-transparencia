@@ -1,0 +1,290 @@
+# Task ID: 19
+# Title: Implement MCP Server Bridge for Portal da Transparência API
+# Status: pending
+# Dependencies: 1, 2, 4
+# Priority: high
+# Description: Create a complete MCP server that dynamically generates tools from the Portal da Transparência Swagger specification and provides seamless integration with Claude Desktop, Cursor, and other MCP-compatible UIs.
+# Details:
+1. Create the main MCP server entry point in `src/mcp-server.ts`:
+```typescript
+import { Server } from '@modelcontextprotocol/sdk/server/index.js';
+import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
+import { SwaggerLoader } from './core/swagger-loader';
+import { Authentication } from './core/authentication';
+import { Logger } from './logging/logger';
+import { OpenAPI } from 'openapi-types';
+
+export class MCPPortalServer {
+  private server: Server;
+  private swaggerLoader: SwaggerLoader;
+  private auth: Authentication;
+  private logger: Logger;
+  private tools: Map<string, any> = new Map();
+
+  constructor() {
+    this.logger = new Logger({ level: 'info' });
+    this.server = new Server({
+      name: 'portal-transparencia-mcp',
+      version: '1.0.0'
+    }, {
+      capabilities: {
+        tools: {}
+      }
+    });
+    this.swaggerLoader = new SwaggerLoader('https://api.portaldatransparencia.gov.br/swagger-ui/swagger.json', this.logger);
+    this.auth = new Authentication({}, this.logger);
+  }
+
+  async initialize(): Promise<void> {
+    const spec = await this.swaggerLoader.loadSpec();
+    await this.generateToolsFromSpec(spec);
+    this.setupToolHandlers();
+  }
+
+  private async generateToolsFromSpec(spec: OpenAPI.Document): Promise<void> {
+    // Generate MCP tools for each endpoint
+    for (const [path, pathItem] of Object.entries(spec.paths || {})) {
+      for (const [method, operation] of Object.entries(pathItem || {})) {
+        if (typeof operation === 'object' && operation.operationId) {
+          const toolName = this.generateToolName(operation.operationId, method, path);
+          const tool = this.createMCPTool(operation, method, path);
+          this.tools.set(toolName, tool);
+        }
+      }
+    }
+  }
+
+  private createMCPTool(operation: any, method: string, path: string) {
+    return {
+      name: this.generateToolName(operation.operationId, method, path),
+      description: operation.summary || operation.description || `${method.toUpperCase()} ${path}`,
+      inputSchema: this.generateInputSchema(operation.parameters || []),
+      handler: async (args: any) => {
+        return await this.executeApiCall(method, path, operation, args);
+      }
+    };
+  }
+
+  private async executeApiCall(method: string, path: string, operation: any, args: any): Promise<any> {
+    try {
+      // Build URL with path parameters
+      let url = `https://api.portaldatransparencia.gov.br/api-de-dados${path}`;
+      const pathParams = operation.parameters?.filter((p: any) => p.in === 'path') || [];
+      
+      for (const param of pathParams) {
+        if (args[param.name]) {
+          url = url.replace(`{${param.name}}`, encodeURIComponent(args[param.name]));
+        }
+      }
+
+      // Build query parameters
+      const queryParams = operation.parameters?.filter((p: any) => p.in === 'query') || [];
+      const searchParams = new URLSearchParams();
+      
+      for (const param of queryParams) {
+        if (args[param.name] !== undefined) {
+          searchParams.append(param.name, args[param.name]);
+        }
+      }
+
+      if (searchParams.toString()) {
+        url += `?${searchParams.toString()}`;
+      }
+
+      // Make API call with authentication
+      const headers = this.auth.getHeaders();
+      const response = await fetch(url, {
+        method: method.toUpperCase(),
+        headers
+      });
+
+      if (!response.ok) {
+        throw new Error(`API call failed: ${response.status} ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      return {
+        success: true,
+        data,
+        metadata: {
+          endpoint: `${method.toUpperCase()} ${path}`,
+          status: response.status,
+          headers: Object.fromEntries(response.headers.entries())
+        }
+      };
+    } catch (error) {
+      this.logger.error('API call failed', { error: error.message, method, path, args });
+      return {
+        success: false,
+        error: error.message,
+        endpoint: `${method.toUpperCase()} ${path}`
+      };
+    }
+  }
+
+  async start(): Promise<void> {
+    const transport = new StdioServerTransport();
+    await this.server.connect(transport);
+    this.logger.info('MCP Portal da Transparência server started');
+  }
+}
+```
+
+2. Create CLI executable in `bin/mcp-portal-server.js`:
+```javascript
+#!/usr/bin/env node
+const { MCPPortalServer } = require('../dist/mcp-server.js');
+
+async function main() {
+  const server = new MCPPortalServer();
+  await server.initialize();
+  await server.start();
+}
+
+main().catch(console.error);
+```
+
+3. Update package.json for npx compatibility:
+```json
+{
+  "bin": {
+    "mcp-portal-server": "./bin/mcp-portal-server.js"
+  },
+  "files": [
+    "dist/",
+    "bin/"
+  ]
+}
+```
+
+4. Create configuration guide in `docs/mcp-setup.md` for Claude Desktop, Cursor, and other UIs with specific configuration examples.
+
+5. Implement comprehensive error handling with user-friendly messages and automatic retry logic for common failures.
+
+6. Add tool categorization and filtering capabilities to organize the large number of endpoints into logical groups.
+
+# Test Strategy:
+1. Unit tests for MCP server components:
+   - Test tool generation from Swagger spec
+   - Test parameter mapping and validation
+   - Test authentication header injection
+   - Test error handling and user-friendly error messages
+   - Test tool categorization and filtering
+
+2. Integration tests with MCP protocol:
+   - Test server initialization and tool registration
+   - Test tool execution with mock API responses
+   - Test stdio transport communication
+   - Test with actual Portal da Transparência API endpoints
+   - Verify all generated tools are accessible and functional
+
+3. End-to-end testing with MCP clients:
+   - Test installation via npx
+   - Test configuration with Claude Desktop
+   - Test configuration with Cursor
+   - Test tool discovery and execution in actual UI environments
+   - Verify user experience is smooth and error messages are helpful
+
+4. Performance and reliability tests:
+   - Test server startup time with large Swagger spec
+   - Test memory usage with many registered tools
+   - Test concurrent tool execution
+   - Test error recovery and graceful degradation
+   - Test with rate limiting scenarios
+
+# Subtasks:
+## 1. Setup básico do MCP Server com SDK [pending]
+### Dependencies: None
+### Description: Criar a estrutura básica do MCP server usando o SDK oficial, configurar transporte stdio e definir capabilities do servidor
+### Details:
+- Instalar @modelcontextprotocol/sdk
+- Criar classe MCPPortalServer básica
+- Configurar Server e StdioServerTransport
+- Definir capabilities (tools)
+- Implementar métodos de inicialização e start
+- Configurar logging básico
+
+## 2. Integração com Swagger Loader [pending]
+### Dependencies: 19.1
+### Description: Integrar o SwaggerLoader existente com o MCP server para carregar dinamicamente a especificação do Portal da Transparência
+### Details:
+- Instanciar SwaggerLoader no MCP server
+- Carregar spec do Portal da Transparência na inicialização
+- Implementar cache da spec para evitar recarregamentos
+- Tratar erros de carregamento da spec
+- Validar estrutura da spec carregada
+
+## 3. Geração Dinâmica de Tools MCP [pending]
+### Dependencies: 19.2
+### Description: Implementar sistema que converte automaticamente cada endpoint da API em uma ferramenta MCP utilizável pelo Claude
+### Details:
+- Iterar sobre paths e operations do Swagger spec
+- Gerar nomes únicos e descritivos para cada tool
+- Criar input schemas baseados nos parâmetros da API
+- Mapear parâmetros de path, query e body
+- Categorizar tools por tags/grupos
+- Registrar tools no MCP server
+- Validar schemas gerados
+
+## 4. Sistema de Execução de API Calls [pending]
+### Dependencies: 19.3
+### Description: Implementar o executor que transforma chamadas de tools MCP em requests HTTP para a API do Portal da Transparência
+### Details:
+- Implementar método executeApiCall
+- Construir URLs com parâmetros de path substituídos
+- Montar query parameters dinamicamente
+- Integrar headers de autenticação
+- Fazer requests HTTP (fetch/axios)
+- Tratar respostas e formatá-las para o MCP
+- Implementar retry logic básico
+- Retornar dados + metadata da resposta
+
+## 5. CLI Setup para NPX [pending]
+### Dependencies: 19.4
+### Description: Criar executável CLI que permite rodar o MCP server via npx de forma simples e direta
+### Details:
+- Criar bin/mcp-portal-transparencia executável
+- Adicionar shebang #!/usr/bin/env node
+- Configurar package.json bin field
+- Implementar CLI que instancia e inicia o server
+- Adicionar parsing de argumentos básicos (API key, port, etc)
+- Tratar erros de inicialização gracefully
+- Adicionar help e version commands
+
+## 6. Sistema de Autenticação Integrado [pending]
+### Dependencies: 19.1
+### Description: Integrar o sistema de autenticação existente com o MCP server para gerenciar API keys automaticamente
+### Details:
+- Integrar Authentication class no MCP server
+- Carregar API key de variáveis de ambiente
+- Implementar configuração via CLI arguments
+- Adicionar headers de autenticação em todas as requests
+- Validar se API key está configurada
+- Fornecer mensagens de erro claras sobre autenticação
+- Suportar configuração per-tool se necessário
+
+## 7. Error Handling User-Friendly [pending]
+### Dependencies: 19.4, 19.6
+### Description: Implementar sistema de tratamento de erros que fornece mensagens claras e úteis para usuários finais do Claude/Cursor
+### Details:
+- Capturar e classificar diferentes tipos de erro da API
+- Traduzir erros HTTP em mensagens user-friendly
+- Implementar fallbacks para erros de rede
+- Adicionar sugestões de resolução nos erros
+- Logar erros para debugging sem expor ao usuário
+- Tratar casos especiais (rate limiting, auth failures)
+- Formatar erros no padrão MCP
+
+## 8. Organização e Categorização de Tools [pending]
+### Dependencies: 19.3
+### Description: Implementar sistema para organizar e categorizar as centenas de tools geradas, facilitando descoberta e uso pelo Claude
+### Details:
+- Agrupar tools por categorias (servidores, contratos, viagens, etc)
+- Criar nomes de tools descritivos e consistentes
+- Implementar prefixos/sufixos organizacionais
+- Adicionar descrições detalhadas para cada tool
+- Implementar sistema de tags/metadata
+- Criar lista/comando help para descobrir tools
+- Otimizar ordem de apresentação das tools
+- Documentar padrões de naming
+

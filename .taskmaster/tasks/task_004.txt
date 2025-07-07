@@ -1,0 +1,72 @@
+# Task ID: 4
+# Title: Implement Authentication System
+# Status: done
+# Dependencies: 1, 3
+# Priority: high
+# Description: Create an authentication system that handles API key management and injection into requests, with support for global and per-call configurations.
+# Details:
+1. Create an Authentication class in `src/core/authentication.ts`:
+```typescript
+import { Logger } from '../logging/logger';
+
+export interface AuthConfig {
+  apiKey?: string;
+  headerName?: string;
+}
+
+export class Authentication {
+  private apiKey: string | null = null;
+  private headerName: string;
+  private logger: Logger;
+
+  constructor(config: AuthConfig = {}, logger: Logger) {
+    this.apiKey = config.apiKey || null;
+    this.headerName = config.headerName || 'chave-api-portal';
+    this.logger = logger;
+  }
+
+  setApiKey(apiKey: string): void {
+    this.apiKey = apiKey;
+    this.logger.info('API key updated');
+  }
+
+  getAuthHeaders(overrideApiKey?: string): Record<string, string> {
+    const key = overrideApiKey || this.apiKey;
+    
+    if (!key) {
+      this.logger.warn('No API key provided for authentication');
+      return {};
+    }
+    
+    return { [this.headerName]: key };
+  }
+
+  hasApiKey(): boolean {
+    return !!this.apiKey;
+  }
+
+  validateApiKey(): boolean {
+    // Basic validation - could be expanded
+    return this.hasApiKey() && this.apiKey!.length > 0;
+  }
+}
+```
+2. Add support for loading API key from environment variables:
+```typescript
+// In constructor
+this.apiKey = config.apiKey || process.env.PORTAL_TRANSPARENCIA_API_KEY || null;
+```
+3. Implement a method to test API key validity with a simple endpoint call
+4. Add support for future OAuth implementation (placeholder)
+5. Create utility functions to securely store and retrieve API keys
+
+# Test Strategy:
+1. Unit tests:
+   - Test header generation
+   - Test API key validation
+   - Test environment variable loading
+   - Test override functionality
+2. Integration tests:
+   - Test authentication against the actual API
+   - Verify error handling for invalid keys
+   - Test security of key storage

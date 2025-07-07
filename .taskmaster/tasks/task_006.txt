@@ -1,0 +1,100 @@
+# Task ID: 6
+# Title: Implement Rate Limiting Monitor
+# Status: cancelled
+# Dependencies: 1, 3, 5
+# Priority: medium
+# Description: Create a rate limiting monitor that tracks API usage, provides alerts when approaching limits, and helps manage request timing to avoid exceeding limits.
+# Details:
+1. Create a RateLimiter class in `src/core/rate-limiter.ts`:
+```typescript
+import { Logger } from '../logging/logger';
+
+interface RateLimitConfig {
+  dayTimeLimit?: number;  // 6:00-23:59 limit
+  nightTimeLimit?: number; // 00:00-5:59 limit
+  alertThreshold?: number; // Percentage threshold for alerts
+}
+
+export class RateLimiter {
+  private dayTimeLimit: number;
+  private nightTimeLimit: number;
+  private alertThreshold: number;
+  private requestCounts: Map<string, number> = new Map();
+  private logger: Logger;
+
+  constructor(config: RateLimitConfig = {}, logger: Logger) {
+    this.dayTimeLimit = config.dayTimeLimit || 90;
+    this.nightTimeLimit = config.nightTimeLimit || 300;
+    this.alertThreshold = config.alertThreshold || 0.8; // 80%
+    this.logger = logger;
+    
+    // Reset counters every minute
+    setInterval(() => this.resetCounters(), 60000);
+  }
+
+  private getCurrentLimit(): number {
+    const hour = new Date().getHours();
+    return (hour >= 6 && hour < 24) ? this.dayTimeLimit : this.nightTimeLimit;
+  }
+
+  private getMinuteKey(): string {
+    const now = new Date();
+    return `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}-${now.getHours()}-${now.getMinutes()}`;
+  }
+
+  private resetCounters(): void {
+    this.requestCounts.clear();
+    this.logger.debug('Rate limit counters reset');
+  }
+
+  trackRequest(): void {
+    const key = this.getMinuteKey();
+    const currentCount = this.requestCounts.get(key) || 0;
+    this.requestCounts.set(key, currentCount + 1);
+    
+    const currentLimit = this.getCurrentLimit();
+    const usagePercentage = (currentCount + 1) / currentLimit;
+    
+    if (usagePercentage >= this.alertThreshold) {
+      this.logger.warn('Approaching rate limit', {
+        currentCount: currentCount + 1,
+        limit: currentLimit,
+        usagePercentage: usagePercentage.toFixed(2),
+        timeWindow: this.getMinuteKey()
+      });
+    }
+  }
+
+  getCurrentUsage(): { count: number; limit: number; percentage: number } {
+    const key = this.getMinuteKey();
+    const currentCount = this.requestCounts.get(key) || 0;
+    const currentLimit = this.getCurrentLimit();
+    
+    return {
+      count: currentCount,
+      limit: currentLimit,
+      percentage: currentCount / currentLimit
+    };
+  }
+
+  shouldThrottle(): boolean {
+    const { count, limit } = this.getCurrentUsage();
+    return count >= limit;
+  }
+}
+```
+2. Add event emitter for rate limit alerts
+3. Implement adaptive throttling based on time of day
+4. Add support for custom alert callbacks
+5. Create utility to estimate remaining requests in current window
+
+# Test Strategy:
+1. Unit tests:
+   - Test limit calculation based on time of day
+   - Test counter incrementation
+   - Test alert threshold detection
+   - Test counter reset functionality
+2. Integration tests:
+   - Test with simulated high-frequency requests
+   - Verify alerts are triggered at appropriate thresholds
+   - Test throttling behavior

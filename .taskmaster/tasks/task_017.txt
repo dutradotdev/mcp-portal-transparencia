@@ -1,0 +1,117 @@
+# Task ID: 17
+# Title: Create NPM Package Configuration
+# Status: pending
+# Dependencies: 19, 13, 14, 15
+# Priority: medium
+# Description: Configure the project for publishing as an NPM package that works as an MCP server via npx, with proper versioning, metadata, and distribution files.
+# Details:
+1. Update package.json with MCP server configuration for npx usage:
+```json
+{
+  "name": "mcp-portal-transparencia",
+  "version": "0.1.0",
+  "description": "MCP Server for Portal da Transparência API - Multi-step Call Planner",
+  "main": "dist/index.js",
+  "bin": {
+    "mcp-portal-transparencia": "dist/index.js"
+  },
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "jest",
+    "test:unit": "jest --testMatch='**/tests/unit/**/*.test.ts'",
+    "test:integration": "jest --testMatch='**/tests/integration/**/*.test.ts'",
+    "lint": "eslint 'src/**/*.ts'",
+    "docs": "typedoc",
+    "prepublishOnly": "npm run build && npm run test && npm run lint",
+    "start": "node dist/index.js"
+  },
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "portal-da-transparencia",
+    "api",
+    "typescript",
+    "brasil",
+    "governo",
+    "transparency"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yourusername/mcp-portal-transparencia.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/mcp-portal-transparencia/issues"
+  },
+  "homepage": "https://github.com/yourusername/mcp-portal-transparencia#readme",
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}
+```
+2. Create .npmignore file:
+```
+src/
+tests/
+examples/
+.github/
+.vscode/
+.eslintrc.js
+.prettierrc
+tsconfig.json
+jest.config.js
+typedoc.json
+.gitignore
+.env
+.env.example
+coverage/
+docs/
+```
+3. Ensure dist/index.js has proper shebang for CLI usage:
+```javascript
+#!/usr/bin/env node
+```
+4. Create release workflow in GitHub Actions:
+```yaml
+name: Release
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16.x'
+          registry-url: 'https://registry.npmjs.org/'
+      - run: npm ci
+      - run: npm run build
+      - run: npm run test
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+```
+5. Create CHANGELOG.md for version tracking
+6. Add LICENSE file (MIT)
+7. Configure semantic versioning for releases
+8. Add README section explaining npx usage for MCP server
+
+# Test Strategy:
+1. Verify package builds correctly with executable permissions
+2. Test installation and execution via npx mcp-portal-transparencia
+3. Verify MCP server starts correctly when run via npx
+4. Test TypeScript types are correctly included
+5. Check that unnecessary files are excluded
+6. Test package.json scripts
+7. Verify bin configuration works properly

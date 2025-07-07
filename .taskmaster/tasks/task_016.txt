@@ -1,0 +1,121 @@
+# Task ID: 16
+# Title: Create Usage Examples
+# Status: cancelled
+# Dependencies: 12
+# Priority: medium
+# Description: Create comprehensive examples demonstrating how to use the MCP for various common scenarios.
+# Details:
+1. Create examples directory structure:
+```
+examples/
+  ├── basic/
+  │   ├── simple-call.ts
+  │   ├── authentication.ts
+  │   └── error-handling.ts
+  ├── flows/
+  │   ├── sequential-calls.ts
+  │   ├── parallel-calls.ts
+  │   └── conditional-flows.ts
+  ├── endpoints/
+  │   ├── viagens.ts
+  │   ├── servidores.ts
+  │   ├── beneficios.ts
+  │   └── ...
+  └── advanced/
+      ├── rate-limiting.ts
+      ├── caching.ts
+      └── custom-clients.ts
+```
+2. Implement basic examples:
+```typescript
+// examples/basic/simple-call.ts
+import PortalTransparenciaMCP from '../../src';
+
+async function main() {
+  // Create MCP instance
+  const mcp = new PortalTransparenciaMCP({
+    auth: {
+      apiKey: process.env.PORTAL_TRANSPARENCIA_API_KEY,
+    },
+  });
+
+  // Get a specific client
+  const servidoresClient = mcp.getClient('ServidoresClient');
+
+  // Make a simple API call
+  try {
+    const result = await servidoresClient.getServidoresPorOrgao({
+      orgaoSuperior: '26000',
+      pagina: 1,
+    });
+
+    console.log(`Found ${result.totalElements} servers`);
+    console.log(result.content.slice(0, 5));
+  } catch (error) {
+    console.error('API call failed:', error.message);
+  }
+}
+
+main();
+```
+3. Implement flow examples:
+```typescript
+// examples/flows/sequential-calls.ts
+import PortalTransparenciaMCP from '../../src';
+
+async function main() {
+  const mcp = new PortalTransparenciaMCP({
+    auth: {
+      apiKey: process.env.PORTAL_TRANSPARENCIA_API_KEY,
+    },
+  });
+
+  // Create a flow with sequential calls
+  const flow = mcp.createFlow()
+    .addApiCall(
+      'getOrgaos',
+      'OrgaosClient',
+      'getOrgaosSuperiores'
+    )
+    .addApiCall(
+      'getServidores',
+      'ServidoresClient',
+      'getServidoresPorOrgao',
+      {
+        orgaoSuperior: '$result.getOrgaos[0].codigo',
+        pagina: 1,
+      },
+      { dependsOn: ['getOrgaos'] }
+    )
+    .addApiCall(
+      'getDetalhes',
+      'ServidoresClient',
+      'getServidorDetalhes',
+      {
+        id: '$result.getServidores.content[0].id',
+      },
+      { dependsOn: ['getServidores'] }
+    );
+
+  // Execute the flow
+  try {
+    const result = await flow.execute();
+    console.log('Flow executed successfully');
+    console.log('Servidor details:', result.results.getDetalhes);
+  } catch (error) {
+    console.error('Flow execution failed:', error.message);
+  }
+}
+
+main();
+```
+4. Create examples for each major endpoint category
+5. Add advanced examples for caching, rate limiting, and error handling
+6. Create a README for each example explaining its purpose
+
+# Test Strategy:
+1. Verify all examples run without errors
+2. Test examples with actual API key
+3. Ensure examples cover all major features
+4. Check that examples are up-to-date with the latest API
+5. Validate output matches expected format

@@ -1,0 +1,108 @@
+# Task ID: 3
+# Title: Implement Logging System
+# Status: cancelled
+# Dependencies: 1
+# Priority: high
+# Description: Create a structured logging system that outputs JSON logs and captures API call details, errors, and performance metrics.
+# Details:
+1. Install logging dependencies:
+   - `npm install pino pino-pretty --save`
+2. Create a Logger class in `src/logging/logger.ts`:
+```typescript
+import pino from 'pino';
+
+export interface LoggerOptions {
+  level?: string;
+  prettyPrint?: boolean;
+}
+
+export class Logger {
+  private logger: pino.Logger;
+
+  constructor(options: LoggerOptions = {}) {
+    this.logger = pino({
+      level: options.level || 'info',
+      ...(options.prettyPrint ? { transport: { target: 'pino-pretty' } } : {}),
+    });
+  }
+
+  info(message: string, data?: Record<string, any>): void {
+    this.logger.info(data || {}, message);
+  }
+
+  error(message: string, data?: Record<string, any>): void {
+    // Ensure API keys are not logged
+    if (data?.headers?.['chave-api-portal']) {
+      data.headers['chave-api-portal'] = '[REDACTED]';
+    }
+    this.logger.error(data || {}, message);
+  }
+
+  warn(message: string, data?: Record<string, any>): void {
+    this.logger.warn(data || {}, message);
+  }
+
+  debug(message: string, data?: Record<string, any>): void {
+    this.logger.debug(data || {}, message);
+  }
+
+  // Specialized method for API calls
+  logApiCall({
+    endpoint,
+    method,
+    requestPayload,
+    responseStatus,
+    responseTime,
+    error,
+  }: {
+    endpoint: string;
+    method: string;
+    requestPayload?: any;
+    responseStatus?: number;
+    responseTime?: number;
+    error?: Error;
+  }): void {
+    const logData = {
+      endpoint,
+      method,
+      requestPayload: this.sanitizePayload(requestPayload),
+      responseStatus,
+      responseTime,
+      error: error ? { message: error.message, stack: error.stack } : undefined,
+    };
+
+    if (error) {
+      this.error('API call failed', logData);
+    } else {
+      this.info('API call completed', logData);
+    }
+  }
+
+  private sanitizePayload(payload: any): any {
+    if (!payload) return payload;
+    
+    // Deep clone to avoid modifying the original
+    const sanitized = JSON.parse(JSON.stringify(payload));
+    
+    // Redact sensitive fields
+    if (sanitized.apiKey) sanitized.apiKey = '[REDACTED]';
+    if (sanitized['chave-api-portal']) sanitized['chave-api-portal'] = '[REDACTED]';
+    
+    return sanitized;
+  }
+}
+```
+3. Create a LoggerFactory to ensure consistent logger instances across the application
+4. Implement log rotation for production environments
+5. Add context tracking to correlate logs from the same request flow
+
+# Test Strategy:
+1. Unit tests:
+   - Test log level filtering
+   - Test sensitive data redaction
+   - Test JSON formatting
+   - Test API call logging format
+2. Integration tests:
+   - Verify logs are correctly written to files
+   - Test log rotation
+   - Verify performance impact is minimal
