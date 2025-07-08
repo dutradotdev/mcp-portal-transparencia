@@ -20,7 +20,7 @@ export class Authentication {
   constructor(config: AuthConfig = {}, logger: Logger) {
     // Load API key from config (environment variables can be loaded by the calling code)
     this.apiKey = config.apiKey || null;
-    this.headerName = config.headerName || 'chave-api-portal';
+    this.headerName = config.headerName || 'chave-api-dados';
     this.testEndpoint =
       config.testEndpoint || 'https://api.portaldatransparencia.gov.br/v3/api-docs';
     this.logger = logger;

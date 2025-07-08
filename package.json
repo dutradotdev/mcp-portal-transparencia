@@ -1,10 +1,10 @@
 {
-  "name": "mcp-portal-transparencia",
-  "version": "1.0.0",
+  "name": "mcp-portal-transparencia-brasil",
+  "version": "1.0.1",
   "description": "MCP Server for Portal da Transparência API - Multi-step Call Planner. Provides intelligent query planning, data aggregation, and comprehensive API interaction capabilities for the Brazilian Government Transparency Portal, enabling efficient access to public expenditure data, government contracts, and transparency information via MCP protocol.",
   "main": "dist/src/index.js",
   "bin": {
-    "mcp-portal-transparencia": "bin/mcp-portal-transparencia.js"
+    "mcp-portal-transparencia-brasil": "bin/mcp-portal-transparencia.js"
   },
   "types": "dist/src/index.d.ts",
   "type": "module",
@@ -13,6 +13,8 @@
     "dev": "npx ts-node -r tsconfig-paths/register src/index.ts",
     "start": "node dist/src/index.js",
     "mcp-server": "node dist/src/mcp-server.js",
+    "inspector": "npx @modelcontextprotocol/inspector --config mcp-inspector-config.json --server portal-transparencia",
+    "inspector:direct": "npx @modelcontextprotocol/inspector node dist/src/mcp-server.js",
     "test": "jest",
     "test:unit": "jest --testMatch='**/tests/unit/**/*.test.ts'",
     "test:integration": "jest --testMatch='**/tests/integration/**/*.test.ts'",
@@ -25,7 +27,7 @@
     "format:check": "prettier --check \"src/**/*.{ts,js,json}\"",
     "clean": "rm -rf dist coverage temp_build",
     "docs": "typedoc",
-    "prepublishOnly": "npm run build && npm run test && npm run lint",
+    "prepublishOnly": "npm run build && npm run test:unit && npm run lint",
     "prepare": "husky install"
   },
   "keywords": [

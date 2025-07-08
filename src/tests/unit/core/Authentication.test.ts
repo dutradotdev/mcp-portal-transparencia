@@ -23,10 +23,10 @@ describe('Authentication', () => {
   describe('constructor', () => {
     it('should initialize with default configuration', () => {
       expect(authentication.hasApiKey()).toBe(false);
-      expect(authentication.getHeaderName()).toBe('chave-api-portal');
+      expect(authentication.getHeaderName()).toBe('chave-api-dados');
       expect(mockLogger.info).toHaveBeenCalledWith('Authentication system initialized', {
         hasApiKey: false,
-        headerName: 'chave-api-portal',
+        headerName: 'chave-api-dados',
         testEndpoint: 'https://api.portaldatransparencia.gov.br/v3/api-docs',
       });
     });
@@ -79,7 +79,7 @@ describe('Authentication', () => {
 
       const headers = authentication.getAuthHeaders();
 
-      expect(headers).toEqual({ 'chave-api-portal': 'test-api-key' });
+      expect(headers).toEqual({ 'chave-api-dados': 'test-api-key' });
     });
 
     it('should use override API key when provided', () => {
@@ -87,7 +87,7 @@ describe('Authentication', () => {
 
       const headers = authentication.getAuthHeaders('override-key');
 
-      expect(headers).toEqual({ 'chave-api-portal': 'override-key' });
+      expect(headers).toEqual({ 'chave-api-dados': 'override-key' });
     });
 
     it('should use custom header name', () => {
@@ -160,7 +160,7 @@ describe('Authentication', () => {
       expect(mockedAxios.get).toHaveBeenCalledWith(
         'https://api.portaldatransparencia.gov.br/v3/api-docs',
         {
-          headers: { 'chave-api-portal': 'valid-key' },
+          headers: { 'chave-api-dados': 'valid-key' },
           timeout: 10000,
         }
       );
@@ -232,7 +232,7 @@ describe('Authentication', () => {
       expect(mockedAxios.get).toHaveBeenCalledWith(
         expect.any(String),
         expect.objectContaining({
-          headers: { 'chave-api-portal': 'set-api-key' },
+          headers: { 'chave-api-dados': 'set-api-key' },
         })
       );
     });
@@ -252,7 +252,7 @@ describe('Authentication', () => {
 
   describe('getHeaderName and setHeaderName', () => {
     it('should get current header name', () => {
-      expect(authentication.getHeaderName()).toBe('chave-api-portal');
+      expect(authentication.getHeaderName()).toBe('chave-api-dados');
     });
 
     it('should set new header name', () => {
