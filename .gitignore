@@ -32,3 +32,5 @@ coverage/
 test-clients/
 dist/
 mcp-inspector-config.json
+
+.cursor/mcp.json

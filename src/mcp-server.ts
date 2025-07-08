@@ -184,7 +184,32 @@ export class MCPPortalServer {
     const pathParts = path.split('/').filter(part => part && !part.startsWith('{'));
     const category = pathParts[pathParts.length - 1] || 'geral';
 
-    return `portal_${category}_${cleanOperationId}`.replace(/[^a-z0-9_]/g, '_');
+    // Create the base name
+    let toolName = `portal_${category}_${cleanOperationId}`.replace(/[^a-z0-9_]/g, '_');
+
+    // Ensure the name doesn't exceed 64 characters (MCP limit)
+    if (toolName.length > 64) {
+      // Truncate while keeping the portal_ prefix and trying to preserve readability
+      const prefix = 'portal_';
+      const maxLength = 64;
+      const availableLength = maxLength - prefix.length;
+
+      // Try to keep a portion of category and operationId
+      const categoryPart = category.substring(0, Math.min(category.length, 12));
+      const operationPart = cleanOperationId.substring(
+        0,
+        availableLength - categoryPart.length - 1
+      );
+
+      toolName = `${prefix}${categoryPart}_${operationPart}`.replace(/[^a-z0-9_]/g, '_');
+
+      // Final check - if still too long, truncate
+      if (toolName.length > 64) {
+        toolName = toolName.substring(0, 64);
+      }
+    }
+
+    return toolName;
   }
 
   private createMCPTool(operation: OpenAPI.Operation, method: string, path: string) {
