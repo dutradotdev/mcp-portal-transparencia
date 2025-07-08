@@ -49,12 +49,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dutradotdev/mcp-portal-transparencia-brasil.git"
+    "url": "git+https://github.com/dutradotdev/mcp-portal-transparencia.git"
   },
   "bugs": {
-    "url": "https://github.com/dutradotdev/mcp-portal-transparencia-brasil/issues"
+    "url": "https://github.com/dutradotdev/mcp-portal-transparencia/issues"
   },
-  "homepage": "https://github.com/dutradotdev/mcp-portal-transparencia-brasil#readme",
+  "homepage": "https://github.com/dutradotdev/mcp-portal-transparencia#readme",
   "files": [
     "dist",
     "bin",
