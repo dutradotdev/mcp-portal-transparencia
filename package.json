@@ -1,6 +1,6 @@
 {
   "name": "mcp-portal-transparencia",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "MCP Server for Portal da Transparência API - Multi-step Call Planner. Provides intelligent query planning, data aggregation, and comprehensive API interaction capabilities for the Brazilian Government Transparency Portal, enabling efficient access to public expenditure data, government contracts, and transparency information via MCP protocol.",
   "main": "dist/src/index.js",
   "bin": {
