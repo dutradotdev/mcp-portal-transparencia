@@ -9,6 +9,7 @@ import { SwaggerLoader } from './core/SwaggerLoader.js';
 import { Authentication } from './core/Authentication.js';
 import { Logger } from './logging/Logger.js';
 import { OpenAPI } from 'openapi-types';
+import fetch from 'node-fetch';
 
 export class MCPPortalServer {
   private server: Server;
