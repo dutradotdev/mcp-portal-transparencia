@@ -1,13 +1,19 @@
 {
   "name": "mcp-portal-transparencia",
   "version": "1.0.0",
-  "description": "Multi-step Call Planner (MCP) for Brazilian Government Transparency Portal API. Provides intelligent query planning, data aggregation, and comprehensive API interaction capabilities for the Portal da Transparência, enabling efficient access to public expenditure data, government contracts, and transparency information.",
-  "main": "src/index.ts",
-  "bin": "src/index.ts",
-  "type": "commonjs",
+  "description": "MCP Server for Portal da Transparência API - Multi-step Call Planner. Provides intelligent query planning, data aggregation, and comprehensive API interaction capabilities for the Brazilian Government Transparency Portal, enabling efficient access to public expenditure data, government contracts, and transparency information via MCP protocol.",
+  "main": "dist/src/index.js",
+  "bin": {
+    "mcp-portal-transparencia": "bin/mcp-portal-transparencia.js"
+  },
+  "types": "dist/src/index.d.ts",
+  "type": "module",
   "scripts": {
+    "build": "tsc",
     "dev": "npx ts-node -r tsconfig-paths/register src/index.ts",
     "test": "jest",
+    "test:unit": "jest --testMatch='**/tests/unit/**/*.test.ts'",
+    "test:integration": "jest --testMatch='**/tests/integration/**/*.test.ts'",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "lint": "eslint src/**/*.ts",
@@ -16,13 +22,22 @@
     "format": "prettier --write \"src/**/*.{ts,js,json}\"",
     "format:check": "prettier --check \"src/**/*.{ts,js,json}\"",
     "clean": "rm -rf dist coverage temp_build",
+    "docs": "typedoc",
+    "prepublishOnly": "npm run build && npm run test && npm run lint",
+    "start": "node dist/src/index.js",
+    "mcp-server": "node dist/src/mcp-server.js",
     "prepare": "husky install"
   },
   "keywords": [
     "mcp",
-    "portal-transparencia",
-    "government-api",
+    "mcp-server",
+    "portal-da-transparencia",
+    "api",
+    "typescript",
+    "brasil",
+    "governo",
     "transparency",
+    "government-api",
     "brazil",
     "openapi",
     "swagger",
@@ -32,22 +47,24 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/lucasdutra/mcp-portal-transparencia.git"
+    "url": "git+https://github.com/dutradotdev/mcp-portal-transparencia.git"
   },
   "bugs": {
-    "url": "https://github.com/lucasdutra/mcp-portal-transparencia/issues"
+    "url": "https://github.com/dutradotdev/mcp-portal-transparencia/issues"
   },
-  "homepage": "https://github.com/lucasdutra/mcp-portal-transparencia#readme",
+  "homepage": "https://github.com/dutradotdev/mcp-portal-transparencia#readme",
   "files": [
-    "src/",
-    "README.md",
-    "LICENSE"
+    "dist",
+    "bin",
+    "LICENSE",
+    "README.md"
   ],
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=16.0.0"
   },
   "dependencies": {
     "@apidevtools/swagger-parser": "^10.1.0",
+    "@modelcontextprotocol/sdk": "^0.6.0",
     "axios": "^1.10.0",
     "dotenv": "^16.4.7",
     "handlebars": "^4.7.8",
@@ -75,6 +92,7 @@
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
     "tsx": "^4.19.2",
+    "typedoc": "^0.25.13",
     "typescript": "^5.7.3"
   },
   "jest": {

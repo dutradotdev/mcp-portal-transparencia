@@ -323,7 +323,7 @@
         "id": 17,
         "title": "Create NPM Package Configuration",
         "description": "Configure the project for publishing as an NPM package that works as an MCP server via npx, with proper versioning, metadata, and distribution files.",
-        "status": "pending",
+        "status": "done",
         "dependencies": [
           19,
           13,
@@ -458,7 +458,7 @@
     ],
     "metadata": {
       "created": "2025-07-06T19:43:37.348Z",
-      "updated": "2025-07-06T22:29:29.833Z",
+      "updated": "2025-07-08T15:18:32.240Z",
       "description": "Tasks for master context"
     }
   }
