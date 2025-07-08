@@ -32,16 +32,18 @@ export class MCPPortalServer {
       }
     );
 
-    // Initialize components
-    this.swaggerLoader = new SwaggerLoader(
-      'https://api.portaldatransparencia.gov.br/swagger-ui/swagger.json',
-      this.logger
-    );
-
     // Configure authentication
     const apiKey = process.env.PORTAL_API_KEY;
     const authConfig = apiKey ? { apiKey } : {};
     this.auth = new Authentication(authConfig, this.logger);
+
+    // Initialize components with auth headers if API key is available
+    const authHeaders = apiKey ? this.auth.getAuthHeaders() : undefined;
+    this.swaggerLoader = new SwaggerLoader(
+      'https://api.portaldatransparencia.gov.br/v3/api-docs',
+      this.logger,
+      authHeaders
+    );
 
     this.setupHandlers();
   }
