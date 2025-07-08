@@ -17,6 +17,7 @@ export class Logger {
       ),
       transports: [
         new winston.transports.Console({
+          stderrLevels: ['error', 'warn', 'info', 'debug'], // Force all levels to stderr
           format: winston.format.combine(winston.format.colorize(), winston.format.simple()),
         }),
       ],

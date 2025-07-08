@@ -7,10 +7,10 @@
  */
 
 // Export main components
-export { ClientGenerator } from './core/ClientGenerator';
-export { SwaggerLoader } from './core/SwaggerLoader';
-export { Authentication } from './core/Authentication';
-export { Logger } from './logging/Logger';
+export { ClientGenerator } from './core/ClientGenerator.js';
+export { SwaggerLoader } from './core/SwaggerLoader.js';
+export { Authentication } from './core/Authentication.js';
+export { Logger } from './logging/Logger.js';
 
 // Export core types and interfaces (to be implemented)
 // export * from '@/types';

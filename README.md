@@ -118,6 +118,139 @@ Adicione ao seu `.cursor/mcp.json`:
 }
 ```
 
+## 🔍 MCP Inspector - Teste Local e Visual
+
+O [MCP Inspector](https://github.com/modelcontextprotocol/inspector) é uma ferramenta oficial da Anthropic que permite testar visualmente todas as ferramentas MCP em uma interface web interativa. É perfeito para desenvolvimento e debugging.
+
+### 🚀 Como Usar o Inspector
+
+#### 1. Pré-requisitos
+
+```bash
+# Obter uma API key gratuita
+# Acesse: https://api.portaldatransparencia.gov.br/api-de-dados/cadastrar-email
+```
+
+#### 2. Configuração Rápida
+
+```bash
+# 1. Clone ou baixe este projeto
+git clone https://github.com/seu-usuario/mcp-portal-transparencia.git
+cd mcp-portal-transparencia
+
+# 2. Configure sua API key
+echo "PORTAL_API_KEY=sua_api_key_aqui" > .env
+
+# 3. Faça o build do projeto
+npm run build
+
+# 4. Execute o MCP Inspector
+PORTAL_API_KEY=sua_api_key_aqui npx @modelcontextprotocol/inspector node dist/src/mcp-server.js
+```
+
+#### 3. Acesso à Interface
+
+Após executar o comando acima, você verá uma saída similar a:
+
+```
+🔗 Open inspector with token pre-filled:
+   http://localhost:6274/?MCP_PROXY_AUTH_TOKEN=seu_token_aqui
+
+🔍 MCP Inspector is up and running at http://127.0.0.1:6274 🚀
+```
+
+**Clique no link** que aparece no terminal para acessar o inspector com autenticação automática!
+
+#### 4. Interface Visual
+
+No MCP Inspector você pode:
+
+- ✅ **Ver todas as 106+ ferramentas** geradas automaticamente
+- 🔧 **Testar qualquer ferramenta** com parâmetros personalizados
+- 📊 **Visualizar respostas** em JSON formatado
+- 🔍 **Filtrar ferramentas** por categoria ou nome
+- 📖 **Ver documentação** de cada ferramenta
+
+#### 5. Exemplo de Teste - Ministério da Fazenda
+
+1. **Verificar API Key**:
+   - Ferramenta: `portal_check_api_key`
+   - Parâmetros: `{}` (vazio)
+
+2. **Consultar Servidores da Fazenda**:
+   - Ferramenta: `portal_servidores_consultar`
+   - Parâmetros:
+     ```json
+     {
+       "orgaoServidorLotacao": "26000",
+       "pagina": 1
+     }
+     ```
+
+3. **Buscar Despesas da Fazenda**:
+   - Ferramenta: `portal_despesas_consultar`
+   - Parâmetros:
+     ```json
+     {
+       "codigoOrgao": "26000",
+       "mesAno": 202412,
+       "pagina": 1
+     }
+     ```
+
+### 📝 Scripts NPM Adicionais
+
+Para facilitar o uso, você pode usar os scripts npm:
+
+```bash
+# Executar o inspector diretamente
+npm run inspector:direct
+
+# Executar com arquivo de configuração
+npm run inspector
+
+# Ver demonstração das ferramentas
+npm run demo
+```
+
+### 🐛 Resolução de Problemas
+
+**Problema**: Erro 401 "Chave de API não informada"
+
+```bash
+# Solução: Verificar se a API key está configurada
+echo $PORTAL_API_KEY  # Deve mostrar sua chave
+
+# Ou reconfigurar
+export PORTAL_API_KEY=sua_chave_aqui
+```
+
+**Problema**: Erro de conexão no inspector
+
+```bash
+# Solução: Verificar se o build foi feito
+npm run build
+
+# E tentar novamente
+PORTAL_API_KEY=sua_chave_aqui npx @modelcontextprotocol/inspector node dist/src/mcp-server.js
+```
+
+**Problema**: Porta ocupada
+
+```bash
+# Solução: Matar processos na porta
+pkill -f inspector
+# E tentar novamente
+```
+
+### 💡 Dicas do Inspector
+
+- 🎯 **Filtros**: Use `portal_ministerio_fazenda` para ver apenas ferramentas da Fazenda
+- 📊 **Favoritos**: Salve combinações de parâmetros usadas frequentemente
+- 🔄 **Re-execução**: Use `Ctrl+Enter` para re-executar rapidamente
+- 📋 **Copiar**: Clique em qualquer resposta para copiar o JSON
+- 🌓 **Modo Escuro**: Disponível no menu de configurações
+
 ## 📖 Uso via MCP (Recomendado)
 
 O MCP Server permite usar o Portal da Transparência diretamente através de ferramentas como Claude Desktop, Cursor, e outras interfaces compatíveis com MCP.

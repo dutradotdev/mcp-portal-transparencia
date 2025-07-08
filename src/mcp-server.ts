@@ -1,6 +1,10 @@
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import { CallToolRequestSchema, ListToolsRequestSchema } from '@modelcontextprotocol/sdk/types.js';
+import {
+  CallToolRequestSchema,
+  ListToolsRequestSchema,
+  InitializeRequestSchema,
+} from '@modelcontextprotocol/sdk/types.js';
 import { SwaggerLoader } from './core/SwaggerLoader.js';
 import { Authentication } from './core/Authentication.js';
 import { Logger } from './logging/Logger.js';
@@ -49,6 +53,20 @@ export class MCPPortalServer {
   }
 
   private setupHandlers(): void {
+    // Handle initialization request
+    this.server.setRequestHandler(InitializeRequestSchema, async _request => {
+      return {
+        protocolVersion: '2024-11-05',
+        capabilities: {
+          tools: {},
+        },
+        serverInfo: {
+          name: 'portal-transparencia-mcp',
+          version: '1.0.0',
+        },
+      };
+    });
+
     this.server.setRequestHandler(ListToolsRequestSchema, async () => {
       const tools = Array.from(this.tools.values());
 
@@ -354,4 +372,22 @@ export class MCPPortalServer {
       throw error;
     }
   }
+}
+
+// Initialize and start the server
+async function main() {
+  const server = new MCPPortalServer();
+  try {
+    await server.initialize();
+    await server.start();
+  } catch (error) {
+    // Use stderr explicitly to avoid interfering with MCP protocol
+    process.stderr.write(`Erro ao iniciar servidor MCP: ${error}\n`);
+    process.exit(1);
+  }
+}
+
+// Only run main if this file is the entry point
+if (import.meta.url === `file://${process.argv[1]}`) {
+  main();
 }
