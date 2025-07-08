@@ -11,6 +11,8 @@
   "scripts": {
     "build": "tsc",
     "dev": "npx ts-node -r tsconfig-paths/register src/index.ts",
+    "start": "node dist/src/index.js",
+    "mcp-server": "node dist/src/mcp-server.js",
     "test": "jest",
     "test:unit": "jest --testMatch='**/tests/unit/**/*.test.ts'",
     "test:integration": "jest --testMatch='**/tests/integration/**/*.test.ts'",
@@ -24,8 +26,6 @@
     "clean": "rm -rf dist coverage temp_build",
     "docs": "typedoc",
     "prepublishOnly": "npm run build && npm run test && npm run lint",
-    "start": "node dist/src/index.js",
-    "mcp-server": "node dist/src/mcp-server.js",
     "prepare": "husky install"
   },
   "keywords": [
@@ -60,7 +60,7 @@
     "README.md"
   ],
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=18.0.0"
   },
   "dependencies": {
     "@apidevtools/swagger-parser": "^10.1.0",

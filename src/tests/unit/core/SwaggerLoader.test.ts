@@ -50,10 +50,13 @@ describe('SwaggerLoader', () => {
       const result = await swaggerLoader.loadSpec();
 
       // Assert
-      expect(mockedAxios.get).toHaveBeenCalledWith('https://test-api.com/swagger.json');
+      expect(mockedAxios.get).toHaveBeenCalledWith('https://test-api.com/swagger.json', {
+        headers: {},
+      });
       expect(mockedSwaggerParser.validate).toHaveBeenCalledWith(mockSpec);
       expect(mockLogger.info).toHaveBeenCalledWith('Loading Swagger specification', {
         url: 'https://test-api.com/swagger.json',
+        hasAuth: false,
       });
       expect(mockLogger.info).toHaveBeenCalledWith('Swagger specification loaded successfully');
       expect(result).toEqual(mockSpec);
@@ -116,7 +119,9 @@ describe('SwaggerLoader', () => {
       const result = await swaggerLoader.getSpec();
 
       // Assert
-      expect(mockedAxios.get).toHaveBeenCalledWith('https://test-api.com/swagger.json');
+      expect(mockedAxios.get).toHaveBeenCalledWith('https://test-api.com/swagger.json', {
+        headers: {},
+      });
       expect(result).toEqual(mockSpec);
     });
   });

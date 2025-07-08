@@ -10,7 +10,8 @@ const __dirname = path.dirname(__filename);
 
 // Check if we're in development mode (running from source)
 const isDevMode =
-  process.env.NODE_ENV === 'development' || !fs.existsSync(path.join(__dirname, '..', 'dist'));
+  process.env.NODE_ENV === 'development' ||
+  fs.existsSync(path.join(__dirname, '..', 'src', 'mcp-server.ts'));
 
 async function main() {
   try {
