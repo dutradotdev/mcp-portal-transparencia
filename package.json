@@ -1,10 +1,10 @@
 {
-  "name": "mcp-portal-transparencia",
+  "name": "mcp-portal-transparencia-brasil",
   "version": "1.0.1",
   "description": "MCP Server for Portal da Transparência API - Multi-step Call Planner. Provides intelligent query planning, data aggregation, and comprehensive API interaction capabilities for the Brazilian Government Transparency Portal, enabling efficient access to public expenditure data, government contracts, and transparency information via MCP protocol.",
   "main": "dist/src/index.js",
   "bin": {
-    "mcp-portal-transparencia": "bin/mcp-portal-transparencia.js"
+    "mcp-portal-transparencia-brasil": "bin/mcp-portal-transparencia.js"
   },
   "types": "dist/src/index.d.ts",
   "type": "module",
@@ -49,12 +49,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dutradotdev/mcp-portal-transparencia.git"
+    "url": "git+https://github.com/dutradotdev/mcp-portal-transparencia-brasil.git"
   },
   "bugs": {
-    "url": "https://github.com/dutradotdev/mcp-portal-transparencia/issues"
+    "url": "https://github.com/dutradotdev/mcp-portal-transparencia-brasil/issues"
   },
-  "homepage": "https://github.com/dutradotdev/mcp-portal-transparencia#readme",
+  "homepage": "https://github.com/dutradotdev/mcp-portal-transparencia-brasil#readme",
   "files": [
     "dist",
     "bin",
