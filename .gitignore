@@ -31,4 +31,4 @@ node_modules/
 coverage/
 test-clients/
 dist/
-
+mcp-inspector-config.json

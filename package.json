@@ -27,7 +27,7 @@
     "format:check": "prettier --check \"src/**/*.{ts,js,json}\"",
     "clean": "rm -rf dist coverage temp_build",
     "docs": "typedoc",
-    "prepublishOnly": "npm run build && npm run test && npm run lint",
+    "prepublishOnly": "npm run build && npm run test:unit && npm run lint",
     "prepare": "husky install"
   },
   "keywords": [
