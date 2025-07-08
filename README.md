@@ -42,6 +42,19 @@ Este projeto implementa um MCP (Multi-step Call Planner) que automatiza e orques
 
 ## 🛠️ Instalação
 
+### Uso via npx (Recomendado para MCP Server)
+
+```bash
+# Executar MCP Server diretamente (para Claude Desktop, Cursor, etc.)
+npx mcp-portal-transparencia
+
+# Ou instalar globalmente
+npm install -g mcp-portal-transparencia
+mcp-portal-transparencia
+```
+
+### Instalação local
+
 ```bash
 # Instalar via npm
 npm install mcp-portal-transparencia
@@ -55,54 +68,114 @@ yarn add mcp-portal-transparencia
 ### Pré-requisitos
 
 - Node.js >= 16.0
-- Uma chave de API do Portal da Transparência (opcional para endpoints públicos)
+- Uma chave de API do Portal da Transparência (obrigatória para MCP Server)
 
 ### Variáveis de Ambiente
 
-Crie um arquivo `.env` na raiz do seu projeto:
+Para usar o MCP Server, configure as variáveis de ambiente:
 
 ```env
-# API Key do Portal da Transparência (se necessário)
-PORTAL_TRANSPARENCIA_API_KEY=sua_api_key_aqui
+# API Key do Portal da Transparência (obrigatória)
+PORTAL_API_KEY=sua_api_key_aqui
 
 # Configurações opcionais
 LOG_LEVEL=info
-RATE_LIMIT_ALERTS=true
 ```
 
-## 📖 Uso Básico
+### Configuração para Claude Desktop
+
+Adicione ao seu `claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "portal-transparencia": {
+      "command": "npx",
+      "args": ["mcp-portal-transparencia"],
+      "env": {
+        "PORTAL_API_KEY": "sua_api_key_aqui"
+      }
+    }
+  }
+}
+```
+
+### Configuração para Cursor
+
+Adicione ao seu `.cursor/mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "portal-transparencia": {
+      "command": "npx",
+      "args": ["mcp-portal-transparencia"],
+      "env": {
+        "PORTAL_API_KEY": "sua_api_key_aqui"
+      }
+    }
+  }
+}
+```
+
+## 📖 Uso via MCP (Recomendado)
+
+O MCP Server permite usar o Portal da Transparência diretamente através de ferramentas como Claude Desktop, Cursor, e outras interfaces compatíveis com MCP.
+
+### Ferramentas Disponíveis
+
+Após configurar o MCP Server, você terá acesso a todas as ferramentas geradas automaticamente:
+
+- `portal_check_api_key` - Verificar se a API key está configurada
+- `portal_servidores_*` - Consultar dados de servidores públicos
+- `portal_viagens_*` - Consultar viagens a serviço
+- `portal_contratos_*` - Consultar contratos públicos
+- `portal_despesas_*` - Consultar despesas públicas
+- `portal_beneficios_*` - Consultar programas sociais
+- E muitas outras...
+
+### Exemplos de Uso no Claude
+
+```
+🔍 Consultar servidores do Ministério da Fazenda
+🎯 Buscar contratos acima de R$ 1 milhão
+📊 Analisar despesas por órgão no último trimestre
+🏛️ Verificar benefícios sociais por região
+```
+
+## 📖 Uso Programático (Biblioteca)
 
 ```typescript
-import { PortalTransparenciaClient } from "mcp-portal-transparencia";
+import { PortalTransparenciaClient } from 'mcp-portal-transparencia';
 
 // Inicializar o cliente
 const client = new PortalTransparenciaClient({
-  apiKey: process.env.PORTAL_TRANSPARENCIA_API_KEY, // opcional
+  apiKey: process.env.PORTAL_API_KEY,
   enableRateLimitAlerts: true,
-  logLevel: "info",
+  logLevel: 'info',
 });
 
 // Exemplo: Consultar viagens por período
 const viagens = await client.viagens.consultar({
-  dataIdaDe: "01/01/2024",
-  dataIdaAte: "31/01/2024",
-  dataRetornoDe: "01/01/2024",
-  dataRetornoAte: "31/01/2024",
-  codigoOrgao: "26000",
+  dataIdaDe: '01/01/2024',
+  dataIdaAte: '31/01/2024',
+  dataRetornoDe: '01/01/2024',
+  dataRetornoAte: '31/01/2024',
+  codigoOrgao: '26000',
   pagina: 1,
 });
 
 // Exemplo: Consultar servidores
 const servidores = await client.servidores.consultar({
-  orgaoServidorLotacao: "26000",
+  orgaoServidorLotacao: '26000',
   pagina: 1,
 });
 
 // Exemplo: Buscar licitações
 const licitacoes = await client.licitacoes.consultar({
-  dataInicial: "01/01/2024",
-  dataFinal: "31/01/2024",
-  codigoOrgao: "26000",
+  dataInicial: '01/01/2024',
+  dataFinal: '31/01/2024',
+  codigoOrgao: '26000',
   pagina: 1,
 });
 ```
@@ -117,12 +190,12 @@ O sistema monitora automaticamente o rate limiting da API:
 // O cliente alerta automaticamente quando atingir 80% do limite
 // Limites: 90 req/min (06:00-23:59) | 300 req/min (00:00-05:59)
 
-client.on("rateLimitWarning", (info) => {
+client.on('rateLimitWarning', info => {
   console.log(`Aviso: ${info.percentage}% do rate limit atingido`);
 });
 
-client.on("rateLimitExceeded", (error) => {
-  console.error("Rate limit excedido:", error.message);
+client.on('rateLimitExceeded', error => {
+  console.error('Rate limit excedido:', error.message);
 });
 ```
 
@@ -132,14 +205,14 @@ client.on("rateLimitExceeded", (error) => {
 // Exemplo de busca correlacionada
 const resultado = await client
   .orchestrator()
-  .addStep("orgaos", () => client.orgaos.listarSiafi({ pagina: 1 }))
-  .addStep("servidores", (prev) =>
+  .addStep('orgaos', () => client.orgaos.listarSiafi({ pagina: 1 }))
+  .addStep('servidores', prev =>
     client.servidores.consultar({
       orgaoServidorLotacao: prev.orgaos[0].codigo,
       pagina: 1,
     })
   )
-  .addStep("remuneracoes", (prev) =>
+  .addStep('remuneracoes', prev =>
     client.servidores.consultarRemuneracao({
       cpf: prev.servidores[0].cpf,
       mesAno: 202401,
