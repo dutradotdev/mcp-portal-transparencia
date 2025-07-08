@@ -19,7 +19,7 @@
       "command": "npx",
       "args": ["mcp-portal-transparencia"],
       "env": {
-        "PORTAL_API_KEY": "5cfc0f8d76b187520a31d3a4451f890c",
+        "PORTAL_API_KEY": "<sua-chave-aqui>",
         "LOG_LEVEL": "info"
       }
     }
