@@ -14,7 +14,7 @@
     "start": "node dist/src/index.js",
     "mcp-server": "node dist/src/mcp-server.js",
     "inspector": "npx @modelcontextprotocol/inspector --config mcp-inspector-config.json --server portal-transparencia",
-    "inspector:direct": "npx @modelcontextprotocol/inspector node dist/src/mcp-server.js",
+    "inspector:direct": "npm run build && npx @modelcontextprotocol/inspector node dist/src/mcp-server.js",
     "test": "jest",
     "test:unit": "jest --testMatch='**/tests/unit/**/*.test.ts'",
     "test:integration": "jest --testMatch='**/tests/integration/**/*.test.ts'",

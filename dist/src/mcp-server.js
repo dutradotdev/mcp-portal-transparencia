@@ -46,52 +46,10 @@ export class MCPPortalServer {
         });
         this.server.setRequestHandler(ListToolsRequestSchema, async () => {
             const tools = Array.from(this.tools.values());
-            // Add API key validation tool as first tool
-            const validationTool = {
-                name: 'portal_check_api_key',
-                description: '⚠️ VERIFICAR API KEY - Verifica se a API key do Portal da Transparência está configurada. IMPORTANTE: Usuário precisa configurar PORTAL_API_KEY nas variáveis de ambiente.',
-                inputSchema: {
-                    type: 'object',
-                    properties: {},
-                    required: [],
-                },
-            };
-            return {
-                tools: [validationTool, ...tools],
-            };
+            return { tools };
         });
         this.server.setRequestHandler(CallToolRequestSchema, async (request) => {
             const { name, arguments: args } = request.params;
-            // Handle API key validation tool
-            if (name === 'portal_check_api_key') {
-                const apiKey = process.env.PORTAL_API_KEY;
-                if (!apiKey) {
-                    return {
-                        content: [
-                            {
-                                type: 'text',
-                                text: '❌ API KEY NÃO CONFIGURADA\n\n' +
-                                    'Para usar o Portal da Transparência, você precisa:\n\n' +
-                                    '1. Obter uma API key gratuita em: https://api.portaldatransparencia.gov.br/api-de-dados\n' +
-                                    '2. Configurar a variável de ambiente PORTAL_API_KEY\n' +
-                                    '3. Reiniciar o servidor MCP\n\n' +
-                                    'Exemplo de configuração:\n' +
-                                    'PORTAL_API_KEY=sua_chave_aqui',
-                            },
-                        ],
-                    };
-                }
-                return {
-                    content: [
-                        {
-                            type: 'text',
-                            text: '✅ API KEY CONFIGURADA\n\n' +
-                                'A API key está configurada corretamente. Você pode usar todas as ferramentas do Portal da Transparência.',
-                        },
-                    ],
-                };
-            }
-            // Handle other tools
             if (!this.tools.has(name)) {
                 throw new Error(`Ferramenta não encontrada: ${name}`);
             }
