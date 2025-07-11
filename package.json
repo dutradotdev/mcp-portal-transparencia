@@ -28,6 +28,9 @@
     "clean": "rm -rf dist coverage temp_build",
     "docs": "typedoc",
     "prepublishOnly": "npm run build && npm run test:unit && npm run lint",
+    "publish:patch": "npm version patch && npm publish",
+    "publish:minor": "npm version minor && npm publish",
+    "publish:major": "npm version major && npm publish",
     "prepare": "husky install"
   },
   "keywords": [
