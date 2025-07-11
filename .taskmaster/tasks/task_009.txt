@@ -1,0 +1,290 @@
+# Task ID: 9
+# Title: Implement Multi-step Call Planner Core
+# Status: cancelled
+# Dependencies: 1, 3, 5, 8
+# Priority: high
+# Description: Create the core MCP functionality that allows chaining multiple API calls in a sequence with dependency management.
+# Details:
+1. Create interfaces for the MCP in `src/types/mcp.ts`:
+```typescript
+export interface MCPStep {
+  id: string;
+  name: string;
+  execute: (context: MCPContext) => Promise<any>;
+  dependsOn?: string[];
+  onSuccess?: (result: any, context: MCPContext) => void;
+  onError?: (error: Error, context: MCPContext) => void;
+  retryConfig?: {
+    maxRetries: number;
+    retryDelay: number;
+  };
+}
+
+export interface MCPContext {
+  results: Record<string, any>;
+  errors: Record<string, Error>;
+  metadata: Record<string, any>;
+}
+
+export interface MCPConfig {
+  continueOnError?: boolean;
+  timeout?: number;
+  concurrency?: number;
+}
+```
+2. Create the MCP class in `src/core/mcp.ts`:
+```typescript
+import { MCPStep, MCPContext, MCPConfig } from '../types/mcp';
+import { Logger } from '../logging/logger';
+
+export class MCP {
+  private steps: MCPStep[] = [];
+  private context: MCPContext;
+  private config: MCPConfig;
+  private logger: Logger;
+
+  constructor(config: MCPConfig = {}, logger: Logger) {
+    this.config = {
+      continueOnError: config.continueOnError ?? false,
+      timeout: config.timeout ?? 300000, // 5 minutes
+      concurrency: config.concurrency ?? 1, // Sequential by default
+    };
+    
+    this.context = {
+      results: {},
+      errors: {},
+      metadata: {},
+    };
+    
+    this.logger = logger;
+  }
+
+  addStep(step: MCPStep): MCP {
+    this.steps.push(step);
+    return this;
+  }
+
+  addSteps(steps: MCPStep[]): MCP {
+    this.steps.push(...steps);
+    return this;
+  }
+
+  setContext(context: Partial<MCPContext>): MCP {
+    this.context = { ...this.context, ...context };
+    return this;
+  }
+
+  private validateSteps(): void {
+    // Check for duplicate IDs
+    const ids = this.steps.map(step => step.id);
+    const uniqueIds = new Set(ids);
+    
+    if (ids.length !== uniqueIds.size) {
+      throw new Error('Duplicate step IDs found');
+    }
+    
+    // Check for circular dependencies
+    for (const step of this.steps) {
+      if (!step.dependsOn) continue;
+      
+      const visited = new Set<string>();
+      const checkCircular = (stepId: string, path: string[] = []): boolean => {
+        if (path.includes(stepId)) {
+          this.logger.error('Circular dependency detected', { path: [...path, stepId] });
+          return true;
+        }
+        
+        if (visited.has(stepId)) return false;
+        visited.add(stepId);
+        
+        const step = this.steps.find(s => s.id === stepId);
+        if (!step || !step.dependsOn) return false;
+        
+        for (const depId of step.dependsOn) {
+          if (checkCircular(depId, [...path, stepId])) {
+            return true;
+          }
+        }
+        
+        return false;
+      };
+      
+      for (const depId of step.dependsOn) {
+        if (checkCircular(depId)) {
+          throw new Error(`Circular dependency detected: ${depId}`);
+        }
+      }
+    }
+  }
+
+  private canExecuteStep(step: MCPStep): boolean {
+    if (!step.dependsOn || step.dependsOn.length === 0) {
+      return true;
+    }
+    
+    // Check if all dependencies have completed successfully
+    return step.dependsOn.every(depId => {
+      const hasResult = depId in this.context.results;
+      const hasError = depId in this.context.errors;
+      
+      return hasResult && (!hasError || this.config.continueOnError);
+    });
+  }
+
+  async execute(): Promise<MCPContext> {
+    this.validateSteps();
+    
+    // Sort steps based on dependencies
+    const executionOrder = this.topologicalSort();
+    
+    this.logger.info('Starting MCP execution', {
+      stepCount: this.steps.length,
+      executionOrder: executionOrder.map(step => step.id)
+    });
+    
+    const startTime = Date.now();
+    
+    try {
+      if (this.config.concurrency === 1) {
+        // Sequential execution
+        for (const step of executionOrder) {
+          await this.executeStep(step);
+        }
+      } else {
+        // Parallel execution with dependency respect
+        let remainingSteps = [...executionOrder];
+        
+        while (remainingSteps.length > 0) {
+          const executableSteps = remainingSteps.filter(step => this.canExecuteStep(step));
+          
+          if (executableSteps.length === 0) {
+            // Deadlock or all remaining steps have failed dependencies
+            break;
+          }
+          
+          // Execute steps in parallel up to concurrency limit
+          const batch = executableSteps.slice(0, this.config.concurrency);
+          await Promise.all(batch.map(step => this.executeStep(step)));
+          
+          // Remove executed steps
+          remainingSteps = remainingSteps.filter(step => 
+            !batch.some(s => s.id === step.id)
+          );
+        }
+      }
+    } catch (error) {
+      this.logger.error('MCP execution failed', { error });
+      throw error;
+    } finally {
+      const duration = Date.now() - startTime;
+      this.context.metadata.executionTime = duration;
+      
+      this.logger.info('MCP execution completed', {
+        duration,
+        successCount: Object.keys(this.context.results).length,
+        errorCount: Object.keys(this.context.errors).length
+      });
+    }
+    
+    return this.context;
+  }
+
+  private async executeStep(step: MCPStep): Promise<void> {
+    if (!this.canExecuteStep(step)) {
+      this.logger.warn(`Skipping step ${step.id} due to failed dependencies`);
+      return;
+    }
+    
+    this.logger.info(`Executing step: ${step.id} - ${step.name}`);
+    const startTime = Date.now();
+    
+    try {
+      const result = await step.execute(this.context);
+      this.context.results[step.id] = result;
+      
+      if (step.onSuccess) {
+        step.onSuccess(result, this.context);
+      }
+      
+      const duration = Date.now() - startTime;
+      this.logger.info(`Step ${step.id} completed successfully`, { duration });
+    } catch (error) {
+      this.context.errors[step.id] = error;
+      
+      if (step.onError) {
+        step.onError(error, this.context);
+      }
+      
+      const duration = Date.now() - startTime;
+      this.logger.error(`Step ${step.id} failed`, { error, duration });
+      
+      if (!this.config.continueOnError) {
+        throw error;
+      }
+    }
+  }
+
+  private topologicalSort(): MCPStep[] {
+    const result: MCPStep[] = [];
+    const visited = new Set<string>();
+    const temp = new Set<string>();
+    
+    const visit = (stepId: string): void => {
+      if (temp.has(stepId)) {
+        throw new Error(`Circular dependency detected: ${stepId}`);
+      }
+      
+      if (visited.has(stepId)) return;
+      
+      const step = this.steps.find(s => s.id === stepId);
+      if (!step) return;
+      
+      temp.add(stepId);
+      
+      if (step.dependsOn) {
+        for (const depId of step.dependsOn) {
+          visit(depId);
+        }
+      }
+      
+      temp.delete(stepId);
+      visited.add(stepId);
+      result.push(step);
+    };
+    
+    for (const step of this.steps) {
+      if (!visited.has(step.id)) {
+        visit(step.id);
+      }
+    }
+    
+    return result;
+  }
+
+  reset(): MCP {
+    this.context = {
+      results: {},
+      errors: {},
+      metadata: {},
+    };
+    return this;
+  }
+}
+```
+3. Implement timeout handling for long-running steps
+4. Add support for conditional step execution
+5. Implement step result transformation
+6. Add support for step retries with backoff
+
+# Test Strategy:
+1. Unit tests:
+   - Test dependency validation
+   - Test topological sorting
+   - Test step execution order
+   - Test error handling
+   - Test parallel execution
+2. Integration tests:
+   - Test with mock steps
+   - Verify context passing between steps
+   - Test timeout handling
+   - Test with actual API clients

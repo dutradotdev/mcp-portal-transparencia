@@ -1,0 +1,130 @@
+# Task ID: 12
+# Title: Implement Main MCP Class and Public API
+# Status: cancelled
+# Dependencies: 2, 3, 4, 5, 6, 7, 8, 9, 10, 11
+# Priority: high
+# Description: Create the main MCP class that serves as the public API for the library, integrating all components.
+# Details:
+1. Create the main MCP class in `src/index.ts`:
+```typescript
+import { Authentication, AuthConfig } from './core/authentication';
+import { SwaggerLoader } from './core/swagger-loader';
+import { Logger, LoggerOptions } from './logging/logger';
+import { ErrorHandler } from './errors/error-handler';
+import { RateLimiter } from './core/rate-limiter';
+import { HttpClient, HttpClientConfig } from './core/http-client';
+import { ClientFactory } from './core/client-factory';
+import { MCPBuilder } from './core/mcp-builder';
+import { CacheManager, CacheConfig } from './core/cache-manager';
+import { MCPConfig } from './types/mcp';
+
+export interface MCPOptions {
+  auth?: AuthConfig;
+  logger?: LoggerOptions;
+  http?: HttpClientConfig;
+  cache?: CacheConfig;
+  rateLimiter?: {
+    dayTimeLimit?: number;
+    nightTimeLimit?: number;
+    alertThreshold?: number;
+  };
+  swaggerUrl?: string;
+}
+
+export class PortalTransparenciaMCP {
+  private logger: Logger;
+  private auth: Authentication;
+  private errorHandler: ErrorHandler;
+  private rateLimiter: RateLimiter;
+  private cacheManager: CacheManager;
+  private httpClient: HttpClient;
+  private clientFactory: ClientFactory;
+  private swaggerLoader: SwaggerLoader;
+
+  constructor(options: MCPOptions = {}) {
+    // Initialize components
+    this.logger = new Logger(options.logger);
+    this.auth = new Authentication(options.auth, this.logger);
+    this.errorHandler = new ErrorHandler(this.logger);
+    this.rateLimiter = new RateLimiter(options.rateLimiter, this.logger);
+    this.cacheManager = new CacheManager(options.cache, this.logger);
+    this.httpClient = new HttpClient(
+      this.auth,
+      this.errorHandler,
+      this.logger,
+      this.rateLimiter,
+      this.cacheManager,
+      options.http
+    );
+    this.clientFactory = new ClientFactory(this.httpClient, this.logger);
+    this.swaggerLoader = new SwaggerLoader(options.swaggerUrl, this.logger);
+    
+    this.logger.info('Portal da Transparência MCP initialized');
+  }
+
+  setApiKey(apiKey: string): void {
+    this.auth.setApiKey(apiKey);
+  }
+
+  createFlow(config: MCPConfig = {}): MCPBuilder {
+    return new MCPBuilder(config, this.clientFactory, this.logger);
+  }
+
+  getClient<T extends string>(clientName: T): any {
+    return this.clientFactory.createClient(clientName);
+  }
+
+  getAllClients(): Record<string, any> {
+    return this.clientFactory.createAllClients();
+  }
+
+  async loadSwaggerSpec(): Promise<void> {
+    await this.swaggerLoader.loadSpec();
+  }
+
+  enableCache(): void {
+    this.cacheManager.enable();
+  }
+
+  disableCache(): void {
+    this.cacheManager.disable();
+  }
+
+  clearCache(): void {
+    this.cacheManager.flush();
+  }
+
+  getRateLimitStatus(): { count: number; limit: number; percentage: number } {
+    return this.rateLimiter.getCurrentUsage();
+  }
+}
+
+// Export types
+export * from './types/mcp';
+export * from './errors/api-errors';
+
+// Default export
+export default PortalTransparenciaMCP;
+```
+2. Create a simple factory function for easier instantiation:
+```typescript
+export function createMCP(options: MCPOptions = {}): PortalTransparenciaMCP {
+  return new PortalTransparenciaMCP(options);
+}
+```
+3. Add examples in the README for common use cases
+4. Implement convenience methods for common operations
+5. Add proper TypeScript exports for all public types
+6. Ensure backward compatibility for future versions
+
+# Test Strategy:
+1. Unit tests:
+   - Test initialization with different options
+   - Test API key setting
+   - Test flow creation
+   - Test client retrieval
+2. Integration tests:
+   - Test full workflow with multiple components
+   - Verify all components are properly initialized
+   - Test with actual API endpoints
+   - Test error handling at the top level

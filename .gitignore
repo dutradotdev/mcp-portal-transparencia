@@ -27,3 +27,10 @@ node_modules/
 # Task files
 # tasks.json
 # tasks/ 
+
+coverage/
+test-clients/
+dist/
+mcp-inspector-config.json
+
+.cursor/mcp.json

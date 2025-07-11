@@ -1,0 +1,158 @@
+# Task ID: 7
+# Title: Implement API Client Generator
+# Status: done
+# Dependencies: 1, 2
+# Priority: high
+# Description: Create a module that automatically generates TypeScript client classes for each endpoint in the Portal da Transparência API based on the Swagger specification.
+# Details:
+1. Install required dependencies:
+   - `npm install openapi-typescript-codegen handlebars --save-dev`
+2. Create a ClientGenerator class in `src/core/client-generator.ts`:
+```typescript
+import { OpenAPI } from 'openapi-types';
+import * as fs from 'fs';
+import * as path from 'path';
+import Handlebars from 'handlebars';
+import { Logger } from '../logging/logger';
+
+export class ClientGenerator {
+  private spec: OpenAPI.Document;
+  private outputDir: string;
+  private logger: Logger;
+
+  constructor(spec: OpenAPI.Document, outputDir: string = './src/clients', logger: Logger) {
+    this.spec = spec;
+    this.outputDir = outputDir;
+    this.logger = logger;
+  }
+
+  async generateClients(): Promise<string[]> {
+    const generatedFiles: string[] = [];
+    
+    try {
+      // Ensure output directory exists
+      if (!fs.existsSync(this.outputDir)) {
+        fs.mkdirSync(this.outputDir, { recursive: true });
+      }
+      
+      // Load template
+      const templatePath = path.resolve(__dirname, '../templates/client.hbs');
+      const templateSource = fs.readFileSync(templatePath, 'utf8');
+      const template = Handlebars.compile(templateSource);
+      
+      // Group endpoints by tag
+      const endpointsByTag = this.groupEndpointsByTag();
+      
+      // Generate client for each tag
+      for (const [tag, endpoints] of Object.entries(endpointsByTag)) {
+        const clientName = this.formatClientName(tag);
+        const fileName = `${this.kebabCase(tag)}.ts`;
+        const filePath = path.join(this.outputDir, fileName);
+        
+        const clientCode = template({
+          clientName,
+          endpoints,
+          imports: this.generateImports(endpoints),
+          interfaces: this.generateInterfaces(endpoints)
+        });
+        
+        fs.writeFileSync(filePath, clientCode);
+        generatedFiles.push(filePath);
+        
+        this.logger.info(`Generated client for ${tag}`, { filePath });
+      }
+      
+      // Generate index file
+      this.generateIndexFile(Object.keys(endpointsByTag));
+      
+      return generatedFiles;
+    } catch (error) {
+      this.logger.error('Failed to generate clients', { error });
+      throw new Error(`Client generation failed: ${error.message}`);
+    }
+  }
+
+  private groupEndpointsByTag(): Record<string, any[]> {
+    const endpointsByTag: Record<string, any[]> = {};
+    
+    // Process paths and operations
+    for (const [path, pathItem] of Object.entries(this.spec.paths)) {
+      for (const [method, operation] of Object.entries(pathItem)) {
+        if (!operation) continue;
+        
+        const tag = operation.tags?.[0] || 'Default';
+        
+        if (!endpointsByTag[tag]) {
+          endpointsByTag[tag] = [];
+        }
+        
+        endpointsByTag[tag].push({
+          path,
+          method: method.toUpperCase(),
+          operationId: operation.operationId || `${method}${this.formatClientName(path)}`,
+          summary: operation.summary,
+          description: operation.description,
+          parameters: operation.parameters,
+          requestBody: operation.requestBody,
+          responses: operation.responses
+        });
+      }
+    }
+    
+    return endpointsByTag;
+  }
+
+  private formatClientName(str: string): string {
+    return str
+      .split(/[-_\s/{}]/)
+      .map(part => part.charAt(0).toUpperCase() + part.slice(1))
+      .join('')
+      .replace(/[^a-zA-Z0-9]/g, '')
+      + 'Client';
+  }
+
+  private kebabCase(str: string): string {
+    return str
+      .replace(/([a-z])([A-Z])/g, '$1-$2')
+      .replace(/[\s_]+/g, '-')
+      .toLowerCase();
+  }
+
+  private generateImports(endpoints: any[]): string {
+    // Generate necessary imports
+    return '';
+  }
+
+  private generateInterfaces(endpoints: any[]): string {
+    // Generate TypeScript interfaces for request/response
+    return '';
+  }
+
+  private generateIndexFile(tags: string[]): void {
+    const indexPath = path.join(this.outputDir, 'index.ts');
+    const exports = tags.map(tag => {
+      const fileName = this.kebabCase(tag);
+      const clientName = this.formatClientName(tag);
+      return `export { ${clientName} } from './${fileName}';`;
+    }).join('\n');
+    
+    fs.writeFileSync(indexPath, exports);
+    this.logger.info('Generated index file', { path: indexPath });
+  }
+}
+```
+3. Create Handlebars templates for client generation
+4. Implement type generation for request/response objects
+5. Add support for path parameters, query parameters, and request bodies
+6. Generate proper TypeScript documentation
+
+# Test Strategy:
+1. Unit tests:
+   - Test client name formatting
+   - Test endpoint grouping
+   - Test template rendering
+   - Test type generation
+2. Integration tests:
+   - Test with actual Swagger spec
+   - Verify generated clients can make API calls
+   - Test type safety of generated code

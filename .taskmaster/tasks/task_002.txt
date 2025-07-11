@@ -1,0 +1,73 @@
+# Task ID: 2
+# Title: Implement Swagger Spec Loader
+# Status: done
+# Dependencies: 1
+# Priority: high
+# Description: Create a module to load, parse, and validate the Swagger specification from the Portal da Transparência API.
+# Details:
+1. Install required dependencies:
+   - `npm install axios swagger-parser @apidevtools/swagger-parser openapi-types --save`
+2. Create a SwaggerLoader class in `src/core/swagger-loader.ts`:
+```typescript
+import axios from 'axios';
+import SwaggerParser from '@apidevtools/swagger-parser';
+import { OpenAPI } from 'openapi-types';
+import { Logger } from '../logging/logger';
+
+export class SwaggerLoader {
+  private specUrl: string;
+  private cachedSpec: OpenAPI.Document | null = null;
+  private logger: Logger;
+
+  constructor(specUrl: string = 'https://api.portaldatransparencia.gov.br/v3/api-docs', logger: Logger) {
+    this.specUrl = specUrl;
+    this.logger = logger;
+  }
+
+  async loadSpec(): Promise<OpenAPI.Document> {
+    try {
+      this.logger.info('Loading Swagger specification', { url: this.specUrl });
+      const response = await axios.get(this.specUrl);
+      const rawSpec = response.data;
+      
+      // Validate the spec
+      const validatedSpec = await SwaggerParser.validate(rawSpec) as OpenAPI.Document;
+      this.cachedSpec = validatedSpec;
+      this.logger.info('Swagger specification loaded successfully');
+      return validatedSpec;
+    } catch (error) {
+      this.logger.error('Failed to load Swagger specification', { error });
+      throw new Error(`Failed to load Swagger specification: ${error.message}`);
+    }
+  }
+
+  async getSpec(): Promise<OpenAPI.Document> {
+    if (!this.cachedSpec) {
+      return this.loadSpec();
+    }
+    return this.cachedSpec;
+  }
+
+  async detectSpecChanges(newSpecUrl?: string): Promise<boolean> {
+    const currentSpec = await this.getSpec();
+    const newSpec = await new SwaggerLoader(newSpecUrl || this.specUrl, this.logger).loadSpec();
+    
+    // Compare versions or other relevant properties
+    return currentSpec.info.version !== newSpec.info.version;
+  }
+}
+```
+3. Create a simple spec validator to check for required fields and structure
+4. Implement caching mechanism to avoid unnecessary reloads
+5. Add version detection to identify API changes
+
+# Test Strategy:
+1. Unit tests:
+   - Test loading spec from a mock URL
+   - Test caching mechanism
+   - Test error handling for invalid URLs
+   - Test version comparison logic
+2. Integration tests:
+   - Test loading the actual Portal da Transparência Swagger spec
+   - Verify all expected endpoints are present
+   - Test version detection with actual API

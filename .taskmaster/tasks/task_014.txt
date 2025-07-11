@@ -1,0 +1,60 @@
+# Task ID: 14
+# Title: Implement Integration Tests
+# Status: pending
+# Dependencies: 19, 13
+# Priority: medium
+# Description: Create comprehensive integration tests that verify all MCP tools work correctly with the actual Portal da Transparência API, testing connectivity and response structure for all endpoint categories through the MCP server interface.
+# Details:
+1. Create integration test configuration in `tests/integration/config.ts`:
+```typescript
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+export const config = {
+  skipLiveTests: process.env.SKIP_LIVE_TESTS === 'true',
+  testTimeout: 30000,
+  mcpServerPort: process.env.MCP_SERVER_PORT || 3000,
+};
+```
+2. Create comprehensive test files for ALL API categories via MCP tools:
+   - `tests/integration/servidores.test.ts`
+   - `tests/integration/viagens.test.ts`
+   - `tests/integration/contratos.test.ts`
+   - `tests/integration/beneficios.test.ts`
+   - `tests/integration/orcamento.test.ts`
+   - `tests/integration/despesas.test.ts`
+   - `tests/integration/receitas.test.ts`
+   - `tests/integration/convenios.test.ts`
+   - `tests/integration/cartoes.test.ts`
+   - `tests/integration/auxilio-emergencial.test.ts`
+   - `tests/integration/seguro-defeso.test.ts`
+   - `tests/integration/bolsa-familia.test.ts`
+   - `tests/integration/bpc.test.ts`
+   - `tests/integration/peti.test.ts`
+3. Test ALL MCP tools functionality through the MCP server:
+   - Verify each MCP tool can make real API calls via server
+   - Test parameter validation and transformation through MCP interface
+   - Verify response structure and data consistency from MCP tools
+4. Create comprehensive MCP connectivity tests:
+   - Test MCP server startup and tool registration
+   - Verify MCP tool discovery and availability
+   - Test MCP communication protocol with actual API calls
+5. Implement end-to-end MCP integration tests:
+   - Test complete MCP client-server communication flow
+   - Verify tool execution through MCP protocol
+   - Test error handling and response formatting via MCP
+6. Create performance and reliability tests via MCP:
+   - Test rate limiting behavior through MCP tools
+   - Verify caching functionality with MCP server
+   - Test timeout handling and retry mechanisms in MCP context
+
+# Test Strategy:
+1. Skip tests conditionally based on environment variables
+2. Focus on MCP tool functionality and API connectivity
+3. Test all endpoint categories through MCP server interface
+4. Verify complete MCP communication flow with real API calls
+5. Test MCP tool registration and discovery mechanisms
+6. Validate response schemas and data consistency via MCP
+7. Test error scenarios with actual API responses through MCP
+8. Measure performance with MCP server caching enabled/disabled

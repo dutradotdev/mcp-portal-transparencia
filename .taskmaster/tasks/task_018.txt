@@ -1,0 +1,56 @@
+# Task ID: 18
+# Title: Create CI/CD Pipeline
+# Status: pending
+# Dependencies: 1, 13, 14, 15, 17
+# Priority: medium
+# Description: Set up basic continuous integration and deployment pipeline for automated testing, building, and publishing.
+# Details:
+1. Create GitHub Actions workflow for CI in `.github/workflows/ci.yml`:
+```yaml
+name: CI/CD
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js 18.x
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18.x
+    - run: npm ci
+    - run: npm run test
+
+  build-and-publish:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: test
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js 18.x
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18.x
+        registry-url: 'https://registry.npmjs.org'
+    - run: npm ci
+    - run: npm run build
+    - run: npm publish
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+```
+2. Configure basic branch protection rules:
+   - Require pull request reviews before merging
+   - Require status checks to pass before merging
+3. Set up NPM_TOKEN secret for publishing
+
+# Test Strategy:
+1. Verify CI workflow runs tests on pull requests
+2. Test that branch protection prevents direct pushes to main
+3. Verify build and publish workflow runs on main branch pushes
+4. Test that publishing works with a test release

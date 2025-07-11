@@ -1,0 +1,15 @@
+{
+  "entryPoints": ["src/index.ts"],
+  "out": "docs",
+  "name": "Portal da Transparência MCP",
+  "readme": "README.md",
+  "includeVersion": true,
+  "excludePrivate": true,
+  "excludeExternals": true,
+  "theme": "default",
+  "plugin": ["typedoc-plugin-markdown"],
+  "exclude": ["src/tests/**/*", "src/**/*.test.ts", "src/**/*.spec.ts"],
+  "excludeNotDocumented": false,
+  "hideGenerator": true,
+  "sort": ["source-order"]
+}

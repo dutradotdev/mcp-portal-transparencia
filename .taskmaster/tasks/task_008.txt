@@ -1,0 +1,167 @@
+# Task ID: 8
+# Title: Implement HTTP Client with Interceptors
+# Status: cancelled
+# Dependencies: 1, 3, 4, 5, 6
+# Priority: high
+# Description: Create a base HTTP client with interceptors for authentication, error handling, logging, and rate limiting.
+# Details:
+1. Install required dependencies:
+   - `npm install axios axios-retry --save`
+2. Create a HttpClient class in `src/core/http-client.ts`:
+```typescript
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import axiosRetry from 'axios-retry';
+import { Authentication } from './authentication';
+import { ErrorHandler } from '../errors/error-handler';
+import { Logger } from '../logging/logger';
+import { RateLimiter } from './rate-limiter';
+
+export interface HttpClientConfig {
+  baseURL?: string;
+  timeout?: number;
+  retries?: number;
+}
+
+export class HttpClient {
+  private client: AxiosInstance;
+  private auth: Authentication;
+  private errorHandler: ErrorHandler;
+  private logger: Logger;
+  private rateLimiter: RateLimiter;
+
+  constructor(
+    auth: Authentication,
+    errorHandler: ErrorHandler,
+    logger: Logger,
+    rateLimiter: RateLimiter,
+    config: HttpClientConfig = {}
+  ) {
+    this.auth = auth;
+    this.errorHandler = errorHandler;
+    this.logger = logger;
+    this.rateLimiter = rateLimiter;
+    
+    this.client = axios.create({
+      baseURL: config.baseURL || 'https://api.portaldatransparencia.gov.br',
+      timeout: config.timeout || 30000,
+    });
+    
+    // Configure retries
+    axiosRetry(this.client, {
+      retries: config.retries || 3,
+      retryDelay: axiosRetry.exponentialDelay,
+      retryCondition: (error) => {
+        // Only retry on network errors and 5xx responses
+        return axiosRetry.isNetworkOrIdempotentRequestError(error) ||
+          (error.response?.status >= 500 && error.response?.status < 600);
+      }
+    });
+    
+    this.setupInterceptors();
+  }
+
+  private setupInterceptors(): void {
+    // Request interceptor
+    this.client.interceptors.request.use(
+      (config) => {
+        const startTime = Date.now();
+        config.metadata = { startTime };
+        
+        // Add authentication headers
+        const authHeaders = this.auth.getAuthHeaders();
+        config.headers = { ...config.headers, ...authHeaders };
+        
+        // Track request for rate limiting
+        this.rateLimiter.trackRequest();
+        
+        return config;
+      },
+      (error) => {
+        this.logger.error('Request error', { error: error.message });
+        return Promise.reject(error);
+      }
+    );
+    
+    // Response interceptor
+    this.client.interceptors.response.use(
+      (response) => {
+        const config = response.config as AxiosRequestConfig & { metadata?: any };
+        const duration = Date.now() - (config.metadata?.startTime || 0);
+        
+        this.logger.logApiCall({
+          endpoint: `${config.method?.toUpperCase()} ${config.url}`,
+          method: config.method?.toUpperCase() || 'UNKNOWN',
+          requestPayload: config.data,
+          responseStatus: response.status,
+          responseTime: duration
+        });
+        
+        return response;
+      },
+      (error) => {
+        const config = error.config as AxiosRequestConfig & { metadata?: any };
+        const duration = Date.now() - (config.metadata?.startTime || 0);
+        
+        this.logger.logApiCall({
+          endpoint: `${config.method?.toUpperCase()} ${config.url}`,
+          method: config.method?.toUpperCase() || 'UNKNOWN',
+          requestPayload: config.data,
+          responseStatus: error.response?.status,
+          responseTime: duration,
+          error
+        });
+        
+        // Transform error
+        const transformedError = this.errorHandler.handleApiError(
+          error,
+          `${config.method?.toUpperCase()} ${config.url}`,
+          config.data
+        );
+        
+        return Promise.reject(transformedError);
+      }
+    );
+  }
+
+  async request<T>(config: AxiosRequestConfig): Promise<T> {
+    try {
+      const response = await this.client.request<T>(config);
+      return response.data;
+    } catch (error) {
+      throw error; // Already transformed by interceptor
+    }
+  }
+
+  async get<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
+    return this.request<T>({ ...config, method: 'GET', url });
+  }
+
+  async post<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
+    return this.request<T>({ ...config, method: 'POST', url, data });
+  }
+
+  async put<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
+    return this.request<T>({ ...config, method: 'PUT', url, data });
+  }
+
+  async delete<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
+    return this.request<T>({ ...config, method: 'DELETE', url });
+  }
+}
+```
+3. Implement request/response timing for performance monitoring
+4. Add circuit breaker pattern for failing endpoints
+5. Implement request queuing for rate limiting
+6. Add support for request cancellation
+
+# Test Strategy:
+1. Unit tests:
+   - Test interceptor functionality
+   - Test authentication header injection
+   - Test error transformation
+   - Test retry logic
+2. Integration tests:
+   - Test with mock API endpoints
+   - Verify rate limiting behavior
+   - Test error handling with various response codes
+   - Measure performance impact of interceptors

@@ -22,7 +22,7 @@
         "dependencies": [
           1
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": []
       },
       {
@@ -35,7 +35,7 @@
         "dependencies": [
           1
         ],
-        "status": "pending",
+        "status": "cancelled",
         "subtasks": []
       },
       {
@@ -49,7 +49,7 @@
           1,
           3
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": []
       },
       {
@@ -63,7 +63,7 @@
           1,
           3
         ],
-        "status": "pending",
+        "status": "cancelled",
         "subtasks": []
       },
       {
@@ -78,7 +78,7 @@
           3,
           5
         ],
-        "status": "pending",
+        "status": "cancelled",
         "subtasks": []
       },
       {
@@ -92,7 +92,7 @@
           1,
           2
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": []
       },
       {
@@ -109,7 +109,7 @@
           5,
           6
         ],
-        "status": "pending",
+        "status": "cancelled",
         "subtasks": []
       },
       {
@@ -125,7 +125,7 @@
           5,
           8
         ],
-        "status": "pending",
+        "status": "cancelled",
         "subtasks": []
       },
       {
@@ -140,7 +140,7 @@
           8,
           9
         ],
-        "status": "pending",
+        "status": "cancelled",
         "subtasks": []
       },
       {
@@ -155,7 +155,7 @@
           3,
           8
         ],
-        "status": "pending",
+        "status": "cancelled",
         "subtasks": []
       },
       {
@@ -177,59 +177,134 @@
           10,
           11
         ],
-        "status": "pending",
+        "status": "cancelled",
         "subtasks": []
       },
       {
         "id": 13,
         "title": "Implement Unit Tests",
-        "description": "Create comprehensive unit tests for all components of the MCP library.",
-        "details": "1. Install testing dependencies:\n   - `npm install jest ts-jest @types/jest jest-mock-extended nock --save-dev`\n2. Configure Jest in `jest.config.js`:\n```javascript\nmodule.exports = {\n  preset: 'ts-jest',\n  testEnvironment: 'node',\n  collectCoverage: true,\n  collectCoverageFrom: [\n    'src/**/*.ts',\n    '!src/**/*.d.ts',\n    '!src/clients/**/*.ts', // Skip generated clients\n  ],\n  coverageThreshold: {\n    global: {\n      branches: 80,\n      functions: 80,\n      lines: 80,\n      statements: 80,\n    },\n  },\n  testMatch: ['**/tests/unit/**/*.test.ts'],\n};\n```\n3. Create test files for each core component:\n   - `tests/unit/core/authentication.test.ts`\n   - `tests/unit/core/swagger-loader.test.ts`\n   - `tests/unit/logging/logger.test.ts`\n   - `tests/unit/errors/error-handler.test.ts`\n   - `tests/unit/core/rate-limiter.test.ts`\n   - `tests/unit/core/http-client.test.ts`\n   - `tests/unit/core/mcp.test.ts`\n   - `tests/unit/core/cache-manager.test.ts`\n4. Create test utilities and mocks in `tests/utils`\n5. Implement test for the main MCP class\n6. Create test coverage reports",
-        "testStrategy": "1. Use Jest snapshots for complex objects\n2. Use mock-extended for complex dependencies\n3. Use nock for HTTP request mocking\n4. Test edge cases and error conditions\n5. Verify test coverage meets 90% threshold\n6. Run tests in CI pipeline",
-        "priority": "high",
+        "description": "Create focused unit tests for the core essential components of the MCP library, with emphasis on the MCP server implementation.",
+        "status": "pending",
         "dependencies": [
           1,
           2,
-          3,
           4,
-          5,
-          6,
           7,
-          8,
-          9,
-          10,
-          11,
-          12
+          19
         ],
-        "status": "pending",
+        "priority": "high",
+        "details": "1. Install testing dependencies:\n   - `npm install jest ts-jest @types/jest jest-mock-extended --save-dev`\n2. Configure Jest in `jest.config.js`:\n```javascript\nmodule.exports = {\n  preset: 'ts-jest',\n  testEnvironment: 'node',\n  collectCoverage: true,\n  collectCoverageFrom: [\n    'src/**/*.ts',\n    '!src/**/*.d.ts',\n  ],\n  coverageThreshold: {\n    global: {\n      branches: 60,\n      functions: 60,\n      lines: 60,\n      statements: 60,\n    },\n  },\n  testMatch: ['**/tests/unit/**/*.test.ts'],\n};\n```\n3. Create test files for core essential components:\n   - `tests/unit/core/mcp-server.test.ts` (MCP server implementation)\n   - `tests/unit/core/tool-registry.test.ts` (Tool registration and management)\n   - `tests/unit/core/request-handler.test.ts` (Request/response handling)\n   - `tests/unit/core/authentication.test.ts` (Authentication mechanisms)\n4. Create basic test utilities and mocks in `tests/utils`\n5. Focus on MCP server functionality and tool management testing",
+        "testStrategy": "1. Use Jest for basic unit testing\n2. Mock MCP protocol messages and responses\n3. Test tool registration and execution workflows\n4. Test MCP server request/response handling\n5. Mock authentication and authorization flows\n6. Focus on MCP server implementation, not complex edge cases\n7. Maintain reasonable test coverage without strict thresholds",
         "subtasks": []
       },
       {
         "id": 14,
         "title": "Implement Integration Tests",
-        "description": "Create integration tests that verify the MCP works correctly with the actual Portal da Transparência API.",
-        "details": "1. Create integration test configuration in `tests/integration/config.ts`:\n```typescript\nimport dotenv from 'dotenv';\n\ndotenv.config();\n\nexport const config = {\n  apiKey: process.env.PORTAL_TRANSPARENCIA_API_KEY || '',\n  skipLiveTests: process.env.SKIP_LIVE_TESTS === 'true',\n};\n```\n2. Create test files for each API category:\n   - `tests/integration/viagens.test.ts`\n   - `tests/integration/servidores.test.ts`\n   - `tests/integration/beneficios.test.ts`\n   - etc.\n3. Create test for the MCP flow with multiple chained calls\n4. Implement test for rate limiting behavior\n5. Create test for error handling with actual API errors\n6. Test caching with real API calls",
-        "testStrategy": "1. Skip tests if no API key is provided\n2. Use conditional testing based on environment variables\n3. Test actual API responses\n4. Verify data consistency across calls\n5. Test rate limiting with controlled request rates\n6. Measure and verify performance improvements with caching",
-        "priority": "medium",
+        "description": "Create comprehensive integration tests that verify all MCP tools work correctly with the actual Portal da Transparência API, testing connectivity and response structure for all endpoint categories through the MCP server interface.",
+        "status": "pending",
         "dependencies": [
-          12,
+          19,
           13
         ],
-        "status": "pending",
+        "priority": "medium",
+        "details": "1. Create integration test configuration in `tests/integration/config.ts`:\n```typescript\nimport dotenv from 'dotenv';\n\ndotenv.config();\n\nexport const config = {\n  skipLiveTests: process.env.SKIP_LIVE_TESTS === 'true',\n  testTimeout: 30000,\n  mcpServerPort: process.env.MCP_SERVER_PORT || 3000,\n};\n```\n2. Create comprehensive test files for ALL API categories via MCP tools:\n   - `tests/integration/servidores.test.ts`\n   - `tests/integration/viagens.test.ts`\n   - `tests/integration/contratos.test.ts`\n   - `tests/integration/beneficios.test.ts`\n   - `tests/integration/orcamento.test.ts`\n   - `tests/integration/despesas.test.ts`\n   - `tests/integration/receitas.test.ts`\n   - `tests/integration/convenios.test.ts`\n   - `tests/integration/cartoes.test.ts`\n   - `tests/integration/auxilio-emergencial.test.ts`\n   - `tests/integration/seguro-defeso.test.ts`\n   - `tests/integration/bolsa-familia.test.ts`\n   - `tests/integration/bpc.test.ts`\n   - `tests/integration/peti.test.ts`\n3. Test ALL MCP tools functionality through the MCP server:\n   - Verify each MCP tool can make real API calls via server\n   - Test parameter validation and transformation through MCP interface\n   - Verify response structure and data consistency from MCP tools\n4. Create comprehensive MCP connectivity tests:\n   - Test MCP server startup and tool registration\n   - Verify MCP tool discovery and availability\n   - Test MCP communication protocol with actual API calls\n5. Implement end-to-end MCP integration tests:\n   - Test complete MCP client-server communication flow\n   - Verify tool execution through MCP protocol\n   - Test error handling and response formatting via MCP\n6. Create performance and reliability tests via MCP:\n   - Test rate limiting behavior through MCP tools\n   - Verify caching functionality with MCP server\n   - Test timeout handling and retry mechanisms in MCP context",
+        "testStrategy": "1. Skip tests conditionally based on environment variables\n2. Focus on MCP tool functionality and API connectivity\n3. Test all endpoint categories through MCP server interface\n4. Verify complete MCP communication flow with real API calls\n5. Test MCP tool registration and discovery mechanisms\n6. Validate response schemas and data consistency via MCP\n7. Test error scenarios with actual API responses through MCP\n8. Measure performance with MCP server caching enabled/disabled",
         "subtasks": []
       },
       {
         "id": 15,
         "title": "Generate API Documentation",
-        "description": "Generate comprehensive API documentation for the MCP library and all available endpoints.",
-        "details": "1. Install documentation dependencies:\n   - `npm install typedoc --save-dev`\n2. Configure TypeDoc in `typedoc.json`:\n```json\n{\n  \"entryPoints\": [\"src/index.ts\"],\n  \"out\": \"docs\",\n  \"name\": \"Portal da Transparência MCP\",\n  \"readme\": \"README.md\",\n  \"includeVersion\": true,\n  \"excludePrivate\": true,\n  \"excludeExternals\": true,\n  \"theme\": \"default\"\n}\n```\n3. Add JSDoc comments to all public classes and methods\n4. Create a documentation generation script in package.json:\n```json\n\"scripts\": {\n  \"docs\": \"typedoc\"\n}\n```\n5. Create a documentation website structure:\n   - Overview\n   - Getting Started\n   - API Reference\n   - Examples\n   - Endpoint Reference\n6. Generate endpoint documentation from Swagger spec\n7. Create diagrams for complex flows",
-        "testStrategy": "1. Verify documentation builds without errors\n2. Check that all public APIs are documented\n3. Validate links between documentation pages\n4. Ensure examples are up-to-date and working\n5. Test documentation site in different browsers",
-        "priority": "medium",
-        "dependencies": [
-          12
-        ],
+        "description": "Generate comprehensive documentation for the MCP library focused on UI integration and user setup guides.",
         "status": "pending",
-        "subtasks": []
+        "dependencies": [
+          19
+        ],
+        "priority": "medium",
+        "details": "1. Install documentation dependencies:\n   - `npm install typedoc --save-dev`\n2. Configure TypeDoc in `typedoc.json`:\n```json\n{\n  \"entryPoints\": [\"src/index.ts\"],\n  \"out\": \"docs\",\n  \"name\": \"Portal da Transparência MCP\",\n  \"readme\": \"README.md\",\n  \"includeVersion\": true,\n  \"excludePrivate\": true,\n  \"excludeExternals\": true,\n  \"theme\": \"default\"\n}\n```\n3. Create comprehensive user-focused documentation structure:\n   - Installation Guide (npx setup)\n   - Configuration Guides:\n     * Claude Desktop setup\n     * Cursor IDE setup\n     * Other UIs/editors setup\n   - Complete MCP Tools Reference\n   - Prompt Examples for Claude\n   - Step-by-step Setup Guides\n   - Troubleshooting Section\n4. Add JSDoc comments to all public classes and methods\n5. Create a documentation generation script in package.json:\n```json\n\"scripts\": {\n  \"docs\": \"typedoc\"\n}\n```\n6. Generate endpoint documentation from Swagger spec\n7. Create diagrams for setup flows and tool interactions\n8. Focus on documenting how to use the MCP server implementation from task 19",
+        "testStrategy": "1. Verify documentation builds without errors\n2. Check that all public APIs are documented\n3. Validate links between documentation pages\n4. Test all setup instructions on different platforms\n5. Verify prompt examples work correctly with Claude\n6. Ensure troubleshooting guides address common issues\n7. Test documentation site in different browsers\n8. Validate that MCP server usage documentation is accurate and complete",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Create Installation Guide",
+            "description": "Document how to install the MCP server using npx",
+            "status": "pending",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Create Claude Desktop Configuration Guide",
+            "description": "Step-by-step guide for configuring MCP in Claude Desktop with screenshots",
+            "status": "pending",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Create Cursor IDE Configuration Guide",
+            "description": "Detailed setup instructions for Cursor IDE integration",
+            "status": "pending",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Create Other UIs/Editors Configuration Guide",
+            "description": "Generic configuration guide for other MCP-compatible UIs and editors",
+            "status": "pending",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          },
+          {
+            "id": 5,
+            "title": "Document All Available MCP Tools",
+            "description": "Create comprehensive reference of all MCP tools with parameters and examples",
+            "status": "pending",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          },
+          {
+            "id": 6,
+            "title": "Create Claude Prompt Examples",
+            "description": "Provide example prompts showing how Claude can use each MCP tool effectively",
+            "status": "pending",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          },
+          {
+            "id": 7,
+            "title": "Create Troubleshooting Guide",
+            "description": "Document common issues and solutions for MCP setup and usage",
+            "status": "pending",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          },
+          {
+            "id": 8,
+            "title": "Create Setup Flow Diagrams",
+            "description": "Visual diagrams showing the setup process for different UIs",
+            "status": "pending",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          },
+          {
+            "id": 9,
+            "title": "Document MCP Server Usage",
+            "description": "Create detailed documentation on how to use the MCP server implementation, including API endpoints, configuration options, and integration patterns",
+            "status": "pending",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          }
+        ]
       },
       {
         "id": 16,
@@ -241,33 +316,30 @@
         "dependencies": [
           12
         ],
-        "status": "pending",
+        "status": "cancelled",
         "subtasks": []
       },
       {
         "id": 17,
         "title": "Create NPM Package Configuration",
-        "description": "Configure the project for publishing as an NPM package with proper versioning, metadata, and distribution files.",
-        "details": "1. Update package.json with publishing configuration:\n```json\n{\n  \"name\": \"mcp-portal-transparencia\",\n  \"version\": \"0.1.0\",\n  \"description\": \"Multi-step Call Planner for Portal da Transparência API\",\n  \"main\": \"dist/index.js\",\n  \"types\": \"dist/index.d.ts\",\n  \"files\": [\n    \"dist\",\n    \"LICENSE\",\n    \"README.md\"\n  ],\n  \"scripts\": {\n    \"build\": \"tsc\",\n    \"test\": \"jest\",\n    \"test:unit\": \"jest --testMatch='**/tests/unit/**/*.test.ts'\",\n    \"test:integration\": \"jest --testMatch='**/tests/integration/**/*.test.ts'\",\n    \"lint\": \"eslint 'src/**/*.ts'\",\n    \"docs\": \"typedoc\",\n    \"prepublishOnly\": \"npm run build && npm run test && npm run lint\"\n  },\n  \"keywords\": [\n    \"portal-da-transparencia\",\n    \"api\",\n    \"mcp\",\n    \"typescript\",\n    \"brasil\",\n    \"governo\"\n  ],\n  \"author\": \"Your Name\",\n  \"license\": \"MIT\",\n  \"repository\": {\n    \"type\": \"git\",\n    \"url\": \"git+https://github.com/yourusername/mcp-portal-transparencia.git\"\n  },\n  \"bugs\": {\n    \"url\": \"https://github.com/yourusername/mcp-portal-transparencia/issues\"\n  },\n  \"homepage\": \"https://github.com/yourusername/mcp-portal-transparencia#readme\",\n  \"engines\": {\n    \"node\": \">=16.0.0\"\n  }\n}\n```\n2. Create .npmignore file:\n```\nsrc/\ntests/\nexamples/\n.github/\n.vscode/\n.eslintrc.js\n.prettierrc\ntsconfig.json\njest.config.js\ntypedoc.json\n.gitignore\n.env\n.env.example\ncoverage/\ndocs/\n```\n3. Create release workflow in GitHub Actions:\n```yaml\nname: Release\n\non:\n  release:\n    types: [created]\n\njobs:\n  build:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v2\n      - uses: actions/setup-node@v2\n        with:\n          node-version: '16.x'\n          registry-url: 'https://registry.npmjs.org/'\n      - run: npm ci\n      - run: npm run build\n      - run: npm run test\n      - run: npm publish\n        env:\n          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}\n```\n4. Create CHANGELOG.md for version tracking\n5. Add LICENSE file (MIT)\n6. Configure semantic versioning for releases",
-        "testStrategy": "1. Verify package builds correctly\n2. Test installation from local package\n3. Verify TypeScript types are correctly included\n4. Check that unnecessary files are excluded\n5. Test package.json scripts",
-        "priority": "medium",
+        "description": "Configure the project for publishing as an NPM package that works as an MCP server via npx, with proper versioning, metadata, and distribution files.",
+        "status": "done",
         "dependencies": [
-          12,
+          19,
           13,
           14,
-          15,
-          16
+          15
         ],
-        "status": "pending",
+        "priority": "medium",
+        "details": "1. Update package.json with MCP server configuration for npx usage:\n```json\n{\n  \"name\": \"mcp-portal-transparencia\",\n  \"version\": \"0.1.0\",\n  \"description\": \"MCP Server for Portal da Transparência API - Multi-step Call Planner\",\n  \"main\": \"dist/index.js\",\n  \"bin\": {\n    \"mcp-portal-transparencia\": \"dist/index.js\"\n  },\n  \"types\": \"dist/index.d.ts\",\n  \"files\": [\n    \"dist\",\n    \"LICENSE\",\n    \"README.md\"\n  ],\n  \"scripts\": {\n    \"build\": \"tsc\",\n    \"test\": \"jest\",\n    \"test:unit\": \"jest --testMatch='**/tests/unit/**/*.test.ts'\",\n    \"test:integration\": \"jest --testMatch='**/tests/integration/**/*.test.ts'\",\n    \"lint\": \"eslint 'src/**/*.ts'\",\n    \"docs\": \"typedoc\",\n    \"prepublishOnly\": \"npm run build && npm run test && npm run lint\",\n    \"start\": \"node dist/index.js\"\n  },\n  \"keywords\": [\n    \"mcp\",\n    \"mcp-server\",\n    \"portal-da-transparencia\",\n    \"api\",\n    \"typescript\",\n    \"brasil\",\n    \"governo\",\n    \"transparency\"\n  ],\n  \"author\": \"Your Name\",\n  \"license\": \"MIT\",\n  \"repository\": {\n    \"type\": \"git\",\n    \"url\": \"git+https://github.com/yourusername/mcp-portal-transparencia.git\"\n  },\n  \"bugs\": {\n    \"url\": \"https://github.com/yourusername/mcp-portal-transparencia/issues\"\n  },\n  \"homepage\": \"https://github.com/yourusername/mcp-portal-transparencia#readme\",\n  \"engines\": {\n    \"node\": \">=16.0.0\"\n  }\n}\n```\n2. Create .npmignore file:\n```\nsrc/\ntests/\nexamples/\n.github/\n.vscode/\n.eslintrc.js\n.prettierrc\ntsconfig.json\njest.config.js\ntypedoc.json\n.gitignore\n.env\n.env.example\ncoverage/\ndocs/\n```\n3. Ensure dist/index.js has proper shebang for CLI usage:\n```javascript\n#!/usr/bin/env node\n```\n4. Create release workflow in GitHub Actions:\n```yaml\nname: Release\n\non:\n  release:\n    types: [created]\n\njobs:\n  build:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v2\n      - uses: actions/setup-node@v2\n        with:\n          node-version: '16.x'\n          registry-url: 'https://registry.npmjs.org/'\n      - run: npm ci\n      - run: npm run build\n      - run: npm run test\n      - run: npm publish\n        env:\n          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}\n```\n5. Create CHANGELOG.md for version tracking\n6. Add LICENSE file (MIT)\n7. Configure semantic versioning for releases\n8. Add README section explaining npx usage for MCP server",
+        "testStrategy": "1. Verify package builds correctly with executable permissions\n2. Test installation and execution via npx mcp-portal-transparencia\n3. Verify MCP server starts correctly when run via npx\n4. Test TypeScript types are correctly included\n5. Check that unnecessary files are excluded\n6. Test package.json scripts\n7. Verify bin configuration works properly",
         "subtasks": []
       },
       {
         "id": 18,
         "title": "Create CI/CD Pipeline",
-        "description": "Set up continuous integration and deployment pipeline for automated testing, building, and publishing.",
-        "details": "1. Create GitHub Actions workflow for CI in `.github/workflows/ci.yml`:\n```yaml\nname: CI\n\non:\n  push:\n    branches: [ main ]\n  pull_request:\n    branches: [ main ]\n\njobs:\n  test:\n    runs-on: ubuntu-latest\n    strategy:\n      matrix:\n        node-version: [16.x, 18.x]\n\n    steps:\n    - uses: actions/checkout@v2\n    - name: Use Node.js ${{ matrix.node-version }}\n      uses: actions/setup-node@v2\n      with:\n        node-version: ${{ matrix.node-version }}\n    - run: npm ci\n    - run: npm run build\n    - run: npm run lint\n    - run: npm run test:unit\n    - name: Upload coverage\n      uses: codecov/codecov-action@v2\n      with:\n        token: ${{ secrets.CODECOV_TOKEN }}\n\n  integration:\n    runs-on: ubuntu-latest\n    if: github.event_name == 'push' && github.ref == 'refs/heads/main'\n    needs: test\n    steps:\n    - uses: actions/checkout@v2\n    - name: Use Node.js 16.x\n      uses: actions/setup-node@v2\n      with:\n        node-version: 16.x\n    - run: npm ci\n    - run: npm run build\n    - run: npm run test:integration\n      env:\n        PORTAL_TRANSPARENCIA_API_KEY: ${{ secrets.PORTAL_TRANSPARENCIA_API_KEY }}\n        SKIP_LIVE_TESTS: ${{ secrets.PORTAL_TRANSPARENCIA_API_KEY == '' }}\n\n  docs:\n    runs-on: ubuntu-latest\n    if: github.event_name == 'push' && github.ref == 'refs/heads/main'\n    needs: test\n    steps:\n    - uses: actions/checkout@v2\n    - name: Use Node.js 16.x\n      uses: actions/setup-node@v2\n      with:\n        node-version: 16.x\n    - run: npm ci\n    - run: npm run docs\n    - name: Deploy to GitHub Pages\n      uses: peaceiris/actions-gh-pages@v3\n      with:\n        github_token: ${{ secrets.GITHUB_TOKEN }}\n        publish_dir: ./docs\n```\n2. Create release workflow in `.github/workflows/release.yml`\n3. Configure branch protection rules:\n   - Require pull request reviews before merging\n   - Require status checks to pass before merging\n   - Require linear history\n4. Set up Codecov integration for test coverage reporting\n5. Configure Dependabot for dependency updates\n6. Add status badges to README.md",
-        "testStrategy": "1. Verify CI workflow runs on pull requests\n2. Test that branch protection prevents direct pushes to main\n3. Verify documentation is automatically deployed\n4. Test release workflow with a test release\n5. Verify code coverage reporting works",
-        "priority": "medium",
+        "description": "Set up basic continuous integration and deployment pipeline for automated testing, building, and publishing.",
+        "status": "pending",
         "dependencies": [
           1,
           13,
@@ -275,13 +347,122 @@
           15,
           17
         ],
-        "status": "pending",
+        "priority": "medium",
+        "details": "1. Create GitHub Actions workflow for CI in `.github/workflows/ci.yml`:\n```yaml\nname: CI/CD\n\non:\n  push:\n    branches: [ main ]\n  pull_request:\n    branches: [ main ]\n\njobs:\n  test:\n    runs-on: ubuntu-latest\n    steps:\n    - uses: actions/checkout@v3\n    - name: Use Node.js 18.x\n      uses: actions/setup-node@v3\n      with:\n        node-version: 18.x\n    - run: npm ci\n    - run: npm run test\n\n  build-and-publish:\n    runs-on: ubuntu-latest\n    if: github.event_name == 'push' && github.ref == 'refs/heads/main'\n    needs: test\n    steps:\n    - uses: actions/checkout@v3\n    - name: Use Node.js 18.x\n      uses: actions/setup-node@v3\n      with:\n        node-version: 18.x\n        registry-url: 'https://registry.npmjs.org'\n    - run: npm ci\n    - run: npm run build\n    - run: npm publish\n      env:\n        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}\n```\n2. Configure basic branch protection rules:\n   - Require pull request reviews before merging\n   - Require status checks to pass before merging\n3. Set up NPM_TOKEN secret for publishing",
+        "testStrategy": "1. Verify CI workflow runs tests on pull requests\n2. Test that branch protection prevents direct pushes to main\n3. Verify build and publish workflow runs on main branch pushes\n4. Test that publishing works with a test release",
         "subtasks": []
+      },
+      {
+        "id": 19,
+        "title": "Implement MCP Server Bridge for Portal da Transparência API",
+        "description": "Create a complete MCP server that dynamically generates tools from the Portal da Transparência Swagger specification and provides seamless integration with Claude Desktop, Cursor, and other MCP-compatible UIs.",
+        "details": "1. Create the main MCP server entry point in `src/mcp-server.ts`:\n```typescript\nimport { Server } from '@modelcontextprotocol/sdk/server/index.js';\nimport { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';\nimport { SwaggerLoader } from './core/swagger-loader';\nimport { Authentication } from './core/authentication';\nimport { Logger } from './logging/logger';\nimport { OpenAPI } from 'openapi-types';\n\nexport class MCPPortalServer {\n  private server: Server;\n  private swaggerLoader: SwaggerLoader;\n  private auth: Authentication;\n  private logger: Logger;\n  private tools: Map<string, any> = new Map();\n\n  constructor() {\n    this.logger = new Logger({ level: 'info' });\n    this.server = new Server({\n      name: 'portal-transparencia-mcp',\n      version: '1.0.0'\n    }, {\n      capabilities: {\n        tools: {}\n      }\n    });\n    this.swaggerLoader = new SwaggerLoader('https://api.portaldatransparencia.gov.br/swagger-ui/swagger.json', this.logger);\n    this.auth = new Authentication({}, this.logger);\n  }\n\n  async initialize(): Promise<void> {\n    const spec = await this.swaggerLoader.loadSpec();\n    await this.generateToolsFromSpec(spec);\n    this.setupToolHandlers();\n  }\n\n  private async generateToolsFromSpec(spec: OpenAPI.Document): Promise<void> {\n    // Generate MCP tools for each endpoint\n    for (const [path, pathItem] of Object.entries(spec.paths || {})) {\n      for (const [method, operation] of Object.entries(pathItem || {})) {\n        if (typeof operation === 'object' && operation.operationId) {\n          const toolName = this.generateToolName(operation.operationId, method, path);\n          const tool = this.createMCPTool(operation, method, path);\n          this.tools.set(toolName, tool);\n        }\n      }\n    }\n  }\n\n  private createMCPTool(operation: any, method: string, path: string) {\n    return {\n      name: this.generateToolName(operation.operationId, method, path),\n      description: operation.summary || operation.description || `${method.toUpperCase()} ${path}`,\n      inputSchema: this.generateInputSchema(operation.parameters || []),\n      handler: async (args: any) => {\n        return await this.executeApiCall(method, path, operation, args);\n      }\n    };\n  }\n\n  private async executeApiCall(method: string, path: string, operation: any, args: any): Promise<any> {\n    try {\n      // Build URL with path parameters\n      let url = `https://api.portaldatransparencia.gov.br/api-de-dados${path}`;\n      const pathParams = operation.parameters?.filter((p: any) => p.in === 'path') || [];\n      \n      for (const param of pathParams) {\n        if (args[param.name]) {\n          url = url.replace(`{${param.name}}`, encodeURIComponent(args[param.name]));\n        }\n      }\n\n      // Build query parameters\n      const queryParams = operation.parameters?.filter((p: any) => p.in === 'query') || [];\n      const searchParams = new URLSearchParams();\n      \n      for (const param of queryParams) {\n        if (args[param.name] !== undefined) {\n          searchParams.append(param.name, args[param.name]);\n        }\n      }\n\n      if (searchParams.toString()) {\n        url += `?${searchParams.toString()}`;\n      }\n\n      // Make API call with authentication\n      const headers = this.auth.getHeaders();\n      const response = await fetch(url, {\n        method: method.toUpperCase(),\n        headers\n      });\n\n      if (!response.ok) {\n        throw new Error(`API call failed: ${response.status} ${response.statusText}`);\n      }\n\n      const data = await response.json();\n      return {\n        success: true,\n        data,\n        metadata: {\n          endpoint: `${method.toUpperCase()} ${path}`,\n          status: response.status,\n          headers: Object.fromEntries(response.headers.entries())\n        }\n      };\n    } catch (error) {\n      this.logger.error('API call failed', { error: error.message, method, path, args });\n      return {\n        success: false,\n        error: error.message,\n        endpoint: `${method.toUpperCase()} ${path}`\n      };\n    }\n  }\n\n  async start(): Promise<void> {\n    const transport = new StdioServerTransport();\n    await this.server.connect(transport);\n    this.logger.info('MCP Portal da Transparência server started');\n  }\n}\n```\n\n2. Create CLI executable in `bin/mcp-portal-server.js`:\n```javascript\n#!/usr/bin/env node\nconst { MCPPortalServer } = require('../dist/mcp-server.js');\n\nasync function main() {\n  const server = new MCPPortalServer();\n  await server.initialize();\n  await server.start();\n}\n\nmain().catch(console.error);\n```\n\n3. Update package.json for npx compatibility:\n```json\n{\n  \"bin\": {\n    \"mcp-portal-server\": \"./bin/mcp-portal-server.js\"\n  },\n  \"files\": [\n    \"dist/\",\n    \"bin/\"\n  ]\n}\n```\n\n4. Create configuration guide in `docs/mcp-setup.md` for Claude Desktop, Cursor, and other UIs with specific configuration examples.\n\n5. Implement comprehensive error handling with user-friendly messages and automatic retry logic for common failures.\n\n6. Add tool categorization and filtering capabilities to organize the large number of endpoints into logical groups.",
+        "testStrategy": "1. Unit tests for MCP server components:\n   - Test tool generation from Swagger spec\n   - Test parameter mapping and validation\n   - Test authentication header injection\n   - Test error handling and user-friendly error messages\n   - Test tool categorization and filtering\n\n2. Integration tests with MCP protocol:\n   - Test server initialization and tool registration\n   - Test tool execution with mock API responses\n   - Test stdio transport communication\n   - Test with actual Portal da Transparência API endpoints\n   - Verify all generated tools are accessible and functional\n\n3. End-to-end testing with MCP clients:\n   - Test installation via npx\n   - Test configuration with Claude Desktop\n   - Test configuration with Cursor\n   - Test tool discovery and execution in actual UI environments\n   - Verify user experience is smooth and error messages are helpful\n\n4. Performance and reliability tests:\n   - Test server startup time with large Swagger spec\n   - Test memory usage with many registered tools\n   - Test concurrent tool execution\n   - Test error recovery and graceful degradation\n   - Test with rate limiting scenarios",
+        "status": "done",
+        "dependencies": [
+          1,
+          2,
+          4
+        ],
+        "priority": "high",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Setup básico do MCP Server com SDK",
+            "description": "Criar a estrutura básica do MCP server usando o SDK oficial, configurar transporte stdio e definir capabilities do servidor",
+            "details": "- Instalar @modelcontextprotocol/sdk\n- Criar classe MCPPortalServer básica\n- Configurar Server e StdioServerTransport\n- Definir capabilities (tools)\n- Implementar métodos de inicialização e start\n- Configurar logging básico",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 19
+          },
+          {
+            "id": 2,
+            "title": "Integração com Swagger Loader",
+            "description": "Integrar o SwaggerLoader existente com o MCP server para carregar dinamicamente a especificação do Portal da Transparência",
+            "details": "- Instanciar SwaggerLoader no MCP server\n- Carregar spec do Portal da Transparência na inicialização\n- Implementar cache da spec para evitar recarregamentos\n- Tratar erros de carregamento da spec\n- Validar estrutura da spec carregada",
+            "status": "done",
+            "dependencies": [
+              "19.1"
+            ],
+            "parentTaskId": 19
+          },
+          {
+            "id": 3,
+            "title": "Geração Dinâmica de Tools MCP",
+            "description": "Implementar sistema que converte automaticamente cada endpoint da API em uma ferramenta MCP utilizável pelo Claude",
+            "details": "- Iterar sobre paths e operations do Swagger spec\n- Gerar nomes únicos e descritivos para cada tool\n- Criar input schemas baseados nos parâmetros da API\n- Mapear parâmetros de path, query e body\n- Categorizar tools por tags/grupos\n- Registrar tools no MCP server\n- Validar schemas gerados",
+            "status": "done",
+            "dependencies": [
+              "19.2"
+            ],
+            "parentTaskId": 19
+          },
+          {
+            "id": 4,
+            "title": "Sistema de Execução de API Calls",
+            "description": "Implementar o executor que transforma chamadas de tools MCP em requests HTTP para a API do Portal da Transparência",
+            "details": "- Implementar método executeApiCall\n- Construir URLs com parâmetros de path substituídos\n- Montar query parameters dinamicamente\n- Integrar headers de autenticação\n- Fazer requests HTTP (fetch/axios)\n- Tratar respostas e formatá-las para o MCP\n- Implementar retry logic básico\n- Retornar dados + metadata da resposta",
+            "status": "done",
+            "dependencies": [
+              "19.3"
+            ],
+            "parentTaskId": 19
+          },
+          {
+            "id": 5,
+            "title": "CLI Setup para NPX",
+            "description": "Criar executável CLI que permite rodar o MCP server via npx de forma simples e direta",
+            "details": "- Criar bin/mcp-portal-transparencia executável\n- Adicionar shebang #!/usr/bin/env node\n- Configurar package.json bin field\n- Implementar CLI que instancia e inicia o server\n- Adicionar parsing de argumentos básicos (API key, port, etc)\n- Tratar erros de inicialização gracefully\n- Adicionar help e version commands",
+            "status": "done",
+            "dependencies": [
+              "19.4"
+            ],
+            "parentTaskId": 19
+          },
+          {
+            "id": 6,
+            "title": "Sistema de Autenticação Integrado",
+            "description": "Integrar o sistema de autenticação existente com o MCP server para gerenciar API keys automaticamente",
+            "details": "- Integrar Authentication class no MCP server\n- Carregar API key de variáveis de ambiente\n- Implementar configuração via CLI arguments\n- Adicionar headers de autenticação em todas as requests\n- Validar se API key está configurada\n- Fornecer mensagens de erro claras sobre autenticação\n- Suportar configuração per-tool se necessário",
+            "status": "done",
+            "dependencies": [
+              "19.1"
+            ],
+            "parentTaskId": 19
+          },
+          {
+            "id": 7,
+            "title": "Error Handling User-Friendly",
+            "description": "Implementar sistema de tratamento de erros que fornece mensagens claras e úteis para usuários finais do Claude/Cursor",
+            "details": "- Capturar e classificar diferentes tipos de erro da API\n- Traduzir erros HTTP em mensagens user-friendly\n- Implementar fallbacks para erros de rede\n- Adicionar sugestões de resolução nos erros\n- Logar erros para debugging sem expor ao usuário\n- Tratar casos especiais (rate limiting, auth failures)\n- Formatar erros no padrão MCP",
+            "status": "done",
+            "dependencies": [
+              "19.4",
+              "19.6"
+            ],
+            "parentTaskId": 19
+          },
+          {
+            "id": 8,
+            "title": "Organização e Categorização de Tools",
+            "description": "Implementar sistema para organizar e categorizar as centenas de tools geradas, facilitando descoberta e uso pelo Claude",
+            "details": "- Agrupar tools por categorias (servidores, contratos, viagens, etc)\n- Criar nomes de tools descritivos e consistentes\n- Implementar prefixos/sufixos organizacionais\n- Adicionar descrições detalhadas para cada tool\n- Implementar sistema de tags/metadata\n- Criar lista/comando help para descobrir tools\n- Otimizar ordem de apresentação das tools\n- Documentar padrões de naming",
+            "status": "done",
+            "dependencies": [
+              "19.3"
+            ],
+            "parentTaskId": 19
+          }
+        ]
       }
     ],
     "metadata": {
       "created": "2025-07-06T19:43:37.348Z",
-      "updated": "2025-07-06T20:07:16.344Z",
+<<<<<<< HEAD
+      "updated": "2025-07-08T15:18:32.240Z",
+=======
+      "updated": "2025-07-07T19:55:38.375Z",
+>>>>>>> develop
       "description": "Tasks for master context"
     }
   }

@@ -9,7 +9,22 @@ Este guia mostra como usar o [MCP Inspector](https://github.com/modelcontextprot
 - Node.js >= 18.0.0
 - API Key do Portal da Transparência ([obter aqui](https://api.portaldatransparencia.gov.br/api-de-dados))
 
+<<<<<<< HEAD
+
 ### 2. Build do projeto
+
+=======
+
+### 2. Configurar API Key
+
+```bash
+# Criar arquivo .env
+echo "PORTAL_API_KEY=sua_api_key_aqui" > .env
+```
+
+### 3. Build do projeto
+
+> > > > > > > develop
 
 ```bash
 npm run build
@@ -20,6 +35,7 @@ npm run build
 ### Método 1: Via NPX (Recomendado)
 
 ```bash
+<<<<<<< HEAD
 # Executar inspector
 npx @modelcontextprotocol/inspector node dist/src/mcp-server.js
 ```
@@ -34,12 +50,21 @@ npx @modelcontextprotocol/inspector node dist/src/mcp-server.js
 
 4. Aperte `Connect`
 
+=======
+
+# Executar inspector diretamente
+
+PORTAL_API_KEY=sua_api_key_aqui npx @modelcontextprotocol/inspector node dist/src/mcp-server.js
+
+````
+
+>>>>>>> develop
 ### Método 2: Via configuração
 
 ```bash
 # Usar arquivo de configuração (já criado)
 npm run inspector
-```
+````
 
 ### Método 3: Modo direto
 
@@ -56,7 +81,16 @@ npm run inspector:direct
 
 ### Ferramentas Principais
 
-#### 1. Consultar Servidores da Fazenda
+#### 1. Verificar API Key
+
+```json
+{
+  "name": "portal_check_api_key",
+  "arguments": {}
+}
+```
+
+#### 2. Consultar Servidores da Fazenda
 
 ```json
 {
@@ -68,7 +102,15 @@ npm run inspector:direct
 }
 ```
 
+<<<<<<< HEAD
+
 #### 2. Consultar Despesas da Fazenda
+
+=======
+
+#### 3. Consultar Despesas da Fazenda
+
+> > > > > > > develop
 
 ```json
 {
@@ -81,7 +123,15 @@ npm run inspector:direct
 }
 ```
 
+<<<<<<< HEAD
+
 #### 3. Consultar Contratos da Fazenda
+
+=======
+
+#### 4. Consultar Contratos da Fazenda
+
+> > > > > > > develop
 
 ```json
 {
@@ -94,7 +144,15 @@ npm run inspector:direct
 }
 ```
 
+<<<<<<< HEAD
+
 #### 4. Consultar Licitações da Fazenda
+
+=======
+
+#### 5. Consultar Licitações da Fazenda
+
+> > > > > > > develop
 
 ```json
 {
@@ -107,7 +165,15 @@ npm run inspector:direct
 }
 ```
 
+<<<<<<< HEAD
+
 #### 5. Consultar Viagens a Serviço da Fazenda
+
+=======
+
+#### 6. Consultar Viagens a Serviço da Fazenda
+
+> > > > > > > develop
 
 ```json
 {

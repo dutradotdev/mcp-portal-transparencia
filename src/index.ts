@@ -6,24 +6,24 @@
  * @version 1.0.0
  */
 
-// Export main client class (to be implemented)
-// export { PortalTransparenciaClient } from './core/PortalTransparenciaClient';
+// Export main components
+export { ClientGenerator } from './core/ClientGenerator';
+export { SwaggerLoader } from './core/SwaggerLoader';
+export { Authentication } from './core/Authentication';
+export { Logger } from './logging/Logger';
 
 // Export core types and interfaces (to be implemented)
-// export * from './types';
+// export * from '@/types';
 
 // Export utility functions
-// export * from './utils';
+// export * from '@/utils';
 
 // Export error classes
-// export * from './errors';
-
-// Temporary placeholder for development
-console.log("MCP Portal da Transparência - Setup Complete!");
+// export * from '@/errors';
 
 // Default export (to be replaced with main client)
 export default {
-  name: "mcp-portal-transparencia",
-  version: "1.0.0",
-  description: "Multi-step Call Planner for Portal da Transparência API",
+  name: 'mcp-portal-transparencia',
+  version: '1.0.0',
+  description: 'Multi-step Call Planner for Portal da Transparência API',
 };
