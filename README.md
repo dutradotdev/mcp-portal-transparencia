@@ -6,6 +6,8 @@
 
 Um MCP Server que fornece acesso programático à API do Portal da Transparência do Governo Federal brasileiro através do protocolo MCP.
 
+**Este projeto apenas consome dados públicos disponibilizados pelo governo federal. Nenhum dado privado é armazenado ou exposto além do que já é acessível por qualquer cidadão via Portal da Transparência.**
+
 ## 📋 Sobre o Projeto
 
 Este projeto implementa um MCP Server que oferece acesso inteligente e estruturado a todos os endpoints disponíveis na API do Portal da Transparência (https://api.portaldatransparencia.gov.br/v3/api-docs). O sistema oferece:
